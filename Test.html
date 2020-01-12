@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Raphaël · Animation</title>
+        <link rel="stylesheet" href="demo.css"media="screen">
+        <link rel="stylesheet" href="demo-print.css"media="print">
+        <script src="raphael.js"></script>
+
+        
+    </head>
+    <body>
+        <div id="container"></div>
+		<script>
+            var paper = new Raphael(document.getElementById('container'), 640, 480);
+			var axis = paper.set();
+			axis.push(
+				paper.path("M0  0, l 640 0 "),
+				paper.path("M0 10, l 640 0 "),
+				paper.path("M0 20, l 640 0 "),
+				paper.path("M0 30, l 640 0 "),
+				paper.path("M0 40, l 640 0 "),
+				paper.path("M0 50, l 640 0 "),
+				paper.path("M0 60, l 640 0 "),
+				paper.path("M0 70, l 640 0 "),
+				paper.path("M0 80, l 640 0 "),
+				paper.path("M0 90, l 640 0 "),
+				paper.path("M0 100, l 640 0 "),
+				paper.path("M0 110, l 640 0 "),
+				paper.path("M0 120, l 640 0 "),
+				paper.path("M0 130, l 640 0 "),
+				paper.path("M0 140, l 640 0 "),
+				paper.path("M0 150, l 640 0 "),
+				paper.path("M0 160, l 640 0 "),
+				paper.path("M0 170, l 640 0 "),
+				paper.path("M0 180, l 640 0 "),
+				paper.path("M0 190, l 640 0 "),
+				paper.path("M0 200, l 640 0 "),
+				/* y */
+				paper.path("M0  10, l 0 480"),
+				paper.path("M10  0, l 0 480"),
+				paper.path("M20  0, l 0 480"),
+				paper.path("M30  0, l 0 480"),
+				paper.path("M40  0, l 0 480"),
+				paper.path("M50  0, l 0 480"),
+				paper.path("M60  0, l 0 480"),
+				paper.path("M70  0, l 0 480"),
+				paper.path("M80  0, l 0 480"),
+				paper.path("M90  0, l 0 480"),
+				paper.path("M100  0, l 0 480"),
+				paper.path("M110  0, l 0 480"),
+				paper.path("M120  0, l 0 480"),
+				paper.path("M130  0, l 0 480"),
+				paper.path("M140  0, l 0 480"),
+				paper.path("M150  0, l 0 480"),
+				paper.path("M160  0, l 0 480"),
+				paper.path("M170  0, l 0 480"),
+				paper.path("M180  0, l 0 480"),
+				paper.path("M190  0, l 0 480"),
+				paper.path("M200  0, l 0 480"),
+				paper.path("M210  0, l 0 480"),
+				paper.path("M220  0, l 0 480"),
+				paper.path("M230  0, l 0 480"),
+				paper.path("M240  0, l 0 480"),
+				paper.path("M250  0, l 0 480"),
+			);
+			axis.attr({
+				'stroke-width' : 0.7,
+				stroke : "#6ee88e"
+			});
+			paper.path("M20 50 Q30 30, 40 50");
+        </script>
+    </body>
+</html>
