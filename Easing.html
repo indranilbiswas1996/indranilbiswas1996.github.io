@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+	<script  src="raphael.js"></script>
+	<script  src="jquery.min.js"></script>
+	<style>
+		body, html {
+			margin : 0;
+		}
+		#container{
+			margin : 0 auto;
+			width : 640px;
+			height : 480px;
+		}
+	</style>
+    </head>
+    <body>
+		<p style="text-align: center">Click on the circle</p>
+        <div id="container"></div>
+<script>
+window.onload = function(){
+	var paper = Raphael(document.getElementById('container'), 620, 480);
+	/*var circle1 = paper.circle(100, 100, 20);
+	circle1.attr({fill: "blue", });
+	circle1.click(function(){		
+		this.cx = this.cx || 300;
+		this.cy = this.cy || 150
+		this.animate({cx: this.cx, cy : this.cy }, 1000, ">");
+		this.cx = this.cx == 300? 100 : 300;
+		this.cy = this.cy == 150? 100 : 150;
+	});*/
+	var circles = paper.set();
+	circles.push(
+		paper.circle(100, 50, 20),
+		paper.circle(100, 100, 20),
+		paper.circle(100, 150, 20),
+		paper.circle(100, 200, 20),
+		paper.circle(100, 250, 20),
+		paper.circle(100, 300, 20),
+		paper.circle(100, 350, 20),
+		paper.circle(100, 400, 20),
+	);
+	circles.attr({fill : 'red'});
+	var texts = paper.set();
+	texts.push(
+		paper.text(540, 50, "linear (default)"),
+		paper.text(540, 100, ">"),
+		paper.text(540, 150, "<"),
+		paper.text(540, 200, "<>"),
+		paper.text(540, 250, "bounce"),
+		paper.text(540, 300, "elastic"),
+		paper.text(540, 350, "backIn"),
+		paper.text(540, 400, "backOut"),		
+	);
+	circles[0].click(function(){
+		this.cx = this.cx || 480;
+		this.animate({cx : this.cx, "stroke-width": this.cx/100, fill: this.cx - 100 ? "blue" : "red", }, 1000);
+		this.cx = this.cx == 480 ? 100 : 480;
+	});
+	circles[1].click(function(){
+		this.cx = this.cx || 480;
+		this.animate({cx : this.cx, "stroke-width": this.cx/100, fill: this.cx - 100 ? "blue" : "red", }, 1000, ">");
+		this.cx = this.cx == 480 ? 100 : 480;
+	});
+	circles[2].click(function(){
+		this.cx = this.cx || 480;
+		this.animate({cx : this.cx, "stroke-width": this.cx/100, fill: this.cx - 100 ? "blue" : "red", }, 1000, "<");
+		this.cx = this.cx == 480 ? 100 : 480;
+	});
+	circles[3].click(function(){
+		this.cx = this.cx || 480;
+		this.animate({cx : this.cx, "stroke-width": this.cx/100, fill: this.cx - 100 ? "blue" : "red", }, 1000, "<>");
+		this.cx = this.cx == 480 ? 100 : 480;
+	});
+	circles[4].click(function(){
+		this.cx = this.cx || 480;
+		this.animate({cx : this.cx, "stroke-width": this.cx/100, fill: this.cx - 100 ? "blue" : "red", }, 1000, "bounce");
+		this.cx = this.cx == 480 ? 100 : 480;
+	});
+	circles[5].click(function(){
+		this.cx = this.cx || 480;
+		this.animate({cx : this.cx, "stroke-width": this.cx/100, fill: this.cx - 100 ? "blue" : "red", }, 1000, "elastic");
+		this.cx = this.cx == 480 ? 100 : 480;
+	});
+	circles[6].click(function(){
+		this.cx = this.cx || 480;
+		this.animate({cx : this.cx, "stroke-width": this.cx/100, fill: this.cx - 100 ? "blue" : "red", }, 1000, "backIn");
+		this.cx = this.cx == 480 ? 100 : 480;
+	});
+	circles[7].click(function(){
+		this.cx = this.cx || 480;
+		this.animate({cx : this.cx, "stroke-width": this.cx/100, fill: this.cx - 100 ? "blue" : "red", }, 1000, "backOut");
+		this.cx = this.cx == 480 ? 100 : 480;
+	});
+}
+</script>
+    </body>
+</html>
