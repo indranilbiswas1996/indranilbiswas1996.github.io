@@ -64,12 +64,7 @@
 		}
 		//Draw the path
 		var p = "M 40 "+ (330 - (320/120)*values[0]);
-			/**/
-			var px = [];
-			var py = [];
-			px.push('40');
-			py.push((''+330 - (320/120)*values[0]));
-			/**/
+			
 		for(var i = 1; i<values.length; i++){
 			var x = (560/(months.length-1));
 			var y = (values[i-1]-values[i])*(320/120);
@@ -95,9 +90,7 @@
 			var x = e.clientX;
 			var y = e.clientY;
 			text1.attr({text : " "+x+" "+y});
-			if(x >= (parseInt(px[0])-20)&&x <= (parseInt(px[0])+20)){
-				alert(x);
-			}
+			
 		});
 	</script>
     </body>
