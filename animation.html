@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script src="raphael.js"></script>
+	<script  src="jquery.min.js"></script>
+		<style>
+			body, html {
+				margin : 0;
+			}
+			div{
+				width : 20.5%;
+				display : inline-block;
+				padding : 2%;
+			}
+	</style>
+    </head>
+    <body>
+        <div id="container1"></div>
+        <div id="container2"></div>
+        <div id="container3"></div>
+        <div id="container4"></div>
+        <div id="container5"></div>
+        <div id="container6"></div>
+        <div id="container7"></div>
+        <div id="container8"></div>
+		<script>
+		/* 1 */
+			var paper = new Raphael(document.getElementById('container1'),300, 200);
+			var rect = paper.rect(0,0,300,200);
+			var circle1 = paper.circle(50,100, 20);
+			circle1.attr({
+				fill : "green"
+			});
+			circle1.click(function(){
+			this.cx = this.cx || 250;
+			this.fill = this.fill || 'red';
+				circle1.animate({
+					fill : this.fill,
+					cx : this.cx
+				},1000);
+				this.cx = this.cx == 250 ? 50 : 250;
+				this.fill = this.fill == 'green' ? 'red' : 'green';
+			});
+			
+		/* 2 */			
+			var paper = new Raphael(document.getElementById('container2'),300, 200);
+			var rect = paper.rect(0,0,300,200);
+			var ellipse2 = paper.ellipse(50,100, 20, 20);
+			property = [{fill : 'green', cx : 50, ry : 20, transform : ""},{fill : 'red', cx : 250, ry : 10, transform : "r45"}]
+			ellipse2.attr(property['0']);
+			ellipse2.click(function(){
+			this.x = this.x || 1;
+				ellipse2.animate(property[(this.x)],1000);
+				this.x = this.x == '1' ? '0' : '1';
+			});
+		/* 3 */
+			var paper = new Raphael(document.getElementById('container3'),300, 200);
+			var rect = paper.rect(0,0,300,200);
+			var rect3  = paper.rect(50, 85, 50, 30);
+			property3 = [{fill : 'green', x : 50, transform : ""},{fill : 'red', x : 200, transform : "r300"}]
+			rect3.attr(property3['0']);
+			rect3.click(function(){
+				this.x = this.x || 1;
+				rect3.animate(property3[(this.x)], 1000);
+				this.x = this.x == '1' ? '0' : '1';
+			});
+		/* 4 */
+			var paper = new Raphael(document.getElementById('container4'),300, 200);
+			var rect = paper.rect(0,0,300,200);
+			var path4 = paper.path("M 50 100 Q40 70, 90 100 T 130 100");
+			path4.attr({
+				'stroke-width' : 5,
+			});
+			var x=0;
+			$('#container4').click(function(){
+				if(x == 0){
+					path4.animate({
+						path : "M 180 100 Q170 70, 220 100 T 260 100",
+						transform : "r-360"
+					}, 1000);
+					x = 1;
+				}else{
+					path4.animate({
+						path : "M 50 100 Q40 70, 90 100 T 130 100",
+						transform : "r0"
+					}, 1000);
+					x = 0;
+				}
+			});
+			
+		/* 5 */
+			var paper = new Raphael(document.getElementById('container5'),300, 200);
+			var rect = paper.rect(0,0,300,200);
+			var path5_a = paper.path("M 50 100 Q40 70, 90 100 T 130 100");
+			var path5_b = paper.path("M 50 120 Q40 90, 90 120 T 130 120");
+			//var path5_b = paper.path("M 50 100 Q 40 130, 90 100 T 130 100");
+			path5_a.attr({
+				'stroke-width' : 5,
+			});
+			path5_b.attr({
+				'stroke-width' : 5,
+			});
+			var x=0;
+			$('#container5').click(function(){
+				if(x == 0){
+					path5_a.animate({
+						path : "M 180 100 Q170 70, 220 100 T 260 100",
+					}, 1000);
+					path5_b.animate({
+						path : "M 180 100 Q 170 130, 220 100 T 260 100",
+						transform : "r-180"
+					}, 1000);
+					x = 1;
+				}else{
+					path5_a.animate({
+						path : "M 50 100 Q40 70, 90 100 T 130 100",
+						transform : "r0"
+					}, 1000);
+					path5_b.animate({
+						path : "M 50 120 Q40 90, 90 120 T 130 120",
+						transform : "r0"
+					}, 1000);
+					x = 0;
+				}
+			});
+		/* 6 */
+			var paper = new Raphael(document.getElementById('container6'),300, 200);
+			var rect = paper.rect(0,0,300,200);
+			var path6 = paper.path("M 50 100, Q 50 80, 75 80 T 100 100 T 75 120 T 50 100");	
+			path6.attr({
+				fill : "#fff"
+			});
+			var x = 0;
+			path6.click(function(){
+				if(x == 0){
+					path6.animate({
+						path : "M 180 100 Q 180 80, 220 100 T 260 100 T 220 100 T 180 100",
+					},1000);
+					x = 1;
+				}else{
+					path6.animate({
+						path : "M 50 100, Q 50 80, 75 80 T 100 100 T 75 120 T 50 100",
+					},1000);
+					x = 0;
+				}
+			});
+	/*
+	For circle to move the diagram need the declear cx, cy(Ex : 1 and 2) where to move the rectangle is will not work, you need to declear x, y(Ex : 3) 
+	*/
+	</script>
+    </body>
+	</html>
