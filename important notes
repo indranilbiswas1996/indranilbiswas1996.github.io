@@ -1,0 +1,3 @@
+/*
+	For circle to move the diagram need the declear cx, cy(Ex : 1 and 2) where to move the rectangle is will not work, you need to declear x, y(Ex : 3) 
+	*/
