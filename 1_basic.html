@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+		<link rel="stylesheet" href="main.css" />
+        <script src="raphael.js"></script>   		
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet">
+    </head>
+    <body>
+	<div class="header">
+		<h3>Line Charts</h3>
+	</div>
+	<div class="container">
+		<div class="inner-container" >
+			<div class="graph" id="cntnr1"></div>
+			<div class="btn-div"><input class="btn" type="submit" value="Run" id="btn1"></div>
+		</div>
+		<!--<div class="inner-container">
+			<div class="graph" id="cntnr2"></div>
+			<div class="btn-div"><input class="btn" type="submit" value="Run" id="btn2"></div>
+		</div>-->
+	</div>
+	<script>
+		/* 1 */
+		var paper = new Raphael(document.getElementById('cntnr1'), 640, 350);		
+		var rect1 = paper.rect(0,0,640,350).attr({ //This rectangle is used for to pointout the mousemove
+			fill : '#fff',
+			stroke : '#fff',
+		});
+		//Values
+		var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+		var values = [96, 82, 75, 111 ,94 , 85 ,103 ,30 ,80, 91, 98 ,15];
+		//Findout the max value
+		var min = values[0];
+		var max  = values[0];
+		for(var i = 0; i<values.length; i++){
+			if(values[i]>max){
+				max = values[i];
+			}
+			if(values[i]<min){
+				min = values[i];
+			}
+		}
+		min = parseInt(min/10)*10;
+		max = parseInt(max/10)*10+10;
+		//Draw x axis and y axis
+		var pathxy = paper.path("M40 10 l 0 320 l 560 0").attr({
+			stroke : '#ddd'
+		});
+		for(var i = 0; i<=10; i++){
+			var y = (i*(320/10))+10;
+			paper.path("M 40 "+ y +" l 560 0").attr({
+				stroke : '#ddd'
+			});
+			paper.text(26, y, ""+ (10-i)*(max/10) +"");
+		}
+		for(var i = 0; i<months.length; i++){
+			var x = (i*(560/(months.length-1)))+40;
+			paper.path("M "+ x +" 10 l 0 320").attr({
+				stroke : '#ddd'
+			});
+			paper.text(x, 340, ""+ months[i] +"");
+		}
+		//Draw the path
+		var p = "M 40 "+ (330 - (320/120)*values[0]);
+			/**/
+			var px = [];
+			var py = [];
+			px.push('40');
+			py.push((''+330 - (320/120)*values[0]));
+			/**/
+		for(var i = 1; i<values.length; i++){
+			var x = (560/(months.length-1));
+			var y = (values[i-1]-values[i])*(320/120);
+			p += "l "+x+" "+y;
+			
+			/**/
+			
+			/**/
+		}
+		var path1 = paper.path(p);
+		path1.attr({
+			stroke : "#49b0ff",
+			'stroke-width' : 3,
+			opacity : 0,
+		});
+		//Path animation
+		path1.animate({
+			opacity : 1,
+		}, 700);
+		//Mouse movement
+		var text1 = paper.text(150, 60, "");
+		rect1.node.addEventListener('mousemove', function(e){
+			var x = e.clientX;
+			var y = e.clientY;
+			text1.attr({text : " "+x+" "+y});
+			if(x >= (parseInt(px[0])-20)&&x <= (parseInt(px[0])+20)){
+				alert(x);
+			}
+		});
+	</script>
+    </body>
+</html>

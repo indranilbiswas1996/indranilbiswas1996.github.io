@@ -1,0 +1,40 @@
+html, body{
+	margin : 0;
+}
+h3{
+	font-size : large;
+	font-family : "Open Sans", sans-serif;
+	color : #fff;
+}
+.header{
+	padding : 5px 5%;
+	background : #008ffb;
+}
+.container{
+	width : 96%;
+	padding: 10px 2%;
+}
+.inner-container{
+	width : 49%;
+	display: inline-block;
+	border : 1px solid #ddd;
+}
+.graph{
+	text-align: center;
+}
+.btn-div{
+	width: 100%;
+	padding : 15px 0;
+	text-align: center;
+}
+.btn{
+	padding: 5px 25px;
+    background: #008ffb;
+    border: 0;
+    color: #fff;
+    cursor: pointer;
+   
+}
+.btn:hover{
+	box-shadow: 1px 1px 8px 8px #008ffb40;
+}
