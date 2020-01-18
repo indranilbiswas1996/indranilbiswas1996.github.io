@@ -13,11 +13,13 @@ h3{
 .container{
 	width : 96%;
 	padding: 10px 2%;
+	text-align: center;
 }
 .inner-container{
-	width : 49%;
+	//width : 49%;
 	display: inline-block;
 	border : 1px solid #ddd;
+	
 }
 .graph{
 	text-align: center;
@@ -26,6 +28,7 @@ h3{
 	width: 100%;
 	padding : 15px 0;
 	text-align: center;
+	display : none;
 }
 .btn{
 	padding: 5px 25px;
