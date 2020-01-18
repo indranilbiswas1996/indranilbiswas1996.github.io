@@ -119,6 +119,7 @@
 		var cx = new Array();
 		var cy = new Array();
 		for(var i = 0; i<data.length; i++){
+		let value = data[i].value;
 			var circle = paper.circle(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))) , ( (height-(2*paddingy)) - ((height-(4*paddingy))*data[i].value)/max), 5).attr({
 				fill : '#49b0ff',
 				stroke : '#49b0ff',
@@ -126,10 +127,10 @@
 			circle.node.id = 'c'+i;
 			cx.push(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))));
 			cy.push(( (height-(2*paddingy)) - ((height-(4*paddingy))*data[i].value)/max));
-			circle.node.addEventListener('mouseover', popup);
+			circle.node.addEventListener('mouseover', (=>{popup(value)}));
 			circle.node.addEventListener('mouseout', popdown);
 		}
-		function popup(){			
+		function popup(value){			
 			//var div = document.getElementById(this.id).getBoundingClientRect();
 			//console.log(div);
 			id = parseInt(this.id.replace('c',''));
@@ -143,6 +144,12 @@
 				y : cy[id],
 				opacity : 1,
 			}, 250);*/
+			popup_alert_text1.attr({
+			text : value,
+				x : cx[id],
+				y : cy[id],
+				opacity : 1,
+			});
 		}
 		function popdown(){
 			//alert(this.id);
@@ -153,11 +160,11 @@
 			stroke : 'green',
 			opacity : 0,
 		});
-		/*var popup_alert_text1 = paper.text(0,0, "Desktops : 100").attr({
-			stroke : 'green',
+		var popup_alert_text1 = paper.text(0,0, "Desktops : 100").attr({
+			stroke : 'none',
 			transform : 's1.1',
 			opacity : 0,
-		}); */
+		}); 
 
 	</script>
     </body>
