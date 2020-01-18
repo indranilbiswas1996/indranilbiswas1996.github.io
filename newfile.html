@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+		<link rel="stylesheet" href="main.css" />
+        <script src="raphael.js"></script>   		
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet">
+    </head>
+    <body>
+	<div class="header">
+		<h3>Line Charts</h3>
+	</div>
+	<div class="container">
+		<div class="inner-container" >
+			<div class="graph" id="cntnr1"></div>
+			<div class="btn-div"><input class="btn" type="submit" value="Run" id="btn1"></div>
+		</div>
+	</div>
+	<script>
+		var data = [{
+				month : 'Jan',
+				value : 10,
+			},{
+				month : 'Feb',
+				value : 57,
+			},{
+				month : 'Mar',
+				value : 35,
+			},{
+				month : 'Apr',
+				value : 27,
+			},{
+				month : 'May',
+				value : 30,
+			},{
+				month : 'Jun',
+				value : 15,
+			},{
+				month : 'Jul',
+				value : 45,
+			},{
+				month : 'Aug',
+				value : 31,
+			},{
+				month : 'Sep',
+				value : 14,
+			},{
+				month : 'Oct',
+				value : 7,
+			},{
+				month : 'Nov',
+				value : 46,
+			},{
+				month : 'Dec',
+				value : 34,
+			},
+		];
+		var options = {
+			height : "460",
+			width : "1000",
+			paddingx : "50",
+			paddingy : "auto",
+			x : "",
+			y : 10,
+		};
+		//Default paper width, height
+		//Max width : 1000, Max-height : 500
+		var paddingx = parseInt(options.paddingx) > 40 ? 40 : parseInt(options.paddingx) || 40;
+		var paddingy = parseInt(options.paddingy) > 40 ? 40 : parseInt(options.paddingy) || 40;		
+		var width = parseInt(options.width) < 700 ? 700 : (parseInt(options.width) > 920 ? 920 : parseInt(options.width)) || 700;
+		var height = parseInt(options.height) < 400 ? 400 : (parseInt(options.height) > 460 ? 460 : parseInt(options.height)) || 400;
+		width += (paddingx*2);
+		height += (paddingy*2);		
+		var paper = new Raphael(document.getElementById('cntnr1'), width, height);
+		//Draw axis
+		var axis = paper.path("M "+(2*paddingx)+" "+(2*paddingy) +" l 0 " + (height-(4*paddingy)) + " l "+ (width-(4*paddingx)) + " 0").attr({
+			stroke : '#b1b1b1',
+		});
+		//Draw point on axis
+		//x
+		for(var i  = 0; i<data.length; i++){
+			paper.path("M " + ((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))) + " "+(height-(2*paddingy))+ " l 0 "+4).attr({
+				stroke : '#b1b1b1',
+			});
+			paper.text(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))), (height-(1.5*paddingy)), ""+data[i].month);
+			paper.path("M " + ((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))) + " "+(2*paddingy)+ " l 0 "+(height-(4*paddingy))).attr({
+				stroke : '#eaeaea',
+			});
+		}
+		//y
+		var y = parseInt(options.y) || 10;
+		var max = 0;
+		for(var i = 0; i<data.length; i++){
+			if(data[i].value > max){
+				max = data[i].value;
+			}
+		}
+		max = ((parseInt(max/(y-1)))*(y-1))+(y-1);
+		for(var i = 0; i<y; i++){
+			paper.path("M "+((2*paddingx)-4)+" "+((height-(2*paddingy))-(i*((height-(4*paddingy))/(y-1))))+" l 4 0").attr({
+				stroke : '#b1b1b1',
+			});
+			paper.text(((1.5*paddingx)),((height-(2*paddingy))-(i*((height-(4*paddingy))/(y-1)))),i*(max/(y-1)));
+			paper.path("M "+((2*paddingx))+" "+((height-(2*paddingy))-(i*((height-(4*paddingy))/(y-1))))+" l "+ (width-(4*paddingy)) +" 0").attr({
+				stroke : '#eaeaea',
+			});
+		}
+		//Draw the path
+		var p = "M "+ (2*paddingx) +" "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*data[0].value)/max) +" ";
+		for(var i = 1; i<data.length; i++){
+			p+= " l "+ (width-(4*paddingx))/(data.length-1) +" "+ ((height-(4*paddingy))*(data[i-1].value - data[i].value))/max +" " ;
+		}
+		paper.path(p).attr({
+			stroke : "#49b0ff",
+			'stroke-width' : 3,
+		});
+		//Draw the circle
+		var cx = new Array();
+		var cy = new Array();
+		for(var i = 0; i<data.length; i++){
+			var circle = paper.circle(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))) , ( (height-(2*paddingy)) - ((height-(4*paddingy))*data[i].value)/max), 5).attr({
+				fill : '#49b0ff',
+				stroke : '#49b0ff',
+			});
+			circle.node.id = 'c'+i;
+			cx.push(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))));
+			cy.push(( (height-(2*paddingy)) - ((height-(4*paddingy))*data[i].value)/max));
+			circle.node.addEventListener('mouseover', popup);
+			circle.node.addEventListener('mouseout', popdown);
+		}
+		function popup(){			
+			//var div = document.getElementById(this.id).getBoundingClientRect();
+			//console.log(div);
+			id = parseInt(this.id.replace('c',''));
+			popup_alert.animate({
+				x : cx[id],
+				y : cy[id]-40,
+				opacity : 1,
+			}, 250);
+			/*popup_alert_text1.animate({
+				x : cx[id],
+				y : cy[id],
+				opacity : 1,
+			}, 250);*/
+		}
+		function popdown(){
+			//alert(this.id);
+		}
+		
+		var popup_alert = paper.rect(0, 0, 80, 40).attr({
+			fill : "#fff",
+			stroke : 'green',
+			opacity : 0,
+		});
+		/*var popup_alert_text1 = paper.text(0,0, "Desktops : 100").attr({
+			stroke : 'green',
+			transform : 's1.1',
+			opacity : 0,
+		}); */
+
+	</script>
+    </body>
+</html>
