@@ -61,6 +61,7 @@
 			},
 		];
 		var options = {
+			name : "Product trends by Month",
 			height : "460",
 			width : "1000",
 			paddingx : "50",
@@ -78,6 +79,12 @@
 		width += (paddingx*2);
 		height += (paddingy*2);		
 		var paper = new Raphael(document.getElementById('cntnr1'), width, height);	
+		//Write name of chart
+		paper.text(2*paddingx, paddingy, options.name).attr({
+			'font-weight' : 'bold',
+			'text-anchor': 'start',
+			'font-size' : '15px',
+		});
 		//Draw axis
 		var axis = paper.path("M "+(2*paddingx)+" "+(2*paddingy) +" l 0 " + (height-(4*paddingy)) + " l "+ (width-(4*paddingx)) + " 0").attr({
 			stroke : '#b1b1b1',
@@ -153,6 +160,7 @@
 			var circle = paper.circle(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))) , ( (height-(2*paddingy)) - ((height-(4*paddingy))*data[i].value)/max), 1.5).attr({
 				fill : '#49b0ff',
 				stroke : '#49b0ff',
+				opacity : 0,
 			});
 			circle.node.id = 'c'+i;
 			cx.push(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))));
@@ -168,6 +176,7 @@
 				text : "Desktops : "+data[id].value,
 			});
 			$('#c'+id).animate({
+				opacity : 1,
 				r : 5,
 			}, 200);
 			if(id<data.length/2){
@@ -202,7 +211,8 @@
 		}
 		function popdown(){
 			$('#c'+id).animate({
-				r : 1.5,
+				opacity : 0,
+				r : 0,
 			}, 200);
 			popup_alert.animate({
 				opacity: 0,
