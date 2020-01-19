@@ -5,6 +5,7 @@
         <title></title>
 		<link rel="stylesheet" href="main.css" />
         <script src="raphael.js"></script>   		
+        <script src="jquery.min.js"></script>   		
 		<!--<link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet">-->
     </head>
     <body>
@@ -72,7 +73,7 @@
 		var height = parseInt(options.height) < 400 ? 400 : (parseInt(options.height) > 460 ? 460 : parseInt(options.height)) || 400;
 		width += (paddingx*2);
 		height += (paddingy*2);		
-		var paper = new Raphael(document.getElementById('cntnr1'), width, height);
+		var paper = new Raphael(document.getElementById('cntnr1'), width, height);	
 		//Draw axis
 		var axis = paper.path("M "+(2*paddingx)+" "+(2*paddingy) +" l 0 " + (height-(4*paddingy)) + " l "+ (width-(4*paddingx)) + " 0").attr({
 			stroke : '#b1b1b1',
@@ -116,42 +117,74 @@
 			stroke : "#49b0ff",
 			'stroke-width' : 3,
 		});
+		//Draw rectangle
+		for(var i = 0; i<data.length; i++){
+			var x = 2*paddingx - (((width-(4*paddingx))/(data.length-1))/2);
+			var rect = paper.rect(x + (i*((width-(4*paddingx))/(data.length-1))), 2*paddingy, ((width-(4*paddingx))/(data.length-1)), height-(4*paddingy)).attr({
+				fill : 'red',
+				opacity : 0,
+			});
+			rect.node.id = 'r'+i;
+			rect.node.addEventListener('mouseover', popup);
+			rect.node.addEventListener('mouseout', popdown);
+		};
 		//Draw the circle
 		var cx = new Array();
 		var cy = new Array();
 		for(var i = 0; i<data.length; i++){
-		let value = data[i].value;
-			var circle = paper.circle(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))) , ( (height-(2*paddingy)) - ((height-(4*paddingy))*data[i].value)/max), 5).attr({
+			var circle = paper.circle(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))) , ( (height-(2*paddingy)) - ((height-(4*paddingy))*data[i].value)/max), 1.5).attr({
 				fill : '#49b0ff',
 				stroke : '#49b0ff',
 			});
 			circle.node.id = 'c'+i;
 			cx.push(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))));
 			cy.push(( (height-(2*paddingy)) - ((height-(4*paddingy))*data[i].value)/max));
-			circle.node.addEventListener('mouseover', popup);
-			circle.node.addEventListener('mouseout', popdown);
 		}
+		
 		function popup(){			
 			/*var div = document.getElementById(this.id).getBoundingClientRect();
 			console.log(div);*/
-			id = parseInt(this.id.replace('c',''));
-			popup_alert.animate({
-				x : cx[id],
-				y : cy[id]-40,
-				opacity : 1,
-			}, 250);
+			id = parseInt(this.id.replace('c','')) || parseInt(this.id.replace('r',''));
 			popup_alert_text1.attr({
 				text : "Desktops : "+data[id].value,
 			});
-			popup_alert_text1.animate({
-				x : cx[id]+50,
-				y : cy[id]-20,
-				opacity : 1,
-				transform : 's1.4',
-			},250);
+			$('#c'+id).animate({
+				r : 5,
+			}, 250);
+			if(id<data.length/2){
+				popup_alert.animate({
+					x : cx[id],
+					y : cy[id]-47,
+					opacity : 1,
+				}, 125);
+				
+				popup_alert_text1.animate({
+					x : cx[id]+50,
+					y : cy[id]-27,
+					opacity : 1,
+					transform : 's1.4',
+				},125);
+			}else{
+				popup_alert.animate({
+					x : cx[id]-100,
+					y : cy[id]-47,
+					opacity : 1,
+				}, 125);
+				
+				popup_alert_text1.animate({
+					x : cx[id]-50,
+					y : cy[id]-27,
+					opacity : 1,
+					transform : 's1.4',
+				},125);
+			}
+			
+			
 		}
 		function popdown(){
-			//alert("OK");
+			$('#c'+id).animate({
+				r : 1.5,
+			}, 250);
 		}
 		
 		var popup_alert = paper.rect(0, 0, 100, 40).attr({
@@ -162,8 +195,8 @@
 		var popup_alert_text1 = paper.text(0,0, "Desktops : 100").attr({
 			//stroke : '#fff',
 			opacity : 0,
-		}); 
-
+		});
+		
 	</script>
     </body>
 </html>
