@@ -1,5 +1,6 @@
 html, body{
 	margin : 0;
+	background: #fafafa;
 }
 h3{
 	font-size : large;
@@ -22,7 +23,12 @@ h3{
 	
 }
 .graph{
+	background : #ffffff;
 	text-align: center;
+	box-shadow: 0px 7px 25px 10px #f3f3f3;
+}
+.graph svg{
+	cursor : crosshair;
 }
 .btn-div{
 	width: 100%;
