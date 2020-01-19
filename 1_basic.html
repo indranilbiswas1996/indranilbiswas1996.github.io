@@ -5,7 +5,7 @@
         <title></title>
 		<link rel="stylesheet" href="main.css" />
         <script src="raphael.js"></script>   		
-		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet">
+		<!--<link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet">-->
     </head>
     <body>
 	<div class="header">
@@ -87,6 +87,7 @@
 			paper.path("M " + ((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))) + " "+(2*paddingy)+ " l 0 "+(height-(4*paddingy))).attr({
 				stroke : '#eaeaea',
 			});
+			
 		}
 		//y
 		var y = parseInt(options.y) || 10;
@@ -127,42 +128,39 @@
 			circle.node.id = 'c'+i;
 			cx.push(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))));
 			cy.push(( (height-(2*paddingy)) - ((height-(4*paddingy))*data[i].value)/max));
-			circle.node.addEventListener('mouseover', (e)=>{popup.apply(e.target,[value])});
+			circle.node.addEventListener('mouseover', popup);
 			circle.node.addEventListener('mouseout', popdown);
 		}
-		function popup(value){			
-			//var div = document.getElementById(this.id).getBoundingClientRect();
-			//console.log(div);
+		function popup(){			
+			/*var div = document.getElementById(this.id).getBoundingClientRect();
+			console.log(div);*/
 			id = parseInt(this.id.replace('c',''));
 			popup_alert.animate({
 				x : cx[id],
 				y : cy[id]-40,
 				opacity : 1,
 			}, 250);
-			/*popup_alert_text1.animate({
-				x : cx[id],
-				y : cy[id],
-				opacity : 1,
-			}, 250);*/
 			popup_alert_text1.attr({
-			text : value,
-				x : cx[id],
-				y : cy[id],
-				opacity : 1,
+				text : "Desktops : "+data[id].value,
 			});
+			popup_alert_text1.animate({
+				x : cx[id]+50,
+				y : cy[id]-20,
+				opacity : 1,
+				transform : 's1.4',
+			},250);
 		}
 		function popdown(){
-			//alert(this.id);
+			//alert("OK");
 		}
 		
-		var popup_alert = paper.rect(0, 0, 80, 40).attr({
-			fill : "#fff",
-			stroke : 'green',
+		var popup_alert = paper.rect(0, 0, 100, 40).attr({
+			fill : "#d9d9d9",
+			stroke : '#d9d9d9',
 			opacity : 0,
 		});
 		var popup_alert_text1 = paper.text(0,0, "Desktops : 100").attr({
-			stroke : 'none',
-			transform : 's1.1',
+			//stroke : '#fff',
 			opacity : 0,
 		}); 
 
