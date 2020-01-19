@@ -143,6 +143,7 @@
 			circle.node.id = 'c'+i;
 			cx.push(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))));
 			cy.push(( (height-(2*paddingy)) - ((height-(4*paddingy))*data[i].value)/max));
+			circle.node.addEventListener('mouseover', popup);
 		}
 		
 		function popup(){			
