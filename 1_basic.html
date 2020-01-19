@@ -21,10 +21,10 @@
 	<script>
 		var data = [{
 				month : 'Jan',
-				value : 10,
+				value : 70,
 			},{
 				month : 'Feb',
-				value : 57,
+				value : 45,
 			},{
 				month : 'Mar',
 				value : 35,
@@ -39,7 +39,7 @@
 				value : 15,
 			},{
 				month : 'Jul',
-				value : 45,
+				value : 40,
 			},{
 				month : 'Aug',
 				value : 31,
@@ -54,6 +54,9 @@
 				value : 46,
 			},{
 				month : 'Dec',
+				value : 30,
+			},{
+				month : 'Jan',
 				value : 34,
 			},
 		];
@@ -64,7 +67,8 @@
 			paddingy : "auto",
 			x : "",
 			y : 10,
-		};
+		};		
+		
 		//Default paper width, height
 		//Max width : 1000, Max-height : 500
 		var paddingx = parseInt(options.paddingx) > 40 ? 40 : parseInt(options.paddingx) || 40;
@@ -150,33 +154,33 @@
 			});
 			$('#c'+id).animate({
 				r : 5,
-			}, 250);
+			}, 200);
 			if(id<data.length/2){
 				popup_alert.animate({
 					x : cx[id],
 					y : cy[id]-47,
 					opacity : 1,
-				}, 125);
+				}, 200);
 				
 				popup_alert_text1.animate({
-					x : cx[id]+50,
+					x : cx[id]+17,
 					y : cy[id]-27,
 					opacity : 1,
 					transform : 's1.4',
-				},125);
+				},200);
 			}else{
 				popup_alert.animate({
 					x : cx[id]-100,
 					y : cy[id]-47,
 					opacity : 1,
-				}, 125);
+				}, 200);
 				
 				popup_alert_text1.animate({
-					x : cx[id]-50,
+					x : cx[id]-83,
 					y : cy[id]-27,
 					opacity : 1,
 					transform : 's1.4',
-				},125);
+				},200);
 			}
 			
 			
@@ -184,17 +188,25 @@
 		function popdown(){
 			$('#c'+id).animate({
 				r : 1.5,
-			}, 250);
+			}, 200);
+			popup_alert.animate({
+				opacity: 0,
+			},100);
+			popup_alert_text1.animate({
+				opacity: 0,
+			},100);
 		}
-		
-		var popup_alert = paper.rect(0, 0, 100, 40).attr({
-			fill : "#d9d9d9",
+				
+		var popup_alert = paper.rect(0, 0, 100, 40, 5,).attr({
+			fill : "#f9f9f9",
 			stroke : '#d9d9d9',
 			opacity : 0,
 		});
 		var popup_alert_text1 = paper.text(0,0, "Desktops : 100").attr({
-			//stroke : '#fff',
+			//stroke : '#000',
 			opacity : 0,
+			"text-anchor": "start",
+			"font-weight": "bold"
 		});
 		
 	</script>
