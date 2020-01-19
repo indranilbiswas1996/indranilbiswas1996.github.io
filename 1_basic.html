@@ -90,7 +90,7 @@
 			});
 			paper.text(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))), (height-(1.5*paddingy)), ""+data[i].month);
 			paper.path("M " + ((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))) + " "+(2*paddingy)+ " l 0 "+(height-(4*paddingy))).attr({
-				stroke : '#eaeaea',
+				stroke : '#f4f4f4',
 			});
 			
 		}
@@ -109,7 +109,7 @@
 			});
 			paper.text(((1.5*paddingx)),((height-(2*paddingy))-(i*((height-(4*paddingy))/(y-1)))),i*(max/(y-1)));
 			paper.path("M "+((2*paddingx))+" "+((height-(2*paddingy))-(i*((height-(4*paddingy))/(y-1))))+" l "+ (width-(4*paddingy)) +" 0").attr({
-				stroke : '#eaeaea',
+				stroke : '#f4f4f4',
 			});
 		}
 		//Draw the path
