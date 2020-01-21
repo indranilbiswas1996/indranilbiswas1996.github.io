@@ -21,7 +21,7 @@
 	<script>
 		var data = [{
 				month : 'Jan',
-				value : 70,
+				value : 67,
 			},{
 				month : 'Feb',
 				value : 45,
@@ -55,9 +55,6 @@
 			},{
 				month : 'Dec',
 				value : 30,
-			},{
-				month : 'Jan',
-				value : 34,
 			},
 		];
 		var options = {
@@ -97,7 +94,7 @@
 			});
 			paper.text(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))), (height-(1.5*paddingy)), ""+data[i].month);
 			paper.path("M " + ((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))) + " "+(2*paddingy)+ " l 0 "+(height-(4*paddingy))).attr({
-				stroke : '#f4f4f4',
+				stroke : '#f1f1f1',
 			});
 			
 		}
@@ -116,7 +113,7 @@
 			});
 			paper.text(((1.5*paddingx)),((height-(2*paddingy))-(i*((height-(4*paddingy))/(y-1)))),i*(max/(y-1)));
 			paper.path("M "+((2*paddingx))+" "+((height-(2*paddingy))-(i*((height-(4*paddingy))/(y-1))))+" l "+ (width-(4*paddingy)) +" 0").attr({
-				stroke : '#f4f4f4',
+				stroke : '#f1f1f1',
 			});
 		}
 		//Draw the path
@@ -142,17 +139,7 @@
 			"font-weight": "bold"
 		});
 		
-		//Draw rectangle for popup
-		for(var i = 0; i<data.length; i++){
-			var x = 2*paddingx - (((width-(4*paddingx))/(data.length-1))/2);
-			var rect = paper.rect(x + (i*((width-(4*paddingx))/(data.length-1))), 2*paddingy, ((width-(4*paddingx))/(data.length-1)), height-(4*paddingy)).attr({
-				fill : 'red',
-				opacity : 0,
-			});
-			rect.node.id = 'r'+i;
-			rect.node.addEventListener('mouseover', popup);
-			rect.node.addEventListener('mouseout', popdown);
-		};
+		
 		//Draw the circle
 		var cx = new Array();
 		var cy = new Array();
@@ -165,15 +152,26 @@
 			circle.node.id = 'c'+i;
 			cx.push(((2*paddingx)+(i*((width-(4*paddingx))/(data.length-1)))));
 			cy.push(( (height-(2*paddingy)) - ((height-(4*paddingy))*data[i].value)/max));
-			circle.node.addEventListener('mouseover', popup);
+			//circle.node.addEventListener('mouseover', popup);
 		}
-		
+		//Draw rectangle for popup
+		for(var i = 0; i<data.length; i++){
+			var x = 2*paddingx - (((width-(4*paddingx))/(data.length-1))/2);
+			var rect = paper.rect(x + (i*((width-(4*paddingx))/(data.length-1))), 2*paddingy, ((width-(4*paddingx))/(data.length-1)), height-(4*paddingy)).attr({
+				fill : 'red',
+				opacity : 0,
+			});
+			rect.node.id = 'r'+i;
+			rect.node.addEventListener('mouseover', popup);
+			rect.node.addEventListener('mouseout', popdown);
+		};
 		function popup(){			
 			/*var div = document.getElementById(this.id).getBoundingClientRect();
 			console.log(div);*/
-			id = parseInt(this.id.replace('c','')) || parseInt(this.id.replace('r',''));
+			//parseInt(this.id.replace('c','')) ||
+			id =  parseInt(this.id.replace('r',''));
 			popup_alert_text1.attr({
-				text : "Desktops : "+data[id].value,
+				text : "Desktops : "+ data[id].value,
 			});
 			$('#c'+id).animate({
 				opacity : 1,
