@@ -21,7 +21,7 @@
 	<script>
 		var data = [{
 				month : 'Jan',
-				value : 67,
+				value : 10,
 			},{
 				month : 'Feb',
 				value : 45,
@@ -117,14 +117,19 @@
 			});
 		}
 		//Draw the path
-		var p = "M "+ (2*paddingx) +" "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*data[0].value)/max) +" ";
-		for(var i = 1; i<data.length; i++){
-			p+= " l "+ (width-(4*paddingx))/(data.length-1) +" "+ ((height-(4*paddingy))*(data[i-1].value - data[i].value))/max +" " ;
-		}
-		paper.path(p).attr({
+		var p = "M "+ (2*paddingx) +" "+ ( (height-(2*paddingy))) +" ";
+		var main_path = paper.path(p).attr({
 			stroke : "#49b0ff",
 			'stroke-width' : 3,
 		});
+		p = "M "+ (2*paddingx) +" "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*data[0].value)/max) +" ";		
+		for(var i = 1; i<data.length; i++){
+			p+= " l "+ (width-(4*paddingx))/(data.length-1) +" "+ ((height-(4*paddingy))*(data[i-1].value - data[i].value))/max +" " ;
+			
+		}
+		main_path.animate({
+				path : p,
+		},500);
 		
 		//Popup
 		var popup_alert = paper.rect(0, 0, 100, 40, 5,).attr({
