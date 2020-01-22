@@ -59,6 +59,8 @@
 		];
 		var options = {
 			name : "Product trends by Month",
+			xname : "Month",
+			yname : "Production",
 			height : "460",
 			width : "1000",
 			paddingx : "50",
@@ -81,6 +83,10 @@
 			'font-weight' : 'bold',
 			'text-anchor': 'start',
 			'font-size' : '15px',
+		});
+		paper.text(width/2, height-paddingy, options.xname);
+		paper.text(paddingx, height/2, options.yname).attr({
+			transform : 'r270',
 		});
 		//Draw axis
 		var axis = paper.path("M "+(2*paddingx)+" "+(2*paddingy) +" l 0 " + (height-(4*paddingy)) + " l "+ (width-(4*paddingx)) + " 0").attr({
@@ -235,10 +241,10 @@
 			}, 200);
 			popup_alert.animate({
 				opacity: 0,
-			},100);
+			},200);
 			popup_alert_text1.animate({
 				opacity: 0,
-			},100);
+			},200);
 		}
 		
 	</script>
