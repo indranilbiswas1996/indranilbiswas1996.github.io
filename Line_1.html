@@ -59,6 +59,8 @@
 		];
 		var options = {
 			name : "Product trends by Month",
+			xname : "Month",
+			yname : "Production",
 			height : "460",
 			width : "1000",
 			paddingx : "50",
@@ -81,6 +83,10 @@
 			'font-weight' : 'bold',
 			'text-anchor': 'start',
 			'font-size' : '15px',
+		});
+		paper.text(width/2, height-paddingy, options.xname);
+		paper.text(paddingx, height/2, options.yname).attr({
+			transform : 'r270',
 		});
 		//Draw axis
 		var axis = paper.path("M "+(2*paddingx)+" "+(2*paddingy) +" l 0 " + (height-(4*paddingy)) + " l "+ (width-(4*paddingx)) + " 0").attr({
@@ -137,13 +143,14 @@
 			stroke : '#d9d9d9',
 			opacity : 0,
 		});
+		popup_alert.node.id = 'ppa';
 		var popup_alert_text1 = paper.text(0,0, "Desktops : 100").attr({
 			//stroke : '#000',
 			opacity : 0,
 			"text-anchor": "start",
 			"font-weight": "bold"
 		});
-		
+		popup_alert_text1.node.id = 'ppat';
 		
 		//Draw the circle
 		var cx = new Array();
@@ -212,17 +219,17 @@
 			
 			
 		}
-		function popdown(){
+		function popdown(){			
+			popup_alert.animate({
+				opacity: 0,
+			},200);
+			popup_alert_text1.animate({
+				opacity: 0,
+			},200);
 			$('#c'+id).animate({
 				opacity : 0,
 				r : 0,
 			}, 200);
-			popup_alert.animate({
-				opacity: 0,
-			},100);
-			popup_alert_text1.animate({
-				opacity: 0,
-			},100);
 		}
 		
 	</script>
