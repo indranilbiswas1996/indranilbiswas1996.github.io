@@ -10,7 +10,7 @@
     </head>
     <body>
 	<div class="header">
-		<h3>Line Charts</h3>
+		<h3>Area Charts</h3>
 	</div>
 	<div class="container">
 		<div class="inner-container" >
@@ -185,17 +185,19 @@
 				});
 				popup_alert.node.id = 'ppa';
 				var popup_alert_text1 = paper.text(0,0, "High : 50").attr({
-					stroke : color[0],
+					stroke : 'none',
 					opacity : 0,
 					"text-anchor": "start",
 					"font-weight": "bold",
+					fill : color[0],
 				});
 				popup_alert_text1.node.id = 'ppat1';
 				var popup_alert_text2 = paper.text(0,40, "Low : 10").attr({
-					stroke : color[1],
+					stroke : 'none',
 					opacity : 0,
 					"text-anchor": "start",
-					"font-weight": "bold"
+					"font-weight": "bold",
+					fill : color[1],
 				});
 				popup_alert_text2.node.id = 'ppat2';
 				
