@@ -285,11 +285,11 @@
 						}, 200);
 					}	
 					//for text
-					//for(var i = 0; i<parseInt(instruction.path_no); i++){
-						$('#tt'+1).attr({
+					for(var i = 0; i<parseInt(instruction.path_no); i++){
+						$('#tt'+i).attr({
 							text : "Low : ",
 						});
-					//}
+					}
 				}
 				function popdown(){
 					var id = parseInt(this.id.replace('r',''));
