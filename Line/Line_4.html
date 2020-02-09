@@ -287,7 +287,7 @@
 					//for text
 					for(var i = 0; i<parseInt(instruction.path_no); i++){
 						elems["tt"+i].attr({
-							text : "Low : ",
+							text : path_details[i].name+" : "+Object.values(data[id].value)[i],
 						});
 					}
 				}
