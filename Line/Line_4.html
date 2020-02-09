@@ -18,7 +18,7 @@
 	</div>
 	<script>
 		window.onload = function(){
-			var data = [{
+			var elems = {}, data = [{
 					month : '1900',
 					value : {
 						tiger : 26,
@@ -232,7 +232,7 @@
 						'text-anchor' : 'start',
 						'font-weight' : 'bold',
 					});
-					text1.node.id = "tt"+i;
+					elems["tt"+i] = text1;
 				}
 				
 				//Draw path
@@ -286,7 +286,7 @@
 					}	
 					//for text
 					for(var i = 0; i<parseInt(instruction.path_no); i++){
-						$('#tt'+i).attr({
+						elems["tt"+i].attr({
 							text : "Low : ",
 						});
 					}
