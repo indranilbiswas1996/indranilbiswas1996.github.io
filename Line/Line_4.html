@@ -220,20 +220,7 @@
 						stroke : "#ececec",
 					});
 				}
-				//Draw popup
-				var pop_rect = paper.rect(0, 0, 100, instruction.path_no*30, 7).attr({
-					fill : '#fbfbfb',
-					stroke : '#f1f1f1',
-				});
-				for(var i=0; i<instruction.path_no; i++){
-					var text1 = paper.text(20, (15 + (30*i)), "knkn").attr({
-						fill : path_details[i].color,
-						'font-size' : '13px',
-						'text-anchor' : 'start',
-						'font-weight' : 'bold',
-					});
-					elems["tt"+i] = text1;
-				}
+				
 				
 				//Draw path
 				for(var i = 0; i < parseInt(instruction.path_no); i++){
@@ -252,6 +239,24 @@
 						opacity : 1,
 					}, 500, "<>");
 				}
+				
+				//Draw popup
+				var pop_rect = paper.rect(0, 0, 100, instruction.path_no*30, 7).attr({
+					fill : '#262626',
+					stroke : '#f1f1f1',
+					opacity : 0,
+				});
+				for(var i=0; i<instruction.path_no; i++){
+					var text1 = paper.text(20, (15 + (30*i)), "").attr({
+						fill : path_details[i].color,
+						'font-size' : '13px',
+						'text-anchor' : 'start',
+						'font-weight' : 'bold',
+						opacity : 0,
+					});
+					elems["tt"+i] = text1;
+				}
+				
 				//Draw circle
 				for(var i = 0; i < parseInt(instruction.path_no); i++){
 					for(var j = 0; j < data.length ; j++){
@@ -263,6 +268,13 @@
 						});
 						circle.node.id = "c"+i+""+j;
 					}
+				}
+				//Collect max data on every point for view popup on that point
+				var popup_point_x = [];
+				var popup_point_y = [];
+				for(var i = 0; i < data.length; i++){
+					popup_point_x.push(((2*paddingx)+i*((width-(4*paddingx))/(x_division_no-1))));
+					popup_point_y.push((height - (2*paddingy)) - ((Math.max(...Object.values(data[i].value)))*((height-(4*paddingy))/max)));
 				}
 				//Draw rectangle
 				for(var i = 0; i< data.length; i++){
@@ -282,12 +294,22 @@
 						$('#c'+i+''+id).animate({
 							opacity : 1,
 							r : 4,
-						}, 200);
+						},100);
 					}	
+					//for rect
+					pop_rect.animate({
+						opacity : 1,
+						x : popup_point_x[id],
+						y : popup_point_y[id],
+					},200);
+					
 					//for text
 					for(var i = 0; i<parseInt(instruction.path_no); i++){
 						elems["tt"+i].attr({
+							opacity : 1,
 							text : path_details[i].name+" : "+Object.values(data[id].value)[i],
+							x : popup_point_x[id] + 20,
+							y : popup_point_y[id] + (15 + (30*i)),
 						});
 					}
 				}
@@ -298,6 +320,16 @@
 							opacity : 0,
 							r : 4,
 						}, 200);
+					}
+					//for rect
+					pop_rect.attr({
+						opacity : 0,
+					});
+					//for text
+					for(var i = 0; i<parseInt(instruction.path_no); i++){
+						elems["tt"+i].attr({
+							opacity : 0,
+						});
 					}
 				}
 				
