@@ -23,6 +23,20 @@ var round_area_stroke = 0;
 var line_path_stroke = 0;
 var round_path_stroke = 0;
 
+/*Function Flag*/
+var main_title_flag = 0;
+var x_axis_title_flag = 0;
+var y_axis_title_flag = 0;
+var axis_flag = 0;
+var x_axis_flag = 0;
+var x_axis_label_flag = 0;
+var y_axis_flag = 0;
+var y_axis_label_flag = 0;
+var draw_line_path_flag = 0;
+var draw_round_path_flag = 0;
+var draw_circle_flag = 0;
+var draw_line_area_flag = 0;
+var draw_round_area_flag = 0;
 
 //Load instruction
 function load_all_data(data,  instruction, path_details){//data_min_point = 1st array index & data_min_point = last array index
@@ -77,22 +91,26 @@ function main_title(){
 		});
 		x += .75*paddingx;
 	}
+	main_title_flag = 1;
 }
 //x axis title
 function x_axis_title(){
 	paper.text(width/2, height-paddingy, instruction.x_axis_name);
+	x_axis_title_flag = 1;
 }
 //y axis title
 function y_axis_title(){
 	paper.text(paddingx, height/2, instruction.y_axis_name).attr({
 		transform : "r270",
 	});
+	y_axis_title_flag = 1;
 }
 //Draw axis
 function axis(){
 	paper.path("M " + (2*paddingx) + " " + (2*paddingy) +" l  0 " + (height-(4*paddingy)) + "l "+ (width - (4*paddingx)) + " 0").attr({
 		stroke : instruction.axis_color || "#9d9d9d",
 	});
+	axis_flag = 1;
 }
 
 /* x */
@@ -100,8 +118,10 @@ function x_axis(){
 	for(var i = 0; i< x_division_no; i++){
 		paper.path("M " + ((2*paddingx) + ((width-(4*paddingx))/(x_division_no-1))*i) + " "+ (height - (2*paddingy)) + " l 0 " + (-(height-(4*paddingy))) ).attr({
 			stroke : "#ececec",
+			opacity : .8,
 		});
 	}
+	x_axis_flag = 1;
 }
 /* x axis label */
 function x_axis_label(){
@@ -113,6 +133,7 @@ function x_axis_label(){
 			fill : instruction.axis_color || "#9d9d9d",
 		});
 	}
+	x_axis_label_flag = 1;
 }
 
 /* y */
@@ -121,8 +142,10 @@ function y_axis(){
 	for(var i = 0 ; i<y_division_no ; i++){		
 		paper.path( "M "+ 2*paddingx +" " + ( (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i ) + " l "+  (width-(4*paddingx)) +" 0").attr({
 			stroke : "#ececec",
+			opacity : .8,
 		});
 	}
+	y_axis_flag = 1;
 }
 /* y axis label */
 function y_axis_label(){
@@ -135,6 +158,7 @@ function y_axis_label(){
 			'text-anchor' : "end",
 		});		
 	}
+	y_axis_label_flag = 1;
 }
 //Draw path
 function draw_line_path(stroke_width){
@@ -160,6 +184,7 @@ function draw_line_path(stroke_width){
 			path : p,
 		}, 400 + (150*i), "<>" );
 	}
+	draw_line_path_flag = 1;
 }
 //Draw round path
 function draw_round_path(stroke_width){
@@ -182,6 +207,7 @@ function draw_round_path(stroke_width){
 			path : p,
 		}, 400 + (150*i), "<>" );
 	}
+	draw_round_path_flag = 1;
 }
 //Draw circle on path
 function draw_circle(redius, redius_zoom){
@@ -202,6 +228,7 @@ function draw_circle(redius, redius_zoom){
 			elems["c"+i+""+j] = circle1;
 		}
 	}
+	draw_circle_flag = 1;
 }
 //Draw line area
 function draw_line_area(stroke_width){
@@ -227,6 +254,7 @@ function draw_line_area(stroke_width){
 			path : p,
 		}, 400 + (150*i), "<>");
 	}
+	draw_line_area_flag = 1;
 }
 
 //Draw round area
@@ -253,6 +281,7 @@ function draw_round_area(stroke_width){
 			path : p,
 		}, 400 + (150*i), "<>" );
 	}
+	draw_round_area_flag = 1;
 }
 
 
@@ -286,8 +315,9 @@ function popup_design(){
 	for(var i=0; i<1; i++){
 		var  p = "M "+ 2*paddingx +" " + 2*paddingy + " l 0 "+  (height-(4*paddingy)) +" 0";
 		var path1 = paper.path(p).attr({
+			stroke : 'blue',
 			'stroke-width' : .5,
-			"stroke-dasharray": "-",
+			//"stroke-dasharray": "-",
 			stroke : '#949494',
 			opacity : 0,
 		});
@@ -297,8 +327,9 @@ function popup_design(){
 	for(var i=0; i<instruction.path_no; i++){
 		var  p = "M "+ 2*paddingx +" " + ( (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i ) + " l "+  (width-(4*paddingx)) +" 0";
 		var path1 = paper.path(p).attr({
+			stroke : 'blue',
 			'stroke-width' : .5,
-			"stroke-dasharray": " - ",
+			//"stroke-dasharray": " - ",
 			stroke : '#949494',
 			opacity : 0,
 		});
@@ -521,31 +552,47 @@ function mouseup(){
 		//Load instruction
 		load_all_data(data.slice(clicked_id, unclicked_id+1), instruction, path_details);
 		
-		//Main title
-		main_title();
-	
-		//Draw the axis
-		axis();		
+		if(main_title_flag == 1){
+			main_title();
+		}	
+		if(axis_flag == 1){
+			axis();
+		}
+		if(x_axis_flag == 1){
+			x_axis();
+		}
+		if(x_axis_title_flag == 1){
+			x_axis_title();
+		}
+		if(x_axis_label_flag == 1){
+			x_axis_label();
+		}
+		if(y_axis_flag == 1){
+			y_axis();
+		}
+		if(y_axis_title_flag == 1){
+			y_axis_title();
+		}
+		if(y_axis_label_flag == 1){
+			y_axis_label();
+		}
+		if(draw_line_area_flag == 1){
+			draw_line_area(line_area_stroke);//Pass stroke width value
+		}
+		if(draw_round_area_flag == 1){
+			draw_round_area(round_area_stroke);//Pass stroke width value
+		}
+		if(draw_line_path_flag == 1){
+			draw_line_path(line_path_stroke);
+		}
+		if(draw_round_path_flag == 1){
+			draw_round_path(round_path_stroke);
+		}
 		
-		/* x */
-		//x_axis();	
-		x_axis_title();
-		x_axis_label();
-		
-		/* y */
-		y_axis();
-		y_axis_title();
-		y_axis_label();
-		
-		//Draw area
-		draw_line_area(line_area_stroke);//Pass stroke width value
-		//draw_round_area(round_area_stroke);//Pass stroke width value
-		
-		//Draw path
-		draw_line_path(line_path_stroke);//Pass stroke width value
-		//draw_round_path(round_path_stroke);
 		//Draw circle
-		draw_circle(circle_redius, circle_redius_zoom);//Pass redius value
+		if(draw_circle_flag == 1){
+			draw_circle(circle_redius, circle_redius_zoom);//Pass redius value
+		}
 						
 		
 		
