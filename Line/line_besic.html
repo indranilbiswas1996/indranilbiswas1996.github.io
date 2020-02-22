@@ -17,6 +17,7 @@
 	<div class="container">
 		<div class="inner-container" >
 			<div class="menu" id="menu">
+				
 			</div>
 			<div class="graph">
 				<div class="inner-graph" id="cntnr1"></div>
@@ -26,123 +27,94 @@
 	<script>
 		window.onload = function(){			
 			var data = [{
+					month : '1840',
+					value : {
+						tiger : 823,
+					}
+				},{
 					month : '1850',
 					value : {
-						tiger : 55,
-						lion : 1,
-						deer :  8,
+						tiger : 876,
 					}
 				},{
 					month : '1860',
 					value : {
-						tiger : 2,
-						lion : 8,
-						deer :  10,
+						tiger : 844,
 					}
 				},{
 					month : '1870',
 					value : {
-						tiger : 40,
-						lion : 27,
-						deer :  45,
+						tiger : 820,
 					}
 				},{
 					month : '1880',
 					value : {
-						tiger : 42,
-						lion : 27,
-						deer :  55,
+						tiger : 850,
 					}
 				},{
 					month : '1890',
 					value : {
-						tiger : 22,
-						lion : 35,
-						deer :  75,
+						tiger : 792,
 					}
 				},{
 					month : '1900',
 					value : {
-						tiger : 26,
-						lion : 13,
-						deer :  65,
+						tiger : 750,
 					}
 				},{
 					month : '1910',
 					value : {
-						tiger : 29,
-						lion : 17,
-						deer :  80,
+						tiger : 600,
 					}
 				},{
 					month : '1920',
 					value : {
-						tiger : 35,
-						lion : 20,
-						deer :  25,
+						tiger : 523,
 					}
 				},{
 					month : '1930',
 					value : {
-						tiger : 40,
-						lion : 27,
-						deer :  45,
+						tiger : 548,
 					}
 				},{
 					month : '1940',
 					value : {
-						tiger : 43,
-						lion : 35,
-						deer :  10,
+						tiger : 610,
 					}
 				},{
 					month : '1950',
 					value : {
-						tiger : 40,
-						lion : 31,
-						deer :  30,
+						tiger : 587,
 					}
 				},{
 					month : '1960',
 					value : {
-						tiger : 10,
-						lion : 50,
-						deer :  30,
+						tiger : 420,
 					}
 				},{
 					month : '1970',
 					value : {
-						tiger : 32,
-						lion : 23,
-						deer :  9,
+						tiger : 450,
 					}
 				},{
 					month : '1980',
 					value : {
-						tiger : 28,
-						lion : 17,
-						deer :  10,
+						tiger : 480,
 					}
 				},{
 					month : '1990',
 					value : {
-						tiger : 25,
-						lion : 12,
-						deer :  30,
+						tiger : 388,
 					}
 				},{
 					month : '2000',
 					value : {
-						tiger : 21,
-						lion : 90,
-						deer :  50,
+						tiger : 360,
 					}
 				},{
 					month : '2010',
 					value : {
-						tiger : 16,
-						lion : 5,
-						deer :  60,
+						tiger : 398,
 					}
 				}
 			];
@@ -157,17 +129,11 @@
 				y_axis_name : "Population in thousand",
 				x_division_no : "",//"" means Number of data
 				y_division_no : "10",//"" means Number of data
-				path_no : 3,
+				path_no : 1,
 			};
 			path_details = [{
 				name : "Tiger",
-				color : "#ff0000",
-			},{
-				name : "Lion",
-				color : "#00e396",
-			},{
-				name : "Deer",
-				color : "#008ffb",
+				color : "#0e66a9",
 			}];
 			var flag = 0;
 			
@@ -210,12 +176,12 @@
 				y_axis_label();
 				
 				//Draw area
-				draw_line_area(0);//Pass stroke width value
+				//draw_line_area(0);//Pass stroke width value
 				//draw_round_area(0);//Pass stroke width value
 				
 				//Draw path
-				draw_line_path(3);//Pass stroke width value
-				//draw_round_path(4);
+				draw_line_path(5);//Pass stroke width value
+				//draw_round_path(5);
 				//Draw circle
 				draw_circle(0, 5);//Pass redius value								
 				
@@ -252,6 +218,7 @@
 					if(rawFile.status === 200 || rawFile.status == 0)
 					{        
 						allText = rawFile.responseText;
+						alert(allText);
 					}
 				}
 			}
