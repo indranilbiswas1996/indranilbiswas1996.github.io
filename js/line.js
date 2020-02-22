@@ -243,7 +243,7 @@ function draw_line_area(stroke_width){
 			fill : "270-"+path_details[i].color+"-#fff",
 			stroke : path_details[i].color,
 			'stroke-width' : stroke_width,
-			opacity : .6,
+			opacity : .4,
 		});
 		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
@@ -269,7 +269,7 @@ function draw_round_area(stroke_width){
 		var path1 = paper.path(p).attr({
 			'stroke-width' : stroke_width,
 			stroke : path_details[i].color,
-			opacity : .6,
+			opacity : .4,
 			fill : "270-"+path_details[i].color+"-#fff",
 		});
 		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i])*((height-(4*paddingy))/max))) + " R ";
