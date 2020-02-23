@@ -37,6 +37,8 @@ var draw_round_path_flag = 0;
 var draw_circle_flag = 0;
 var draw_line_area_flag = 0;
 var draw_round_area_flag = 0;
+var x_axis_hover_design_flag = 0;
+var y_axis_hover_design_flag = 0;
 
 //Load instruction
 function load_all_data(data,  instruction, path_details){//data_min_point = 1st array index & data_min_point = last array index
@@ -304,9 +306,9 @@ function draw_round_area(stroke_width){
 
 /////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////
-//Draw popup
-function popup_design(){
-	// For x axis hover -----------------------------
+
+// For x axis hover -----------------------------
+function x_axis_hover_design(){
 	for(var i=0; i<1; i++){
 		var  p = "M "+ 2*paddingx +" " + 2*paddingy + " l 0 "+  (height-(4*paddingy)) +" 0";
 		var path1 = paper.path(p).attr({
@@ -318,7 +320,10 @@ function popup_design(){
 		});
 		elems["px"+i] = path1;
 	}
-	// For y axis hover -----------------------------
+	x_axis_hover_design_flag = 1;
+}
+// For y axis hover -----------------------------
+function y_axis_hover_design(){
 	for(var i=0; i<instruction.path_no; i++){
 		var  p = "M "+ 2*paddingx +" " + ( (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i ) + " l "+  (width-(4*paddingx)) +" 0";
 		var path1 = paper.path(p).attr({
@@ -330,6 +335,11 @@ function popup_design(){
 		});
 		elems["py"+i] = path1;
 	}
+	y_axis_hover_design_flag =1;
+}
+//Draw popup
+function popup_design(){
+	
 	var pop_rect = paper.rect(0, 0, 100, instruction.path_no*30, 7).attr({
 		fill : '#f2f4ff',
 		stroke : '#90a3ff',
@@ -383,8 +393,12 @@ function popup(){
 	if(draw_circle_flag == 1){
 		circle_popup(id);
 	}
-	x_axis_popup(id);
-	y_axis_popup(id);
+	if(x_axis_hover_design_flag == 1){
+		x_axis_hover(id);
+	}
+	if(y_axis_hover_design_flag == 1){
+		y_axis_hover(id);
+	}
 	if(id<data.length/2){
 		if(Math.max(...(Object.values(data[id].value)))>(max/2)){
 			//for rect
@@ -480,8 +494,12 @@ function popdown(){
 	if(draw_circle_flag == 1){
 		circle_popdown(id);
 	}
-	x_axis_popdown(id);
-	y_axis_popdown(id);
+	if(x_axis_hover_flag == 1){
+		x_axis_hover_out(id);
+	}
+	if(y_axis_hover_flag == 1){
+		y_axis_hover_out(id);
+	}
 	//for rect
 	elems["pop_rect"].animate({
 		opacity : 0,
@@ -513,7 +531,7 @@ function circle_popdown(id){
 	}
 }
 //X axis hover
-function x_axis_popup(id){
+function x_axis_hover(id){
 	for(var i = 0; i<1; i++){
 		var  p  = "M "+ ((2*paddingx)+id*((width-(4*paddingx))/(data.length-1))) +" " + (2*paddingy) + " l 0 "+  ( (height - (4*paddingy)) ) ;
 		elems["px"+i].animate({
@@ -523,7 +541,7 @@ function x_axis_popup(id){
 	}
 }
 //Y axis hover
-function y_axis_popup(id){
+function y_axis_hover(id){
 	for(var i = 0; i<parseInt(instruction.path_no); i++){
 		var  p  = "M "+ 2*paddingx +" " + ( (height - (2*paddingy)) - ((Object.values(data[id].value)[i])*((height-(4*paddingy))/max)) ) + " l "+  (width-(4*paddingx)) +" 0";
 		elems["py"+i].animate({
@@ -533,7 +551,7 @@ function y_axis_popup(id){
 	}
 }
 //X axis hover out
-function x_axis_popdown(id){
+function x_axis_hover_out(id){
 	for(var i = 0; i<1; i++){
 		elems["px"+i].animate({
 			opacity : 0,
@@ -541,7 +559,7 @@ function x_axis_popdown(id){
 	}
 }
 //Y axis hover out
-function y_axis_popdown(id){
+function y_axis_hover_out(id){
 	for(var i = 0; i<parseInt(instruction.path_no); i++){
 		elems["py"+i].animate({
 			opacity : 0,
@@ -661,6 +679,12 @@ function mouseup(){
 		
 		//Collect max data on every point for view popup on that point
 		collect_popup_point();
+		if(x_axis_hover_design_flag == 1){
+			x_axis_hover_design();
+		}
+		if(y_axis_hover_design_flag == 1){
+			y_axis_hover_design();
+		}
 		
 		//Draw popup
 		popup_design();
