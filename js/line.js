@@ -62,7 +62,7 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 			max = Math.max(...(Object.values(data[i].value)));
 		}
 	}
-	max = ((Math.ceil(max/(y_division_no-1)))*(y_division_no-1))+(15*(y_division_no-1));	
+	max = ((Math.ceil(max/(y_division_no-1)))*(y_division_no-1))+(10*(y_division_no-1));	
 }
 //Paper set
 function create_paper(){	
