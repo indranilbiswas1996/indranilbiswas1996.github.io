@@ -62,7 +62,7 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 			max = Math.max(...(Object.values(data[i].value)));
 		}
 	}
-	max = ((Math.ceil(max/(y_division_no-1)))*(y_division_no-1))+(10*(y_division_no-1));	
+	max = ((Math.ceil(max/(y_division_no-1)))*(y_division_no-1))+(10*(y_division_no-1));
 }
 //Paper set
 function create_paper(){	
@@ -368,7 +368,9 @@ function draw_popup_rect(){
 //////////////////////////////////////////////////PopUp////////////////////////////////////////////////////
 function popup(){
 	var id = parseInt(this.id.replace('r',''));
-	circle_popup(id);
+	if(draw_circle_flag == 1){
+		circle_popup(id);
+	}
 	x_axis_popup(id);
 	y_axis_popup(id);
 	if(id<data.length/2){
@@ -463,7 +465,9 @@ function popup(){
 }
 function popdown(){
 	var id = parseInt(this.id.replace('r',''));
-	circle_popdown(id);
+	if(draw_circle_flag == 1){
+		circle_popdown(id);
+	}
 	x_axis_popdown(id);
 	y_axis_popdown(id);
 	//for rect
