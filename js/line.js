@@ -494,10 +494,10 @@ function popdown(){
 	if(draw_circle_flag == 1){
 		circle_popdown(id);
 	}
-	if(x_axis_hover_flag == 1){
+	if(x_axis_hover_design_flag == 1){
 		x_axis_hover_out(id);
 	}
-	if(y_axis_hover_flag == 1){
+	if(y_axis_hover_design_flag == 1){
 		y_axis_hover_out(id);
 	}
 	//for rect
