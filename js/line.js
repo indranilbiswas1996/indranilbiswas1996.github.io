@@ -306,22 +306,6 @@ function draw_round_area(stroke_width){
 /////////////////////////////////////////////////////////////////////////////////////
 //Draw popup
 function popup_design(){
-	var pop_rect = paper.rect(0, 0, 100, instruction.path_no*30, 7).attr({
-		fill : '#f2f4ff',
-		stroke : '#90a3ff',
-		opacity : 0,
-	});
-	elems["pop_rect"] = pop_rect;
-	for(var i=0; i<instruction.path_no; i++){
-		var text1 = paper.text(20, (15 + (30*i)), "").attr({
-			fill : path_details[i].color,
-			'font-size' : '13px',
-			'text-anchor' : 'start',
-			'font-weight' : 'bold',
-			opacity : 0,
-		});
-		elems["tt"+i] = text1;
-	}
 	// For x axis hover -----------------------------
 	for(var i=0; i<1; i++){
 		var  p = "M "+ 2*paddingx +" " + 2*paddingy + " l 0 "+  (height-(4*paddingy)) +" 0";
@@ -346,6 +330,23 @@ function popup_design(){
 		});
 		elems["py"+i] = path1;
 	}
+	var pop_rect = paper.rect(0, 0, 100, instruction.path_no*30, 7).attr({
+		fill : '#f2f4ff',
+		stroke : '#90a3ff',
+		opacity : 0,
+	});
+	elems["pop_rect"] = pop_rect;
+	for(var i=0; i<instruction.path_no; i++){
+		var text1 = paper.text(20, (15 + (30*i)), "").attr({
+			fill : path_details[i].color,
+			'font-size' : '13px',
+			'text-anchor' : 'start',
+			'font-weight' : 'bold',
+			opacity : 0,
+		});
+		elems["tt"+i] = text1;
+	}
+	
 }
 
 //Collect max data on every point for view popup on that point
