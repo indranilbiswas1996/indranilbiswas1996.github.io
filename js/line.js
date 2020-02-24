@@ -55,7 +55,8 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 	height = parseInt(instruction.height) > 510 ? 510 : parseInt(instruction.height) < 420 ? 420 : parseInt(instruction.height) || 510;
 	paddingx = parseInt(instruction.paddingx) > 40 ? 40 : parseInt(instruction.paddingx) < 25 ? 25 : parseInt(instruction.paddingx) || 40;
 	paddingy = parseInt(instruction.paddingy) > 40 ? 40 : parseInt(instruction.paddingy) < 25 ? 25 : parseInt(instruction.paddingy) || 40;
-	x_division_no = parseInt(instruction.x_division_no) > (data.length/2) ? parseInt(instruction.x_division_no) == data.length ? data.length : (data.length/2) : instruction.x_division_no || data.length;
+	//x_division_no = parseInt(instruction.x_division_no) > (data.length/2) ? parseInt(instruction.x_division_no) == data.length ? data.length : (data.length/2) : instruction.x_division_no || data.length;
+	x_division_no = parseInt(instruction.x_division_no) > data.length ? (data.length > 18 ? 18 : data.length) : (parseInt(instruction.x_division_no) > 18 ? 18 : parseInt(instruction.x_division_no)) || (data.length > 18 ? 18 : data.length );
 	y_division_no = parseInt(instruction.y_division_no) || data.length;
 	//max for division of y axis
 	max = 0;
@@ -123,7 +124,7 @@ function x_axis(){
 			stroke : "#ececec",
 			opacity : .8,
 		});
-		j = j + (Math.floor(data.length/(x_division_no)));
+		j = j + (Math.ceil(data.length/(x_division_no)));
 	}
 	x_axis_flag = 1;
 }
@@ -137,14 +138,14 @@ function x_axis_label(){
 		if(data.length>15){
 			paper.text(((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j) , (height - (1.5*paddingy)), data[j].month).attr({
 				fill : instruction.axis_color || "#9d9d9d",
-				transform : "r320",
+				transform : "r325",
 			});
 		}else{
 			paper.text(((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j) , (height - (1.5*paddingy)), data[j].month).attr({
 				fill : instruction.axis_color || "#9d9d9d",
 			});
 		}
-		j = j + (Math.floor(data.length/(x_division_no)));		
+		j = j + (Math.ceil(data.length/(x_division_no)));		
 	}
 	x_axis_label_flag = 1;
 }
