@@ -142,7 +142,7 @@
 				height : 540,
 				paddingx : 40,
 				paddingy : 40,
-				axis_color : "blue",
+				axis_color : "#0e66a9",
 				x_axis_name : "Year",
 				y_axis_name : "Population in thousand",
 				x_division_no : "12",//"" means Number of data
@@ -183,16 +183,16 @@
 				//Main title
 				main_title();
 				
-				//Draw the axis
-				axis();		
 				
 				/* x */
-				//x_axis();	
+				x_axis();	
+				//x_axis_division();	
 				x_axis_title();
 				x_axis_label();
 				
 				/* y */
 				y_axis();
+				y_axis_division();
 				y_axis_title();
 				y_axis_label();
 				
@@ -220,13 +220,15 @@
 				//Draw popup
 				popup_design();
 				
+				//Draw popup footer
+				popup_footer_design();
+				
 				//Draw select area
 				select_area();
 				
 				
 				//*****Draw rectangle for popup
-				draw_popup_rect();				
-				
+				draw_popup_rect();
 			}			
 		}
 	</script>
