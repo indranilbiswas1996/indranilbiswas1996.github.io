@@ -462,7 +462,7 @@ function popup_hover(id){
 			elems["pop_rect"].animate({
 				opacity : 1,
 				x : popup_point_x[id] ,
-				y : popup_point_y[id],
+				y : popup_point_y[id] + 15,
 			},150);
 			//for text change
 			for(var i = 0; i<parseInt(instruction.path_no); i++){
@@ -475,7 +475,7 @@ function popup_hover(id){
 				elems["tt"+i].animate({
 					opacity : 1,
 					x : popup_point_x[id] + 20,
-					y : popup_point_y[id] + (15 + (30*i)),
+					y : popup_point_y[id] + (15 + (30*i) + 15),
 				}, 150);
 			}
 		}else{
@@ -483,7 +483,7 @@ function popup_hover(id){
 			elems["pop_rect"].animate({
 				opacity : 1,
 				x : popup_point_x[id] ,
-				y : popup_point_y[id] - (instruction.path_no*30),
+				y : popup_point_y[id] - (instruction.path_no*30) - 15,
 			},150);
 			//for text change
 			for(var i = 0; i<parseInt(instruction.path_no); i++){
@@ -496,7 +496,7 @@ function popup_hover(id){
 				elems["tt"+i].animate({
 					opacity : 1,
 					x : popup_point_x[id] + 20,
-					y : popup_point_y[id] + (15 + (30*i)) - (instruction.path_no*30),
+					y : popup_point_y[id] + (15 + (30*i)) - (instruction.path_no*30) - 15,
 				}, 150);
 			}
 		}
@@ -506,7 +506,7 @@ function popup_hover(id){
 			elems["pop_rect"].animate({
 				opacity : 1,
 				x : popup_point_x[id] - 100,
-				y : popup_point_y[id],
+				y : popup_point_y[id] + 15,
 			},150);
 			//for text change
 			for(var i = 0; i<parseInt(instruction.path_no); i++){
@@ -519,7 +519,7 @@ function popup_hover(id){
 				elems["tt"+i].animate({
 					opacity : 1,
 					x : popup_point_x[id] + 20 - 100,
-					y : popup_point_y[id] + (15 + (30*i)),
+					y : popup_point_y[id] + (15 + (30*i))  + 15,
 				}, 150);
 			}
 		}else{
@@ -527,7 +527,7 @@ function popup_hover(id){
 			elems["pop_rect"].animate({
 				opacity : 1,
 				x : popup_point_x[id] - 100,
-				y : popup_point_y[id] - (instruction.path_no*30),
+				y : popup_point_y[id] - (instruction.path_no*30) - 15,
 			},150);
 			//for text change
 			for(var i = 0; i<parseInt(instruction.path_no); i++){
@@ -540,7 +540,7 @@ function popup_hover(id){
 				elems["tt"+i].animate({
 					opacity : 1,
 					x : popup_point_x[id] + 20 - 100,
-					y : popup_point_y[id] + (15 + (30*i)) - (instruction.path_no*30),
+					y : popup_point_y[id] + (15 + (30*i)) - (instruction.path_no*30) - 15,
 				}, 150);
 			}
 		}
