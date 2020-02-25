@@ -352,7 +352,7 @@ function y_axis_hover_design(){
 //Draw popup
 function popup_design(){
 	
-	var pop_rect = paper.rect(0, 0, 100, instruction.path_no*30, 3).attr({
+	var pop_rect = paper.rect(0, 0, 120, instruction.path_no*30, 3).attr({
 		fill : '#f2f4ff',
 		stroke : '#90a3ff',
 		opacity : 0,
