@@ -27,18 +27,21 @@ var round_path_stroke = 0;
 var main_title_flag = 0;
 var x_axis_title_flag = 0;
 var y_axis_title_flag = 0;
-var axis_flag = 0;
 var x_axis_flag = 0;
-var x_axis_label_flag = 0;
 var y_axis_flag = 0;
+var x_axis_division_flag = 0;
+var x_axis_label_flag = 0;
+var y_axis_division_flag = 0;
 var y_axis_label_flag = 0;
 var draw_line_path_flag = 0;
 var draw_round_path_flag = 0;
 var draw_circle_flag = 0;
 var draw_line_area_flag = 0;
 var draw_round_area_flag = 0;
+var popup_design_flag = 0;
 var x_axis_hover_design_flag = 0;
 var y_axis_hover_design_flag = 0;
+var popup_footer_design_flag = 0;
 
 //Load instruction
 function load_all_data(data,  instruction, path_details){//data_min_point = 1st array index & data_min_point = last array index
@@ -108,16 +111,24 @@ function y_axis_title(){
 	});
 	y_axis_title_flag = 1;
 }
-//Draw axis
-function axis(){
-	paper.path("M " + (2*paddingx) + " " + (2*paddingy) +" l  0 " + (height-(4*paddingy)) + "l "+ (width - (4*paddingx)) + " 0").attr({
+//Draw x axis
+function x_axis(){
+	paper.path("M " + (2*paddingx) + " " + (height-(2*paddingy)) + "l "+ (width - (4*paddingx)) + " 0").attr({
 		stroke : instruction.axis_color || "#9d9d9d",
 	});
-	axis_flag = 1;
+	x_axis_flag = 1;
+}
+//Draw y axis
+function y_axis(){
+	paper.path("M " + (2*paddingx) + " " + (2*paddingy) +" l  0 " + (height-(4*paddingy)) ).attr({
+		stroke : instruction.axis_color || "#9d9d9d",
+	});
+	y_axis_flag = 1;
 }
 
 /* x */
-function x_axis(){
+/* x axis division */
+function x_axis_division(){
 	var j = 0;
 	for(var i = 0; j< data.length; i++){	
 		paper.path("M " + ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j) + " "+ (height - (2*paddingy)) + " l 0 " + (-(height-(4*paddingy))) ).attr({
@@ -126,7 +137,7 @@ function x_axis(){
 		});
 		j = j + (Math.ceil(data.length/(x_division_no)));
 	}
-	x_axis_flag = 1;
+	x_axis_division_flag = 1;
 }
 /* x axis label */
 function x_axis_label(){
@@ -151,7 +162,7 @@ function x_axis_label(){
 }
 
 /* y */
-function y_axis(){
+function y_axis_division(){
 				
 	for(var i = 0 ; i<y_division_no ; i++){		
 		paper.path( "M "+ 2*paddingx +" " + ( (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i ) + " l "+  (width-(4*paddingx)) +" 0").attr({
@@ -159,7 +170,7 @@ function y_axis(){
 			opacity : .8,
 		});
 	}
-	y_axis_flag = 1;
+	y_axis_division_flag = 1;
 }
 /* y axis label */
 function y_axis_label(){
@@ -341,7 +352,7 @@ function y_axis_hover_design(){
 //Draw popup
 function popup_design(){
 	
-	var pop_rect = paper.rect(0, 0, 100, instruction.path_no*30, 7).attr({
+	var pop_rect = paper.rect(0, 0, 100, instruction.path_no*30, 3).attr({
 		fill : '#f2f4ff',
 		stroke : '#90a3ff',
 		opacity : 0,
@@ -357,9 +368,27 @@ function popup_design(){
 		});
 		elems["tt"+i] = text1;
 	}
-	
+	popup_design_flag = 1;
 }
 
+//Draw popup footer design
+function popup_footer_design(){
+	//for rect
+	var rect1 = paper.rect(2*paddingx, height - (2*paddingy), 0, 40, 5).attr({
+		fill : '#f1f1f1',
+		stroke : '#b6b6b6',
+		opacity : 0,
+	});
+	elems["pfd_r"] = rect1;
+	//for text
+	var text1 = paper.text(2*paddingx, height - (1.5*paddingy), "2019").attr({
+		'font-size' : '13px',
+			'font-weight' : 'bold',
+		opacity : 0,
+	});
+	elems["pfd_t"] = text1;
+	popup_footer_design_flag = 1;
+}
 //Collect max data on every point for view popup on that point
 function collect_popup_point(){
 	popup_point_x = [];
@@ -400,6 +429,33 @@ function popup(){
 	if(y_axis_hover_design_flag == 1){
 		y_axis_hover(id);
 	}
+	if(popup_design_flag == 1){
+		popup_hover(id);
+	}
+	if(popup_footer_design_flag == 1){
+		popup_footer_hover(id);
+	}
+}
+function popdown(){
+	var id = parseInt(this.id.replace('r',''));
+	if(draw_circle_flag == 1){
+		circle_popdown(id);
+	}
+	if(x_axis_hover_design_flag == 1){
+		x_axis_hover_out(id);
+	}
+	if(y_axis_hover_design_flag == 1){
+		y_axis_hover_out(id);
+	}
+	if(popup_design_flag == 1){
+		popup_hover_out(id);
+	}
+	if(popup_footer_design_flag == 1){
+		popup_footer_hover_out(id);
+	}
+}
+//Popup hover
+function popup_hover(id){
 	if(id<data.length/2){
 		if(Math.max(...(Object.values(data[id].value)))>(max/2)){
 			//for rect
@@ -490,17 +546,8 @@ function popup(){
 		}
 	}
 }
-function popdown(){
-	var id = parseInt(this.id.replace('r',''));
-	if(draw_circle_flag == 1){
-		circle_popdown(id);
-	}
-	if(x_axis_hover_design_flag == 1){
-		x_axis_hover_out(id);
-	}
-	if(y_axis_hover_design_flag == 1){
-		y_axis_hover_out(id);
-	}
+//Popup hover out
+function popup_hover_out(id){
 	//for rect
 	elems["pop_rect"].animate({
 		opacity : 0,
@@ -513,6 +560,35 @@ function popdown(){
 	}
 }
 
+//Popup footer hover
+function popup_footer_hover(id){
+	//for rect
+	elems["pfd_r"].animate({
+		opacity : 1,
+		x : popup_point_x[id] - (((data[id].month.length*7)+20)/2),
+		width : (data[id].month.length*7) + 20,
+	},150);
+	//for text change
+	elems["pfd_t"].attr({
+		text : data[id].month,
+	});
+	//for text
+	elems["pfd_t"].animate({
+		opacity : 1,
+		x : popup_point_x[id] ,
+	}, 150);
+}
+//Popup footer hover out
+function popup_footer_hover_out(id){
+	//for rect
+	elems["pfd_r"].animate({
+		opacity : 0,
+	},150);
+	//for text
+	elems["pfd_t"].animate({
+		opacity : 0,
+	}, 150);
+}
 //Circle effect on popup
 function circle_popup(id){
 	for(var i = 0; i<parseInt(instruction.path_no); i++){
@@ -635,11 +711,11 @@ function mouseup(){
 		if(main_title_flag == 1){
 			main_title();
 		}	
-		if(axis_flag == 1){
-			axis();
-		}
 		if(x_axis_flag == 1){
 			x_axis();
+		}
+		if(x_axis_division_flag == 1){
+			x_axis_division();
 		}
 		if(x_axis_title_flag == 1){
 			x_axis_title();
@@ -649,6 +725,9 @@ function mouseup(){
 		}
 		if(y_axis_flag == 1){
 			y_axis();
+		}
+		if(y_axis_division_flag == 1){
+			y_axis_division();
 		}
 		if(y_axis_title_flag == 1){
 			y_axis_title();
@@ -688,8 +767,14 @@ function mouseup(){
 		}
 		
 		//Draw popup
-		popup_design();
+		if(popup_design_flag == 1){
+			popup_design();
+		}
 		
+		//Draw popup footer
+		if(popup_footer_design_flag == 1){
+				popup_footer_design();
+		}
 		//Draw select area
 		select_area();
 		
