@@ -168,7 +168,7 @@ function x_axis_label(){
 		paper.path( "M " + ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j) + " "+ (height - (2*paddingy)) + " l 0 3" ).attr({
 			stroke : instruction.axis_color || "#9d9d9d",
 		});
-		if(data.length>15){
+		if(x_division_no>15){
 			paper.text(((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j) , (height - (1.5*paddingy)), data[j].month).attr({
 				fill : instruction.axis_color || "#9d9d9d",
 				transform : "r325",
