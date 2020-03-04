@@ -24,6 +24,7 @@ var line_path_stroke = 0;
 var round_path_stroke = 0;
 
 /*Function Flag*/
+var flag = 0;
 var main_title_flag = 0;
 var x_axis_title_flag = 0;
 var y_axis_title_flag = 0;
@@ -43,6 +44,27 @@ var x_axis_hover_design_flag = 0;
 var y_axis_hover_design_flag = 0;
 var popup_footer_design_flag = 0;
 
+function check(data, instruction, path_details){
+	if(data.length > 2){
+		if(parseInt(instruction.path_no)==path_details.length){
+			for(var i = 0 ; i<data.length; i++){
+				if(Object.keys(data[i].value).length == path_details.length){
+					flag = 1;
+				}else{
+					flag = 0;
+				}
+			}
+			if(flag == 0){
+				alert("Check the data values");
+			}
+		}else{
+			alert("Check the path no and path details");
+		}
+	}else{
+		alert("Give atleast 3 data");
+	}
+}
+
 //Load instruction
 function load_all_data(data,  instruction, path_details){//data_min_point = 1st array index & data_min_point = last array index
 	this.data = data;
@@ -60,7 +82,7 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 	paddingy = parseInt(instruction.paddingy) > 40 ? 40 : parseInt(instruction.paddingy) < 25 ? 25 : parseInt(instruction.paddingy) || 40;
 	//x_division_no = parseInt(instruction.x_division_no) > (data.length/2) ? parseInt(instruction.x_division_no) == data.length ? data.length : (data.length/2) : instruction.x_division_no || data.length;
 	x_division_no = parseInt(instruction.x_division_no) > data.length ? (data.length > 18 ? 18 : data.length) : (parseInt(instruction.x_division_no) > 18 ? 18 : parseInt(instruction.x_division_no)) || (data.length > 18 ? 18 : data.length );
-	y_division_no = parseInt(instruction.y_division_no) || data.length;
+	y_division_no = parseInt(instruction.y_division_no) > 12 ? 12 : (parseInt(instruction.y_division_no) < 2 ? 2 : parseInt(instruction.y_division_no) ) || 12;
 	//max for division of y axis
 	max = 0;
 	for(var i = 0; i<data.length; i++){
@@ -68,7 +90,7 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 			max = Math.max(...(Object.values(data[i].value)));
 		}
 	}
-	max = ((Math.ceil(max/(y_division_no-1)))*(y_division_no-1))+(10*(y_division_no-1));
+	max = ((Math.ceil(max/(y_division_no-1)))*(y_division_no-1))+(1*(y_division_no-1));
 }
 //Paper set
 function create_paper(){	
