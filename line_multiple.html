@@ -66,37 +66,37 @@
 					month : 'JUL',
 					value : {
 						a : 129,
-						b : 350,
+						b : 419,
 					}
 				},{
 					month : 'AUG',
 					value : {
 						a : 155,
-						b : 321,
+						b : 435,
 					}
 				},{
 					month : 'SEP',
 					value : {
 						a : 165,
-						b : 226,
+						b : 450,
 					}
 				},{
 					month : 'OCT',
 					value : {
 						a : 194,
-						b : 239,
+						b : 465,
 					}
 				},{
 					month : 'NOV',
 					value : {
 						a : 201,
-						b : 215,
+						b : 455,
 					}
 				},{
 					month : 'DEC',
 					value : {
 						a : 261,
-						b : 205,
+						b : 490,
 					}
 				}
 			];
@@ -120,22 +120,14 @@
 				name : "Desktop",
 				color : "#00e396",
 			}];
-			var flag = 0;
+
 			
-			if(parseInt(instruction.path_no)==path_details.length){
-				for(var i = 0 ; i<data.length; i++){
-					if(Object.keys(data[i].value).length == path_details.length){
-						flag = 1;
-					}else{
-						flag = 0;
-					}
-				}
-				if(flag == 0){
-					alert("Check the data values");
-				}
-			}else{
-				alert("Check the path no and path details");
-			}
+			
+			
+			//Check the all data's to create graph
+			check(data, instruction, path_details);
+			
+			
 			if(flag === 1){	
 			
 				//Load instruction
