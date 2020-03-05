@@ -39,6 +39,7 @@ var draw_round_path_flag = 0;
 var draw_circle_flag = 0;
 var draw_line_area_flag = 0;
 var draw_round_area_flag = 0;
+var label_flag = 0;
 var popup_design_flag = 0;
 var x_axis_hover_design_flag = 0;
 var y_axis_hover_design_flag = 0;
@@ -331,6 +332,36 @@ function draw_round_area(stroke_width){
 	draw_round_area_flag = 1;
 }
 
+//Draw label on path
+function label(){
+	for(var i = 0; i < parseInt(instruction.path_no); i++){
+		var j = 0;		
+		for(var k = 0; j< data.length; k++){
+			var rect1 = paper.rect( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((((Object.values(data[j].value)[i]+"").length*7) + 10)/2) ,(height - (2*paddingy)), ((Object.values(data[j].value)[i]+"").length*7) + 10 , 16, 2).attr({
+				opacity : 0,
+				fill : "#fff",		
+				stroke : path_details[i].color,		
+			});
+			rect1.animate({
+				opacity : 1,
+				y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i])*((height-(4*paddingy))/max)) - 8,
+			}, 400 + (150*i), "<>" );
+			
+			var text1 = paper.text( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - (0*((height-(4*paddingy))/max)) ,Object.values(data[j].value)[i]).attr({
+				opacity : 0,
+				fill : path_details[i].color,
+			});
+			text1.animate({
+				opacity : 1,
+				x : ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))),
+				y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i])*((height-(4*paddingy))/max)),
+				
+			}, 400 + (150*i), "<>" );
+			j = j + (Math.ceil(data.length/(x_division_no)));		
+		}
+	}
+	label_flag = 1;
+}
 
 
 
@@ -786,6 +817,11 @@ function mouseup(){
 		}
 		if(y_axis_hover_design_flag == 1){
 			y_axis_hover_design();
+		}
+
+		//Draw label
+		if(label_flag == 1){
+			label();
 		}
 		
 		//Draw popup
