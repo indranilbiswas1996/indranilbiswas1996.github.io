@@ -72,7 +72,7 @@
 					month : '1910',
 					value : {
 						tiger : 600,
-						deer : 950,
+						deer : 1010,
 					}
 				},{
 					month : '1920',
@@ -156,22 +156,11 @@
 				name : "Deer",
 				color : "#00e396",
 			}];
-			var flag = 0;
 			
-			if(parseInt(instruction.path_no)==path_details.length){
-				for(var i = 0 ; i<data.length; i++){
-					if(Object.keys(data[i].value).length == path_details.length){
-						flag = 1;
-					}else{
-						flag = 0;
-					}
-				}
-				if(flag == 0){
-					alert("Check the data values");
-				}
-			}else{
-				alert("Check the path no and path details");
-			}
+			
+			//Check the all data's to create graph
+			check(data, instruction, path_details);
+			
 			if(flag === 1){	
 			
 				//Load instruction
