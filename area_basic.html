@@ -105,22 +105,13 @@
 				name : "Laptop",
 				color : "#0e66a9",
 			}];
-			var flag = 0;
+
 			
-			if(parseInt(instruction.path_no)==path_details.length){
-				for(var i = 0 ; i<data.length; i++){
-					if(Object.keys(data[i].value).length == path_details.length){
-						flag = 1;
-					}else{
-						flag = 0;
-					}
-				}
-				if(flag == 0){
-					alert("Check the data values");
-				}
-			}else{
-				alert("Check the path no and path details");
-			}
+			
+			//Check the all data's to create graph
+			check(data, instruction, path_details);
+			
+			
 			if(flag === 1){	
 			
 				//Load instruction
