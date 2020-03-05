@@ -1,6 +1,6 @@
 html, body{
 	margin : 0;
-	background: #fff; /*#f1f1f1;*/
+	background: #fdfdfd; /*#f1f1f1;*/
 }
 h3{
 	font-size : large;
@@ -50,8 +50,7 @@ h3{
 	width : 84%;
 	display : inline-block;
 	text-align: center;
-	background: #fff;
-    padding: 20px 0 50px;
+    	padding: 20px 0 50px;
 }
 .inner-graph{
 	display : inline-block;
