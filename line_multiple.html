@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -137,32 +138,29 @@
 				}
 			];
 			var instruction = {
-				title : "Product Trends by Month",
+				title : "Wildlife population",
 				width : 1000,
 				height : 540,
 				paddingx : 40,
 				paddingy : 40,
-				axis_color : "#0e66a9",
-				x_axis_name : "Month",
-				y_axis_name : "",
-				x_division_no : "12",//"" means Number of data
+				axis_color : "blue",
+				x_axis_name : "Year",
+				y_axis_name : "Population in thousand",
+				x_division_no : "18",//"" means Number of data
 				y_division_no : "10",//"" means Number of data
 				path_no : 2,
 			};
 			path_details = [{
-				name : "Loptop",
-				color : "#0e66a9",
+				name : "Tiger",
+				color : "#ff0000",
 			},{
-				name : "Desktop",
-				color : "#ff9800",
+				name : "Deer",
+				color : "#0e66a9",
 			}];
-
-			
 			
 			
 			//Check the all data's to create graph
 			check(data, instruction, path_details);
-			
 			
 			if(flag === 1){	
 			
@@ -193,8 +191,8 @@
 				//draw_round_area(0);//Pass stroke width value
 				
 				//Draw path
-				draw_line_path(5);//Pass stroke width value
-				//draw_round_path(5);
+				//draw_line_path(5);//Pass stroke width value
+				draw_round_path(5);
 				//Draw circle
 				draw_circle(0, 5);//Pass redius value								
 				
@@ -220,7 +218,8 @@
 				
 				
 				//*****Draw rectangle for popup
-				draw_popup_rect();
+				draw_popup_rect();					
+				
 			}			
 		}
 	</script>
