@@ -339,8 +339,8 @@ function label(){
 		for(var k = 0; j< data.length; k++){
 			var rect1 = paper.rect( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((((Object.values(data[j].value)[i]+"").length*7) + 10)/2) ,(height - (2*paddingy)), ((Object.values(data[j].value)[i]+"").length*7) + 10 , 16, 2).attr({
 				opacity : 0,
-				fill : "#fff",		
-				stroke : path_details[i].color,		
+				fill : path_details[i].color,		
+				stroke : "#fff",		
 			});
 			rect1.animate({
 				opacity : 1,
@@ -349,7 +349,7 @@ function label(){
 			
 			var text1 = paper.text( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - (0*((height-(4*paddingy))/max)) ,Object.values(data[j].value)[i]).attr({
 				opacity : 0,
-				fill : path_details[i].color,
+				fill : "#fff",// path_details[i].color,
 			});
 			text1.animate({
 				opacity : 1,
