@@ -219,7 +219,7 @@ function draw_line_path(stroke_width){
 		var path1 = paper.path(p).attr({
 			'stroke-width' : stroke_width,
 			stroke : path_details[i].color,
-			opacity : .6,
+			opacity : 1,
 		});
 		elems['path'+i] = path1;
 	}
@@ -245,7 +245,7 @@ function draw_round_path(stroke_width){
 		var path1 = paper.path(p).attr({
 			'stroke-width' : stroke_width,
 			stroke : path_details[i].color,
-			opacity : .6,
+			opacity : 1,
 		});
 		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i])*((height-(4*paddingy))/max))) + " R ";
 		for(var j = 1; j < data.length ; j++){
@@ -264,7 +264,7 @@ function draw_circle(redius, redius_zoom){
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
 		for(var j = 0; j < data.length ; j++){
 			var circle1 = paper.circle( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - (0*((height-(4*paddingy))/max)) ,redius).attr({
-				opacity : .6,
+				opacity : 1,
 				fill : path_details[i].color,
 				stroke : path_details[i].color,
 			});
