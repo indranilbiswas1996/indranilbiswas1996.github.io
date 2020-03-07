@@ -22,6 +22,7 @@ var line_area_stroke = 0;
 var round_area_stroke = 0;
 var line_path_stroke = 0;
 var round_path_stroke = 0;
+var stepline_path_stroke = 0;
 
 /*Function Flag*/
 var flag = 0;
@@ -36,6 +37,7 @@ var y_axis_division_flag = 0;
 var y_axis_label_flag = 0;
 var draw_line_path_flag = 0;
 var draw_round_path_flag = 0;
+var draw_stepline_path_flag = 0;
 var draw_circle_flag = 0;
 var draw_line_area_flag = 0;
 var draw_round_area_flag = 0;
@@ -257,6 +259,34 @@ function draw_round_path(stroke_width){
 	}
 	draw_round_path_flag = 1;
 }
+//Draw stepline path
+function draw_stepline_path(stroke_width){
+	stepline_path_stroke = stroke_width;
+	for(var i = 0; i < parseInt(instruction.path_no); i++){
+		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0))/max) + " ";
+		for(var j = 1; j < data.length ; j++){
+			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
+			p += " l "+ 0 + " "+ ((height-(4*paddingy))*0)/max + "";
+		}
+		var path1 = paper.path(p).attr({
+			'stroke-width' : stroke_width,
+			stroke : path_details[i].color,
+			opacity : 1,
+		});
+		elems['path'+i] = path1;
+	}
+	for(var i = 0; i < parseInt(instruction.path_no); i++){
+		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]))/max) + " ";
+		for(var j = 1; j < data.length ; j++){
+			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
+			p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
+		}
+		elems['path'+i].animate({
+			path : p,
+		}, 600 + (150*i), "backOut" );
+	}
+	draw_stepline_path_flag = 1;
+}
 //Draw circle on path
 function draw_circle(redius, redius_zoom){
 	circle_redius = redius;
@@ -349,7 +379,7 @@ function label(){
 			
 			var text1 = paper.text( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - (0*((height-(4*paddingy))/max)) ,Object.values(data[j].value)[i]).attr({
 				opacity : 0,
-				fill : "#fff",// path_details[i].color,
+				fill : "#fff",//path_details[i].color,
 			});
 			text1.animate({
 				opacity : 1,
@@ -800,7 +830,9 @@ function mouseup(){
 		if(draw_round_path_flag == 1){
 			draw_round_path(round_path_stroke);
 		}
-		
+		if(draw_stepline_path_flag == 1){
+			draw_stepline_path(stepline_path_stroke);
+		}
 		//Draw circle
 		if(draw_circle_flag == 1){
 			draw_circle(circle_redius, circle_redius_zoom);//Pass redius value
