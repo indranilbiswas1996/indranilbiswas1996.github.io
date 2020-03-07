@@ -23,6 +23,7 @@ var round_area_stroke = 0;
 var line_path_stroke = 0;
 var round_path_stroke = 0;
 var stepline_path_stroke = 0;
+var stepline_area_stroke = 0;
 
 /*Function Flag*/
 var flag = 0;
@@ -38,6 +39,7 @@ var y_axis_label_flag = 0;
 var draw_line_path_flag = 0;
 var draw_round_path_flag = 0;
 var draw_stepline_path_flag = 0;
+var draw_stepline_area_flag = 0;
 var draw_circle_flag = 0;
 var draw_line_area_flag = 0;
 var draw_round_area_flag = 0;
@@ -283,7 +285,7 @@ function draw_stepline_path(stroke_width){
 		}
 		elems['path'+i].animate({
 			path : p,
-		}, 600 + (150*i), "backOut" );
+		}, 400 + (150*i), "backOut" );
 	}
 	draw_stepline_path_flag = 1;
 }
@@ -360,6 +362,35 @@ function draw_round_area(stroke_width){
 		}, 400 + (150*i), "<>" );
 	}
 	draw_round_area_flag = 1;
+}
+
+//Draw stepline area
+function draw_stepline_area(stroke_width){
+	stepline_area_stroke = stroke_width;
+	for(var i = 0; i < parseInt(instruction.path_no); i++){
+		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0))/max) + " ";
+		for(var j = 1; j < data.length ; j++){
+			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
+			p += " l "+ 0 + " "+ ((height-(4*paddingy))*0)/max + "";
+		}
+		p += " l "+ 0 + " "+ ((height-(4*paddingy))*(0 - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
+		var path1 = paper.path(p).attr({
+			fill : "270-"+path_details[i].color+"-#fff",
+			stroke : path_details[i].color,
+			'stroke-width' : stroke_width,
+			opacity : .3,
+		});
+		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]))/max) + " ";
+		for(var j = 1; j < data.length ; j++){
+			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
+			p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
+		}
+		p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
+		path1.animate({
+			path : p,
+		}, 400 + (150*i), "backOut");
+	}
+	draw_stepline_area_flag = 1;
 }
 
 //Draw label on path
@@ -823,6 +854,9 @@ function mouseup(){
 		}
 		if(draw_round_area_flag == 1){
 			draw_round_area(round_area_stroke);//Pass stroke width value
+		}
+		if(draw_stepline_area_flag == 1){
+			draw_stepline_area(stepline_area_stroke);
 		}
 		if(draw_line_path_flag == 1){
 			draw_line_path(line_path_stroke);
