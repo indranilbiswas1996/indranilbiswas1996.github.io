@@ -12,6 +12,8 @@ var path_details;
 var paper = null;
 var elems = {};
 var max = 0;
+var max_value = 0;
+var min_value = 0;
 var popup_point_x = [];
 var popup_point_y = [];
 
@@ -89,13 +91,21 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 	x_division_no = parseInt(instruction.x_division_no) > data.length ? (data.length > 18 ? 18 : data.length) : (parseInt(instruction.x_division_no) > 18 ? 18 : parseInt(instruction.x_division_no)) || (data.length > 18 ? 18 : data.length );
 	y_division_no = parseInt(instruction.y_division_no) > 12 ? 12 : (parseInt(instruction.y_division_no) < 2 ? 2 : parseInt(instruction.y_division_no) ) || 12;
 	//max for division of y axis
-	max = 0;
+	max_value = 0;
 	for(var i = 0; i<data.length; i++){
-		if((Math.max(...(Object.values(data[i].value))))>max){
-			max = Math.max(...(Object.values(data[i].value)));
+		if((Math.max(...(Object.values(data[i].value))))>max_value){
+			max_value = Math.max(...(Object.values(data[i].value)));
 		}
 	}
-	max = ((Math.ceil(max/(y_division_no-1)))*(y_division_no-1))+(1*(y_division_no-1));
+	min_value = 0;
+	for(var i = 0; i<data.length; i++){
+		if((Math.min(...(Object.values(data[i].value))))< min_value){
+			min_value = Math.min(...(Object.values(data[i].value)));
+		}
+	}
+	min_value = min_value + (Math.ceil((min_value)/(y_division_no-1)));
+	//max = ((Math.ceil(max_value/(y_division_no-1)))*(y_division_no-1))+(1*(y_division_no-1));
+	max = ((Math.ceil((max_value-min_value)/(y_division_no-1)))*(y_division_no-1))+(1*(y_division_no-1));
 }
 //Paper set
 function create_paper(){	
@@ -140,7 +150,7 @@ function y_axis_title(){
 }
 //Draw x axis
 function x_axis(){
-	paper.path("M " + (2*paddingx) + " " + (height-(2*paddingy)) + "l "+ (width - (4*paddingx)) + " 0").attr({
+	paper.path("M " + (2*paddingx) + " " + ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0 - min_value))/max) + "l "+ (width - (4*paddingx)) + " 0").attr({
 		stroke : instruction.axis_color || "#9d9d9d",
 	});
 	x_axis_flag = 1;
@@ -205,7 +215,7 @@ function y_axis_label(){
 		paper.path( "M "+ 2*paddingx +" " + ( (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i ) + " l -3 0").attr({
 			stroke : instruction.axis_color || "#9d9d9d",
 		});
-		paper.text(2*paddingx - 5, (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i, (max/(y_division_no-1))*i).attr({
+		paper.text(2*paddingx - 5, (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i, ((max/(y_division_no-1))*i)+min_value).attr({
 			fill : instruction.axis_color || "#9d9d9d",
 			'text-anchor' : "end",
 		});		
@@ -216,7 +226,7 @@ function y_axis_label(){
 function draw_line_path(stroke_width){
 	line_path_stroke = stroke_width;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0))/max) + " ";
+		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0 - min_value))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
 			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*0)/max + "";
 		}
@@ -228,7 +238,7 @@ function draw_line_path(stroke_width){
 		elems['path'+i] = path1;
 	}
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]))/max) + " ";
+		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i] - min_value))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
 			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
 		}
@@ -242,18 +252,18 @@ function draw_line_path(stroke_width){
 function draw_round_path(stroke_width){
 	round_path_stroke = stroke_width;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((0)*((height-(4*paddingy))/max))) + " R ";
+		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((0   - min_value)*((height-(4*paddingy))/max))) + " R ";
 		for(var j = 1; j < data.length ; j++){
-			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0)*((height-(4*paddingy))/max))) + " ";
+			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0 - min_value)*((height-(4*paddingy))/max))) + " ";
 		}
 		var path1 = paper.path(p).attr({
 			'stroke-width' : stroke_width,
 			stroke : path_details[i].color,
 			opacity : 1,
 		});
-		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i])*((height-(4*paddingy))/max))) + " R ";
+		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i]   - min_value)*((height-(4*paddingy))/max))) + " R ";
 		for(var j = 1; j < data.length ; j++){
-			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((Object.values(data[j].value)[i])*((height-(4*paddingy))/max))) + " ";
+			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " ";
 		}
 		path1.animate({
 			path : p,
@@ -265,7 +275,7 @@ function draw_round_path(stroke_width){
 function draw_stepline_path(stroke_width){
 	stepline_path_stroke = stroke_width;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0))/max) + " ";
+		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0  - min_value))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
 			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
 			p += " l "+ 0 + " "+ ((height-(4*paddingy))*0)/max + "";
@@ -278,7 +288,7 @@ function draw_stepline_path(stroke_width){
 		elems['path'+i] = path1;
 	}
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]))/max) + " ";
+		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]  - min_value))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
 			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
 			p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
@@ -295,14 +305,14 @@ function draw_circle(redius, redius_zoom){
 	circle_redius_zoom = redius_zoom;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
 		for(var j = 0; j < data.length ; j++){
-			var circle1 = paper.circle( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - (0*((height-(4*paddingy))/max)) ,redius).attr({
+			var circle1 = paper.circle( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max)) ,redius).attr({
 				opacity : 1,
 				fill : path_details[i].color,
 				stroke : path_details[i].color,
 			});
 			circle1.animate({
 				cx : ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))),
-				cy : (height - (2*paddingy)) - ((Object.values(data[j].value)[i])*((height-(4*paddingy))/max)),
+				cy : (height - (2*paddingy)) - ((Object.values(data[j].value)[i] - min_value)*((height-(4*paddingy))/max)),
 				
 			}, 400 + (150*i), "<>" );			
 			elems["c"+i+""+j] = circle1;
@@ -314,7 +324,7 @@ function draw_circle(redius, redius_zoom){
 function draw_line_area(stroke_width){
 	line_area_stroke = stroke_width;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0))/max) + " ";
+		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0 - min_value))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
 			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*0)/max + "";
 		}
@@ -325,7 +335,7 @@ function draw_line_area(stroke_width){
 			'stroke-width' : stroke_width,
 			opacity : .3,
 		});
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]))/max) + " ";
+		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i] - min_value))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
 			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
 		}
@@ -341,20 +351,20 @@ function draw_line_area(stroke_width){
 function draw_round_area(stroke_width){
 	round_area_stroke = stroke_width;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((0)*((height-(4*paddingy))/max))) + " R ";
+		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max))) + " R ";
 		for(var j = 1; j < data.length ; j++){
-			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0)*((height-(4*paddingy))/max))) + " ";
+			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max))) + " ";
 		}
-		p+= ", "+ ((2*paddingx)+(data.length-1)*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0)*((height-(4*paddingy))/max))) + " z";
+		p+= ", "+ ((2*paddingx)+(data.length-1)*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max))) + " z";
 		var path1 = paper.path(p).attr({
 			'stroke-width' : stroke_width,
 			stroke : path_details[i].color,
 			opacity : .3,
 			fill : "270-"+path_details[i].color+"-#fff",
 		});
-		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i])*((height-(4*paddingy))/max))) + " R ";
+		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " R ";
 		for(var j = 1; j < data.length ; j++){
-			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((Object.values(data[j].value)[i])*((height-(4*paddingy))/max))) + " ";
+			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " ";
 		}
 		p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
 		path1.animate({
@@ -368,7 +378,7 @@ function draw_round_area(stroke_width){
 function draw_stepline_area(stroke_width){
 	stepline_area_stroke = stroke_width;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0))/max) + " ";
+		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0  - min_value))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
 			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
 			p += " l "+ 0 + " "+ ((height-(4*paddingy))*0)/max + "";
@@ -380,7 +390,7 @@ function draw_stepline_area(stroke_width){
 			'stroke-width' : stroke_width,
 			opacity : .3,
 		});
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]))/max) + " ";
+		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]  - min_value))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
 			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
 			p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
@@ -398,24 +408,24 @@ function label(){
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
 		var j = 0;		
 		for(var k = 0; j< data.length; k++){
-			var rect1 = paper.rect( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((((Object.values(data[j].value)[i]+"").length*7) + 10)/2) ,(height - (2*paddingy)), ((Object.values(data[j].value)[i]+"").length*7) + 10 , 16, 2).attr({
-				opacity : 0,
+			var rect1 = paper.rect( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((((Object.values(data[j].value)[i]+"").length*7) + 10)/2) ,(height - (2*paddingy))- ((0  - min_value)*((height-(4*paddingy))/max)), ((Object.values(data[j].value)[i]+"").length*7) + 10 , 16, 2).attr({
+				//opacity : 0,
 				fill : path_details[i].color,		
 				stroke : "#fff",		
 			});
 			rect1.animate({
 				opacity : 1,
-				y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i])*((height-(4*paddingy))/max)) - 8,
+				y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max)) - 8,
 			}, 400 + (150*i), "<>" );
 			
-			var text1 = paper.text( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - (0*((height-(4*paddingy))/max)) ,Object.values(data[j].value)[i]).attr({
-				opacity : 0,
+			var text1 = paper.text( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max)) ,Object.values(data[j].value)[i]).attr({
+				//opacity : 0,
 				fill : "#fff",//path_details[i].color,
 			});
 			text1.animate({
 				opacity : 1,
 				x : ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))),
-				y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i])*((height-(4*paddingy))/max)),
+				y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max)),
 				
 			}, 400 + (150*i), "<>" );
 			j = j + (Math.ceil(data.length/(x_division_no)));		
@@ -509,7 +519,7 @@ function collect_popup_point(){
 	popup_point_y = [];
 	for(var i = 0; i < data.length; i++){
 		popup_point_x.push(((2*paddingx)+i*((width-(4*paddingx))/(data.length-1))));
-		popup_point_y.push((height - (2*paddingy)) - ((Math.max(...Object.values(data[i].value)))*((height-(4*paddingy))/max)));
+		popup_point_y.push((height - (2*paddingy)) - ((Math.max(...Object.values(data[i].value))  - min_value)*((height-(4*paddingy))/max)));
 	}
 }
 
@@ -723,9 +733,9 @@ function circle_popdown(id){
 }
 //X axis hover
 function x_axis_hover(id){
-	for(var i = 0; i<1; i++){
-		var  p  = "M "+ ((2*paddingx)+id*((width-(4*paddingx))/(data.length-1))) +" " + (2*paddingy) + " l 0 "+  ( (height - (4*paddingy)) ) ;
-		elems["px"+i].animate({
+	for(var i = 0; i<parseInt(instruction.path_no); i++){
+		var  p  = "M "+ 2*paddingx +" " + ( (height - (2*paddingy)) - ((Object.values(data[id].value)[i] - min_value)*((height-(4*paddingy))/max)) ) + " l "+  (width-(4*paddingx)) +" 0";
+		elems["py"+i].animate({
 			opacity : 1,
 			path : p,
 		}, 150);
@@ -733,13 +743,14 @@ function x_axis_hover(id){
 }
 //Y axis hover
 function y_axis_hover(id){
-	for(var i = 0; i<parseInt(instruction.path_no); i++){
-		var  p  = "M "+ 2*paddingx +" " + ( (height - (2*paddingy)) - ((Object.values(data[id].value)[i])*((height-(4*paddingy))/max)) ) + " l "+  (width-(4*paddingx)) +" 0";
-		elems["py"+i].animate({
+	for(var i = 0; i<1; i++){
+		var  p  = "M "+ ((2*paddingx)+id*((width-(4*paddingx))/(data.length-1))) +" " + (2*paddingy) + " l 0 "+  ( (height - (4*paddingy)) ) ;
+		elems["px"+i].animate({
 			opacity : 1,
 			path : p,
 		}, 150);
 	}
+	
 }
 //X axis hover out
 function x_axis_hover_out(id){
