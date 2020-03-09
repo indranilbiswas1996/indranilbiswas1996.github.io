@@ -28,8 +28,7 @@ var stepline_path_stroke = 0;
 var stepline_area_stroke = 0;
 
 /*Function Flag*/
-var flag = 0;
-var main_title_flag = 0;
+/*var main_title_flag = 0;
 var x_axis_title_flag = 0;
 var y_axis_title_flag = 0;
 var x_axis_flag = 0;
@@ -49,8 +48,9 @@ var label_flag = 0;
 var popup_design_flag = 0;
 var x_axis_hover_design_flag = 0;
 var y_axis_hover_design_flag = 0;
-var popup_footer_design_flag = 0;
+var popup_footer_design_flag = 0;*/
 
+var flag = 0;
 function check(data, instruction, path_details){
 	if(data.length > 2){
 		if(parseInt(instruction.path_no)==path_details.length){
@@ -111,7 +111,9 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 function create_paper(){	
 	paper = new Raphael(document.getElementById("cntnr1"), width, height);	
 }
+
 //All title
+var main_title_flag = 0;
 function main_title(){
 	//alert(data.length);
 	paper.text((2*paddingx), paddingy, instruction.title).attr({
@@ -136,26 +138,34 @@ function main_title(){
 	}
 	main_title_flag = 1;
 }
+
 //x axis title
+var x_axis_title_flag = 0;
 function x_axis_title(){
 	paper.text(width/2, height-paddingy, instruction.x_axis_name);
 	x_axis_title_flag = 1;
 }
+
 //y axis title
+var y_axis_title_flag = 0;
 function y_axis_title(){
 	paper.text(paddingx, height/2, instruction.y_axis_name).attr({
 		transform : "r270",
 	});
 	y_axis_title_flag = 1;
 }
+
 //Draw x axis
+var x_axis_flag = 0;
 function x_axis(){
 	paper.path("M " + (2*paddingx) + " " + ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0 - min_value))/max) + "l "+ (width - (4*paddingx)) + " 0").attr({
 		stroke : instruction.axis_color || "#9d9d9d",
 	});
 	x_axis_flag = 1;
 }
+
 //Draw y axis
+var y_axis_flag = 0;
 function y_axis(){
 	paper.path("M " + (2*paddingx) + " " + (2*paddingy) +" l  0 " + (height-(4*paddingy)) ).attr({
 		stroke : instruction.axis_color || "#9d9d9d",
@@ -165,6 +175,7 @@ function y_axis(){
 
 /* x */
 /* x axis division */
+var x_axis_division_flag = 0;
 function x_axis_division(){
 	var j = 0;
 	for(var i = 0; j< data.length; i++){	
@@ -177,6 +188,7 @@ function x_axis_division(){
 	x_axis_division_flag = 1;
 }
 /* x axis label */
+var x_axis_label_flag = 0;
 function x_axis_label(){
 	var j = 0;		
 	for(var i = 0; j< data.length; i++){		
@@ -199,6 +211,7 @@ function x_axis_label(){
 }
 
 /* y */
+var y_axis_division_flag = 0;
 function y_axis_division(){
 				
 	for(var i = 0 ; i<y_division_no ; i++){		
@@ -210,6 +223,7 @@ function y_axis_division(){
 	y_axis_division_flag = 1;
 }
 /* y axis label */
+var y_axis_label_flag = 0;
 function y_axis_label(){
 	for(var i = 0 ; i<y_division_no ; i++){
 		paper.path( "M "+ 2*paddingx +" " + ( (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i ) + " l -3 0").attr({
@@ -223,6 +237,7 @@ function y_axis_label(){
 	y_axis_label_flag = 1;
 }
 //Draw path
+var draw_line_path_flag = 0;
 function draw_line_path(stroke_width){
 	line_path_stroke = stroke_width;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
@@ -249,6 +264,7 @@ function draw_line_path(stroke_width){
 	draw_line_path_flag = 1;
 }
 //Draw round path
+var draw_round_path_flag = 0;
 function draw_round_path(stroke_width){
 	round_path_stroke = stroke_width;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
@@ -271,7 +287,9 @@ function draw_round_path(stroke_width){
 	}
 	draw_round_path_flag = 1;
 }
+
 //Draw stepline path
+var draw_stepline_path_flag = 0;
 function draw_stepline_path(stroke_width){
 	stepline_path_stroke = stroke_width;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
@@ -300,6 +318,7 @@ function draw_stepline_path(stroke_width){
 	draw_stepline_path_flag = 1;
 }
 //Draw circle on path
+var draw_circle_flag = 0;
 function draw_circle(redius, redius_zoom){
 	circle_redius = redius;
 	circle_redius_zoom = redius_zoom;
@@ -321,6 +340,7 @@ function draw_circle(redius, redius_zoom){
 	draw_circle_flag = 1;
 }
 //Draw line area
+var draw_line_area_flag = 0;
 function draw_line_area(stroke_width){
 	line_area_stroke = stroke_width;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
@@ -348,6 +368,7 @@ function draw_line_area(stroke_width){
 }
 
 //Draw round area
+var draw_round_area_flag = 0;
 function draw_round_area(stroke_width){
 	round_area_stroke = stroke_width;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
@@ -375,6 +396,7 @@ function draw_round_area(stroke_width){
 }
 
 //Draw stepline area
+var draw_stepline_area_flag = 0;
 function draw_stepline_area(stroke_width){
 	stepline_area_stroke = stroke_width;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
@@ -404,6 +426,7 @@ function draw_stepline_area(stroke_width){
 }
 
 //Draw label on path
+var label_flag = 0;
 function label(){
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
 		var j = 0;		
@@ -434,8 +457,83 @@ function label(){
 	label_flag = 1;
 }
 
-
-
+//Draw annotations
+var draw_annotations_flag = 0;
+function draw_annotations(){
+	if(instruction.annotations){
+		//y axis annotations
+		if(instruction.annotations.yaxis){
+			if(instruction.annotations.yaxis.length > 0){
+				//alert("Ok");
+				for(var i = 0; i< instruction.annotations.yaxis.length; i++){
+					if(instruction.annotations.yaxis[i].y || instruction.annotations.yaxis[i].y == 0){
+						if(instruction.annotations.yaxis[i].y < max_value && instruction.annotations.yaxis[i].y > min_value){
+							paper.path("M "+ 2*paddingx +" " + ( (height-(2*paddingy)) - ((height-(4*paddingy))*(instruction.annotations.yaxis[i].y - min_value))/max) + " l "+  (width-(4*paddingx)) +" 0").attr({
+								stroke : instruction.annotations.yaxis[i].borderColor,
+							});
+							if((instruction.annotations.yaxis[i].y - min_value) > max/2){
+								paper.rect((2*paddingx) + (i*50+50), (( (height-(2*paddingy)) - ((height-(4*paddingy))*(instruction.annotations.yaxis[i].y - min_value))/max)), (instruction.annotations.yaxis[i].label.text.length*7)+20, 20).attr({
+									fill : instruction.annotations.yaxis[i].label.style.background,
+									stroke : instruction.annotations.yaxis[i].label.borderColor,
+								});
+								paper.text((2*paddingx) + (i*50+50) + ((instruction.annotations.yaxis[i].label.text.length*7)+20)/2, (( (height-(2*paddingy)) - ((height-(4*paddingy))*(instruction.annotations.yaxis[i].y - min_value))/max))+10, (instruction.annotations.yaxis[i].label.text)).attr({
+									fill : instruction.annotations.yaxis[i].label.style.color,
+								});
+							}else{
+								paper.rect((2*paddingx) + (i*50+50), (( (height-(2*paddingy)) - ((height-(4*paddingy))*(instruction.annotations.yaxis[i].y - min_value))/max))-20, (instruction.annotations.yaxis[i].label.text.length*7)+20, 20).attr({
+									fill : instruction.annotations.yaxis[i].label.style.background,
+									stroke : instruction.annotations.yaxis[i].label.borderColor,
+								});
+								paper.text((2*paddingx) + (i*50+50) + ((instruction.annotations.yaxis[i].label.text.length*7)+20)/2, (( (height-(2*paddingy)) - ((height-(4*paddingy))*(instruction.annotations.yaxis[i].y - min_value))/max))+10-20, (instruction.annotations.yaxis[i].label.text)).attr({
+									fill : instruction.annotations.yaxis[i].label.style.color,
+								});
+							}
+						}
+					}
+					if((instruction.annotations.yaxis[i].y1 && instruction.annotations.yaxis[i].y2) || (instruction.annotations.yaxis[i].y1 == 0 || instruction.annotations.yaxis[i].y2 == 0)){
+						var y1 = instruction.annotations.yaxis[i].y1;
+						var y2 = instruction.annotations.yaxis[i].y2;
+						if(y1 > y2){
+							var a = y1;
+							y1 = y2;
+							y2 = a;
+						}
+						if(y1 < min_value){
+							y1=min_value;
+						}
+						if(y2 > (max+min_value)){
+							y2 = max+min_value;
+						}
+						paper.rect((2*paddingx),  (( (height-(2*paddingy)) - ((height-(4*paddingy))*(y2 - min_value))/max)), width - (4*paddingx) , ((height-(4*paddingy))*(y2 -y1))/max).attr({
+							stroke : instruction.annotations.yaxis[i].borderColor,
+							fill : instruction.annotations.yaxis[i].fillColor,
+							opacity : instruction.annotations.yaxis[i].opacity,
+						});
+						if((y2-min_value) > max/2){
+							paper.rect((2*paddingx) + (i*50+50), (( (height-(2*paddingy)) - ((height-(4*paddingy))*(y2 - min_value))/max)), (instruction.annotations.yaxis[i].label.text.length*7)+20, 20).attr({
+								fill : instruction.annotations.yaxis[i].label.style.background,
+								stroke : instruction.annotations.yaxis[i].label.borderColor,
+							});
+							paper.text((2*paddingx) + (i*50+50) + ((instruction.annotations.yaxis[i].label.text.length*7)+20)/2, (( (height-(2*paddingy)) - ((height-(4*paddingy))*(y2 - min_value))/max))+10, (instruction.annotations.yaxis[i].label.text)).attr({
+								fill : instruction.annotations.yaxis[i].label.style.color,
+							});
+							
+						}else{
+							paper.rect((2*paddingx) + (i*50+50), (( (height-(2*paddingy)) - ((height-(4*paddingy))*(y2 - min_value))/max))-20, (instruction.annotations.yaxis[i].label.text.length*7)+20, 20).attr({
+								fill : instruction.annotations.yaxis[i].label.style.background,
+								stroke : instruction.annotations.yaxis[i].label.borderColor,
+							});
+							paper.text((2*paddingx) + (i*50+50) + ((instruction.annotations.yaxis[i].label.text.length*7)+20)/2, ( (height-(2*paddingy)) - ((height-(4*paddingy))*(y2 - min_value))/max)-10, (instruction.annotations.yaxis[i].label.text)).attr({
+								fill : instruction.annotations.yaxis[i].label.style.color,
+							});
+						}
+					}
+				}
+			}
+		}
+	}
+	draw_annotations_flag = 1;
+}
 
 
 
@@ -444,6 +542,7 @@ function label(){
 /////////////////////////////////////////////////////////////////////////////////////
 
 // For x axis hover -----------------------------
+var x_axis_hover_design_flag = 0;
 function x_axis_hover_design(){
 	for(var i=0; i<1; i++){
 		var  p = "M "+ 2*paddingx +" " + 2*paddingy + " l 0 "+  (height-(4*paddingy)) +" 0";
@@ -459,6 +558,7 @@ function x_axis_hover_design(){
 	x_axis_hover_design_flag = 1;
 }
 // For y axis hover -----------------------------
+var y_axis_hover_design_flag = 0;
 function y_axis_hover_design(){
 	for(var i=0; i<instruction.path_no; i++){
 		var  p = "M "+ 2*paddingx +" " + ( (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i ) + " l "+  (width-(4*paddingx)) +" 0";
@@ -474,6 +574,7 @@ function y_axis_hover_design(){
 	y_axis_hover_design_flag =1;
 }
 //Draw popup
+var popup_design_flag = 0;
 function popup_design(){
 	
 	var pop_rect = paper.rect(0, 0, 120, instruction.path_no*30, 3).attr({
@@ -496,6 +597,7 @@ function popup_design(){
 }
 
 //Draw popup footer design
+var popup_footer_design_flag = 0;
 function popup_footer_design(){
 	//for rect
 	var rect1 = paper.rect(2*paddingx, height - (2*paddingy), 0, 40, 5).attr({
@@ -883,7 +985,10 @@ function mouseup(){
 			draw_circle(circle_redius, circle_redius_zoom);//Pass redius value
 		}
 						
-		
+		//Draw annotations
+		if(draw_annotations_flag == 1){
+			draw_annotations();
+		}
 		
 		//////////////////////            POPUP            //////////////////////
 		
