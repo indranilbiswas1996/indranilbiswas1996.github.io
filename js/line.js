@@ -18,8 +18,8 @@ var popup_point_x = [];
 var popup_point_y = [];
 
 /*Sub variable*/
-var circle_redius = 0;
-var circle_redius_zoom = 0;
+var circle_radius = 0;
+var circle_radius_zoom = 0;
 var line_area_stroke = 0;
 var round_area_stroke = 0;
 var line_path_stroke = 0;
@@ -91,7 +91,7 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 	x_division_no = parseInt(instruction.x_division_no) > data.length ? (data.length > 18 ? 18 : data.length) : (parseInt(instruction.x_division_no) > 18 ? 18 : parseInt(instruction.x_division_no)) || (data.length > 18 ? 18 : data.length );
 	y_division_no = parseInt(instruction.y_division_no) > 12 ? 12 : (parseInt(instruction.y_division_no) < 2 ? 2 : parseInt(instruction.y_division_no) ) || 12;
 	//max for division of y axis
-	max_value = 0;
+	max_value = Math.max(...(Object.values(data[0].value)));
 	for(var i = 0; i<data.length; i++){
 		if((Math.max(...(Object.values(data[i].value))))>max_value){
 			max_value = Math.max(...(Object.values(data[i].value)));
@@ -319,12 +319,12 @@ function draw_stepline_path(stroke_width){
 }
 //Draw circle on path
 var draw_circle_flag = 0;
-function draw_circle(redius, redius_zoom){
-	circle_redius = redius;
-	circle_redius_zoom = redius_zoom;
+function draw_circle(radius, radius_zoom){
+	circle_radius = radius;
+	circle_radius_zoom = radius_zoom;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
 		for(var j = 0; j < data.length ; j++){
-			var circle1 = paper.circle( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max)) ,redius).attr({
+			var circle1 = paper.circle( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max)) ,radius).attr({
 				opacity : 1,
 				fill : path_details[i].color,
 				stroke : path_details[i].color,
@@ -464,8 +464,8 @@ function draw_annotations(){
 		//y axis annotations
 		if(instruction.annotations.yaxis){
 			if(instruction.annotations.yaxis.length > 0){
-				//alert("Ok");
 				for(var i = 0; i< instruction.annotations.yaxis.length; i++){
+					//Path annotations
 					if(instruction.annotations.yaxis[i].y || instruction.annotations.yaxis[i].y == 0){
 						if(instruction.annotations.yaxis[i].y < max_value && instruction.annotations.yaxis[i].y > min_value){
 							paper.path("M "+ 2*paddingx +" " + ( (height-(2*paddingy)) - ((height-(4*paddingy))*(instruction.annotations.yaxis[i].y - min_value))/max) + " l "+  (width-(4*paddingx)) +" 0").attr({
@@ -490,6 +490,7 @@ function draw_annotations(){
 							}
 						}
 					}
+					//Area annotations
 					if((instruction.annotations.yaxis[i].y1 && instruction.annotations.yaxis[i].y2) || (instruction.annotations.yaxis[i].y1 == 0 || instruction.annotations.yaxis[i].y2 == 0)){
 						var y1 = instruction.annotations.yaxis[i].y1;
 						var y2 = instruction.annotations.yaxis[i].y2;
@@ -529,6 +530,199 @@ function draw_annotations(){
 						}
 					}
 				}
+			}
+		}
+		//Point annotations
+		if(instruction.annotations.points){
+			try{
+				if(instruction.annotations.points.length > 0){
+					for(var i = 0; i<instruction.annotations.points.length; i++){
+						for(var j = 0; j < data.length ; j ++){
+							if(data[j].month == instruction.annotations.points[i].x){
+								if(instruction.annotations.points[i].y <= max_value && instruction.annotations.points[i].y >= min_value){
+									//alert(max_value+ " "+ min_value+" "+max);								
+									paper.circle(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((parseInt(instruction.annotations.points[i].y) - min_value)*((height-(4*paddingy))/max)), instruction.annotations.points[i].marker.radius).attr({
+										fill : instruction.annotations.points[i].marker.fillColor,
+										'stroke-width' : instruction.annotations.points[i].marker.strokeWidth,
+										stroke : instruction.annotations.points[i].marker.strokeColor,
+									});
+									var rect_x = 0, rect_y = 0, text_x = 0, text_y = 0;
+									if(parseInt(instruction.annotations.points[i].y - min_value) > max/2){
+										if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) < 1*((width-(4*paddingx))/4)){
+											rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1)))  + (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+											rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max))- 10;
+											text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.points[i].label.text.length*7)+20)/2 + (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+											text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) ;
+										}
+										else if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) > 3*((width-(4*paddingx))/4)){
+											rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.points[i].label.text.length*7)+20) - (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+											rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) - 10;
+											text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.points[i].label.text.length*7)+20)/2 - ((instruction.annotations.points[i].label.text.length*7)+20) - (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+											text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max));
+										}else {
+											rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.points[i].label.text.length*7)+20)/2;
+											rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) + (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+											text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.points[i].label.text.length*7)+20)/2 - ((instruction.annotations.points[i].label.text.length*7)+20)/2;
+											text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max))+10 + (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+										}
+									}else{
+										if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) < 1*((width-(4*paddingx))/4)){
+											rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1)))  + (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+											rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max))- 10;
+											text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.points[i].label.text.length*7)+20)/2 + (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+											text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) ;
+										}
+										else if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) > 3*((width-(4*paddingx))/4)){
+											rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.points[i].label.text.length*7)+20) - (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+											rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) - 10;
+											text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.points[i].label.text.length*7)+20)/2 - ((instruction.annotations.points[i].label.text.length*7)+20) - (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+											text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max));
+										}else {
+											rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.points[i].label.text.length*7)+20)/2;
+											rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) - 20 - (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+											text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.points[i].label.text.length*7)+20)/2 - ((instruction.annotations.points[i].label.text.length*7)+20)/2;
+											text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) - 10 - (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+										}
+									}
+									paper.rect(rect_x, rect_y, (instruction.annotations.points[i].label.text.length*7)+20, 20).attr({
+										fill : instruction.annotations.points[i].label.style.background,
+										stroke : instruction.annotations.points[i].label.borderColor,
+									});
+									paper.text(text_x, text_y, (instruction.annotations.points[i].label.text)).attr({
+										fill : instruction.annotations.points[i].label.style.color,
+									});	
+								}
+							}
+						}
+					}
+				}
+			}catch(err){}
+		}
+		
+		//Max point annotations
+		if(instruction.annotations.max){
+			if(instruction.annotations.points.length > 0){	
+				var max_point_value = Math.max(...(Object.values(data[0].value)));;
+				var j = 0;
+				for(var i = 0; i<data.length; i++){
+					if((Math.max(...(Object.values(data[i].value))))>max_point_value){
+						max_point_value = Math.max(...(Object.values(data[i].value)));
+						j = i;
+					}
+				}
+				paper.circle(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((parseInt(max_point_value) - min_value)*((height-(4*paddingy))/max)), instruction.annotations.max[0].marker.radius).attr({
+					fill : instruction.annotations.max[0].marker.fillColor,
+					'stroke-width' : instruction.annotations.max[0].marker.strokeWidth,
+					stroke : instruction.annotations.max[0].marker.strokeColor,
+				});
+				var rect_x = 0, rect_y = 0, text_x = 0, text_y = 0;
+				if(parseInt(max_point_value - min_value) > max/2){
+					if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) < 1*((width-(4*paddingx))/4)){
+						rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1)))  + (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+						rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max))- 10;
+						text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.max[0].label.text.length*7)+20)/2 + (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+						text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) ;
+					}
+					else if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) > 3*((width-(4*paddingx))/4)){
+						rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.max[0].label.text.length*7)+20) - (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+						rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) - 10;
+						text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.max[0].label.text.length*7)+20)/2 - ((instruction.annotations.max[0].label.text.length*7)+20) - (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+						text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max));
+					}else {
+						rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.max[0].label.text.length*7)+20)/2;
+						rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) + (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+						text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.max[0].label.text.length*7)+20)/2 - ((instruction.annotations.max[0].label.text.length*7)+20)/2;
+						text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max))+10 + (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+					}
+				}else{
+					if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) < 1*((width-(4*paddingx))/4)){
+						rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1)))  + (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+						rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max))- 10;
+						text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.max[0].label.text.length*7)+20)/2 + (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+						text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) ;
+					}
+					else if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) > 3*((width-(4*paddingx))/4)){
+						rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.max[0].label.text.length*7)+20) - (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+						rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) - 10;
+						text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.max[0].label.text.length*7)+20)/2 - ((instruction.annotations.max[0].label.text.length*7)+20) - (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+						text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max));
+					}else {
+						rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.max[0].label.text.length*7)+20)/2;
+						rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) - 20 - (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+						text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.max[0].label.text.length*7)+20)/2 - ((instruction.annotations.max[0].label.text.length*7)+20)/2;
+						text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) - 10 - (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+					}
+				}
+				paper.rect(rect_x, rect_y, (instruction.annotations.max[0].label.text.length*7)+20, 20).attr({
+					fill : instruction.annotations.max[0].label.style.background,
+					stroke : instruction.annotations.max[0].label.borderColor,
+				});
+				paper.text(text_x, text_y, (instruction.annotations.max[0].label.text)).attr({
+					fill : instruction.annotations.max[0].label.style.color,
+				});
+			}
+		}
+		//Min point annotations
+		if(instruction.annotations.min){
+			if(instruction.annotations.points.length > 0){	
+				var min_point_value = Math.min(...(Object.values(data[0].value)));;
+				var j = 0;
+				for(var i = 0; i<data.length; i++){
+					if((Math.min(...(Object.values(data[i].value))))< min_point_value){
+						min_point_value = Math.min(...(Object.values(data[i].value)));
+						j = i;
+					}
+				}
+				paper.circle(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((parseInt(min_point_value) - min_value)*((height-(4*paddingy))/max)), instruction.annotations.min[0].marker.radius).attr({
+					fill : instruction.annotations.min[0].marker.fillColor,
+					'stroke-width' : instruction.annotations.min[0].marker.strokeWidth,
+					stroke : instruction.annotations.min[0].marker.strokeColor,
+				});
+				var rect_x = 0, rect_y = 0, text_x = 0, text_y = 0;
+				if(parseInt(min_point_value - min_value) > max/2){
+					if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) < 1*((width-(4*paddingx))/4)){
+						rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1)))  + (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+						rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max))- 10;
+						text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.min[0].label.text.length*7)+20)/2 + (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+						text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) ;
+					}
+					else if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) > 3*((width-(4*paddingx))/4)){
+						rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.min[0].label.text.length*7)+20) - (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+						rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) - 10;
+						text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.min[0].label.text.length*7)+20)/2 - ((instruction.annotations.min[0].label.text.length*7)+20) - (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+						text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max));
+					}else {
+						rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.min[0].label.text.length*7)+20)/2;
+						rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) + (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+						text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.min[0].label.text.length*7)+20)/2 - ((instruction.annotations.min[0].label.text.length*7)+20)/2;
+						text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max))+10 + (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+					}
+				}else{
+					if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) < 1*((width-(4*paddingx))/4)){
+						rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1)))  + (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+						rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max))- 10;
+						text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.min[0].label.text.length*7)+20)/2 + (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+						text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) ;
+					}
+					else if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) > 3*((width-(4*paddingx))/4)){
+						rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.min[0].label.text.length*7)+20) - (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+						rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) - 10;
+						text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.min[0].label.text.length*7)+20)/2 - ((instruction.annotations.min[0].label.text.length*7)+20) - (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+						text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max));
+					}else {
+						rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.min[0].label.text.length*7)+20)/2;
+						rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) - 20 - (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+						text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.min[0].label.text.length*7)+20)/2 - ((instruction.annotations.min[0].label.text.length*7)+20)/2;
+						text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) - 10 - (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+					}
+				}
+				paper.rect(rect_x, rect_y, (instruction.annotations.min[0].label.text.length*7)+20, 20).attr({
+					fill : instruction.annotations.min[0].label.style.background,
+					stroke : instruction.annotations.min[0].label.borderColor,
+				});
+				paper.text(text_x, text_y, (instruction.annotations.min[0].label.text)).attr({
+					fill : instruction.annotations.min[0].label.style.color,
+				});
 			}
 		}
 	}
@@ -820,7 +1014,7 @@ function circle_popup(id){
 	for(var i = 0; i<parseInt(instruction.path_no); i++){
 		elems["c"+i+""+id].animate({
 			opacity : 1,
-			r : circle_redius_zoom,
+			r : circle_radius_zoom,
 		},25);
 	}
 }
@@ -829,7 +1023,7 @@ function circle_popdown(id){
 	for(var i = 0; i<parseInt(instruction.path_no); i++){
 		elems["c"+i+""+id].animate({
 			//opacity : 0,
-			r : circle_redius,
+			r : circle_radius,
 		},25);
 	}
 }
@@ -982,13 +1176,9 @@ function mouseup(){
 		}
 		//Draw circle
 		if(draw_circle_flag == 1){
-			draw_circle(circle_redius, circle_redius_zoom);//Pass redius value
+			draw_circle(circle_radius, circle_radius_zoom);//Pass radius value
 		}
-						
-		//Draw annotations
-		if(draw_annotations_flag == 1){
-			draw_annotations();
-		}
+		
 		
 		//////////////////////            POPUP            //////////////////////
 		
@@ -1015,6 +1205,13 @@ function mouseup(){
 		if(popup_footer_design_flag == 1){
 				popup_footer_design();
 		}
+		
+						
+		//Draw annotations
+		if(draw_annotations_flag == 1){
+			draw_annotations();
+		}
+		
 		//Draw select area
 		select_area();
 		
