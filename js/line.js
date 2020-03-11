@@ -1363,6 +1363,11 @@ function mouseup(){
 		if(y_axis_hover_design_flag == 1){
 			y_axis_hover_design();
 		}
+		
+		//Draw label
+		if(label_flag == 1){
+			label();
+		}
 						
 		//Draw annotations
 		if(draw_annotations_flag == 1){
@@ -1370,10 +1375,6 @@ function mouseup(){
 		}
 		
 
-		//Draw label
-		if(label_flag == 1){
-			label();
-		}
 		
 		//Draw popup
 		if(popup_design_flag == 1){
