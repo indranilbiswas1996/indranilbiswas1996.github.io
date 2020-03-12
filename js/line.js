@@ -127,8 +127,8 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 			}
 		}
 	}
-	console.log(max_point_value+ " "+ min_point_value);
-	console.log(max_value+ " "+ min_value);
+	//console.log(max_point_value+ " "+ min_point_value);
+	//console.log(max_value+ " "+ min_value);
 	main_data_flag = 1;
 }
 //Paper set
