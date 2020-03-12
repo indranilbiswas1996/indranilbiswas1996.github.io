@@ -383,7 +383,7 @@ function draw_line_area(stroke_width){
 			fill : "270-"+path_details[i].color+"-#fff",
 			stroke : path_details[i].color,
 			'stroke-width' : stroke_width,
-			opacity : .3,
+			opacity : .1,
 		});
 		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i] - min_value))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
@@ -410,7 +410,7 @@ function draw_round_area(stroke_width){
 		var path1 = paper.path(p).attr({
 			'stroke-width' : stroke_width,
 			stroke : path_details[i].color,
-			opacity : .3,
+			opacity : .1,
 			fill : "270-"+path_details[i].color+"-#fff",
 		});
 		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " R ";
@@ -440,7 +440,7 @@ function draw_stepline_area(stroke_width){
 			fill : "270-"+path_details[i].color+"-#fff",
 			stroke : path_details[i].color,
 			'stroke-width' : stroke_width,
-			opacity : .3,
+			opacity : .1,
 		});
 		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]  - min_value))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
