@@ -105,7 +105,7 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 			min_value = Math.min(...(Object.values(data[i].value)));
 		}
 	}
-	min_value = min_value + (Math.ceil((min_value)/(y_division_no-1)));
+	//min_value = min_value + (Math.ceil((min_value)/(y_division_no-1)));
 	//max = ((Math.ceil(max_value/(y_division_no-1)))*(y_division_no-1))+(1*(y_division_no-1));
 	max = ((Math.ceil((max_value-min_value)/(y_division_no-1)))*(y_division_no-1))+(1*(y_division_no-1));
 	
@@ -120,13 +120,15 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 			}
 		}
 		//Min point value
-		min_point_value = Math.min(...(Object.values(data[0].value)));
-		for(var i = 0; i<data.length; i++){
-			if((Math.min(...(Object.values(data[i].value))))< min_point_value){
-				min_point_value = Math.min(...(Object.values(data[i].value)));
+		min_point_value = Math.min(...(Object.values(main_data[0].value)));
+		for(var i = 0; i<main_data.length; i++){
+			if((Math.min(...(Object.values(main_data[i].value))))< min_point_value){
+				min_point_value = Math.min(...(Object.values(main_data[i].value)));
 			}
 		}
 	}
+	console.log(max_point_value+ " "+ min_point_value);
+	console.log(max_value+ " "+ min_value);
 	main_data_flag = 1;
 }
 //Paper set
@@ -492,6 +494,8 @@ function draw_annotations(){
 		//x axis annotations
 		if(instruction.annotations.xaxis){
 			if(instruction.annotations.xaxis.length > 0){
+				
+var x_area_annotation_count = 0;
 				for(var i = 0; i< instruction.annotations.xaxis.length; i++){
 					//Path annotations
 					if(instruction.annotations.xaxis[i].x){
@@ -499,16 +503,16 @@ function draw_annotations(){
 							if(data[j].month == instruction.annotations.xaxis[i].x){
 								paper.path("M " + ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j) + " "+ (height - (2*paddingy)) + " l 0 " + (-(height-(4*paddingy))) ).attr({
 									stroke : instruction.annotations.xaxis[i].borderColor,
-								});
+								}).toBack();
 								var rect_x, rect_y, text_x, text_y;
 								if(j < data.length/2){
 									rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j);
-									rect_y = 2*paddingy + (j*20);
+									rect_y = 2*paddingy +10;//+ (j*5);
 									text_x = rect_x + 10;
 									text_y = rect_y + ((instruction.annotations.xaxis[i].label.text.length*7)+20)/2;
 								}else{
 									rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j)-20;
-									rect_y = 2*paddingy;
+									rect_y = 2*paddingy +10;//+ (j*5);
 									text_x = rect_x + 10;
 									text_y = rect_y + ((instruction.annotations.xaxis[i].label.text.length*7)+20)/2;
 								}
@@ -561,7 +565,9 @@ function draw_annotations(){
 								}
 							}
 							var area_rect_x, area_rect_y,area_rect_width, area_rect_height;
-							var rect_x, rect_y, text_x, text_y;
+							//var rect_x, rect_y, text_x, text_y;
+							var rect_x = -5000, rect_y = -5000, text_x = -5000, text_y = -5000;
+							//alert(x_area_annotation_count);
 							if(x1 >=0 && x2 >= 0){
 								if(x1 > x2){
 									var a = x1;
@@ -573,7 +579,7 @@ function draw_annotations(){
 								area_rect_width = ((width-(4*paddingx))/(data.length-1))*(x2-x1);
 								area_rect_height = (height-(4*paddingy));
 								rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*x1);
-								rect_y = height - (4*paddingy) - (i*30);
+								rect_y = height - (4*paddingy) -30 - (x_area_annotation_count*30);
 								text_x = rect_x + 10;
 								text_y = rect_y + ((instruction.annotations.xaxis[i].label.text.length*7)+20)/2;
 							}
@@ -587,7 +593,7 @@ function draw_annotations(){
 								}else{
 									rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*0);
 								}
-								rect_y = height - (4*paddingy) - (i*30);
+								rect_y = height - (4*paddingy) -30 - (x_area_annotation_count*30);
 								text_x = rect_x + 10;
 								text_y = rect_y + ((instruction.annotations.xaxis[i].label.text.length*7)+20)/2;
 							}
@@ -601,7 +607,7 @@ function draw_annotations(){
 								}else{
 									rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*x1);
 								}
-								rect_y = height - (4*paddingy) - (i*30);
+								rect_y = height - (4*paddingy) -30 - (x_area_annotation_count*30);
 								text_x = rect_x + 10;
 								text_y = rect_y + ((instruction.annotations.xaxis[i].label.text.length*7)+20)/2;
 							}
@@ -611,7 +617,7 @@ function draw_annotations(){
 								area_rect_width = (width-(4*paddingx));
 								area_rect_height = (height-(4*paddingy));
 								rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*0);
-								rect_y = height - (4*paddingy) - (i*30);
+								rect_y = height - (4*paddingy) -30 - (x_area_annotation_count*30);
 								text_x = rect_x + 10;
 								text_y = rect_y + ((instruction.annotations.xaxis[i].label.text.length*7)+20)/2;
 							}
@@ -620,7 +626,7 @@ function draw_annotations(){
 								stroke : instruction.annotations.xaxis[i].borderColor,
 								fill : instruction.annotations.xaxis[i].fillColor,
 								opacity : instruction.annotations.xaxis[i].opacity,
-							});
+							}).toBack();
 							paper.rect(rect_x, rect_y, 20, (instruction.annotations.xaxis[i].label.text.length*7)+20).attr({
 								fill : instruction.annotations.xaxis[i].label.style.background,
 								stroke : instruction.annotations.xaxis[i].label.borderColor,
@@ -629,6 +635,7 @@ function draw_annotations(){
 								fill : instruction.annotations.xaxis[i].label.style.color,
 								transform : "r270",
 							});
+							x_area_annotation_count++;
 						}
 					}
 				}
@@ -643,7 +650,7 @@ function draw_annotations(){
 						if(instruction.annotations.yaxis[i].y < max_value && instruction.annotations.yaxis[i].y > min_value){
 							paper.path("M "+ 2*paddingx +" " + ( (height-(2*paddingy)) - ((height-(4*paddingy))*(instruction.annotations.yaxis[i].y - min_value))/max) + " l "+  (width-(4*paddingx)) +" 0").attr({
 								stroke : instruction.annotations.yaxis[i].borderColor,
-							});
+							}).toBack();
 							if((instruction.annotations.yaxis[i].y - min_value) > max/2){
 								paper.rect((2*paddingx) + (i*50+50), (( (height-(2*paddingy)) - ((height-(4*paddingy))*(instruction.annotations.yaxis[i].y - min_value))/max)), (instruction.annotations.yaxis[i].label.text.length*7)+20, 20).attr({
 									fill : instruction.annotations.yaxis[i].label.style.background,
@@ -682,7 +689,7 @@ function draw_annotations(){
 							stroke : instruction.annotations.yaxis[i].borderColor,
 							fill : instruction.annotations.yaxis[i].fillColor,
 							opacity : instruction.annotations.yaxis[i].opacity,
-						});
+						}).toBack();
 						if((y2-min_value) > max/2){
 							paper.rect((2*paddingx) + (i*50+50), (( (height-(2*paddingy)) - ((height-(4*paddingy))*(y2 - min_value))/max)), (instruction.annotations.yaxis[i].label.text.length*7)+20, 20).attr({
 								fill : instruction.annotations.yaxis[i].label.style.background,
