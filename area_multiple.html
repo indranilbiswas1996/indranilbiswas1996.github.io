@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -27,139 +30,121 @@
 	<script>
 		window.onload = function(){			
 			var data = [{
-					month : '1840',
+					month : 'JAN',
 					value : {
-						tiger : 823,
-						deer : 1406,
+						a : 2.5,
+						b : 7.0,
+						c : -2.0,
 					}
 				},{
-					month : '1850',
+					month : 'FEB',
 					value : {
-						tiger : 876,
-						deer : 1456,
+						a : 3.8,
+						b : 8.2,
+						c : 3.4,
 					}
 				},{
-					month : '1860',
+					month : 'MAR',
 					value : {
-						tiger : 844,
-						deer : 1305,
+						a : 8.8,
+						b : 14.1,
+						c : -0.7,
 					}
 				},{
-					month : '1870',
+					month : 'APR',
 					value : {
-						tiger : 820,
-						deer : 1248,
+						a : 14.2,
+						b : 20.5,
+						c : 7.9,
 					}
 				},{
-					month : '1880',
+					month : 'MAY',
 					value : {
-						tiger : 850,
-						deer : 1280,
+						a : 17.7,
+						b : 24.5,
+						c : 10.8,
 					}
 				},{
-					month : '1890',
+					month : 'JUN',
 					value : {
-						tiger : 792,
-						deer : 1356,
+						a : 22.3,
+						b : 29.6,
+						c : 14.9,
 					}
 				},{
-					month : '1900',
+					month : 'JUL',
 					value : {
-						tiger : 750,
-						deer : 1150,
+						a : 24.1,
+						b : 30.1,
+						c : 18.1,
 					}
 				},{
-					month : '1910',
+					month : 'AUG',
 					value : {
-						tiger : 600,
-						deer : 1010,
+						a : 23.5,
+						b : 29.6,
+						c : 17.5,
 					}
 				},{
-					month : '1920',
+					month : 'SEP',
 					value : {
-						tiger : 523,
-						deer : 1198,
+						a : 19.8,
+						b : 27.4,
+						c : 12.1,
 					}
 				},{
-					month : '1930',
+					month : 'OCT',
 					value : {
-						tiger : 548,
-						deer : 1056,
+						a : 14.1,
+						b : 22.4,
+						c : 5.8,
 					}
 				},{
-					month : '1940',
+					month : 'NOV',
 					value : {
-						tiger : 610,
-						deer : 950,
+						a : 8.1,
+						b : 15.1,
+						c : 0.9,
 					}
 				},{
-					month : '1950',
+					month : 'DEC',
 					value : {
-						tiger : 587,
-						deer : 923,
-					}
-				},{
-					month : '1960',
-					value : {
-						tiger : 420,
-						deer : 897,
-					}
-				},{
-					month : '1970',
-					value : {
-						tiger : 450,
-						deer : 915,
-					}
-				},{
-					month : '1980',
-					value : {
-						tiger : 480,
-						deer : 829,
-					}
-				},{
-					month : '1990',
-					value : {
-						tiger : 388,
-						deer : 1048,
-					}
-				},{
-					month : '2000',
-					value : {
-						tiger : 360,
-						deer : 900,
-					}
-				},{
-					month : '2010',
-					value : {
-						tiger : 398,
-						deer : 1055,
+						a : 3.4,
+						b : 8.2,
+						c : -1.5,
 					}
 				}
 			];
 			var instruction = {
-				title : "Wildlife population",
+				title : "Weather statistics for Jammu and Kashmir",
 				width : 1000,
 				height : 540,
 				paddingx : 40,
 				paddingy : 40,
-				axis_color : "blue",
-				x_axis_name : "Year",
-				y_axis_name : "Population in thousand",
+				axis_color : "#0e66a9",
+				x_axis_name : "Month",
+				y_axis_name : "",
 				x_division_no : "10",//"" means Number of data
 				y_division_no : "10",//"" means Number of data
-				path_no : 2,
+				path_no : 3,
 			};
 			path_details = [{
-				name : "Tiger",
-				color : "#770069",
-			},{
-				name : "Deer",
+				name : "Normal",
 				color : "#0e66a9",
+			},{
+				name : "Warmest",
+				color : "#ff9800",
+			},{
+				name : "Coldest",
+				color : "#03a9f4",
 			}];
+
+			
 			
 			
 			//Check the all data's to create graph
 			check(data, instruction, path_details);
+			
 			
 			if(flag === 1){	
 			
@@ -186,12 +171,12 @@
 				y_axis_label();
 				
 				//Draw area
-				//draw_line_area(0);//Pass stroke width value
-				draw_round_area(0);//Pass stroke width value
+				draw_line_area(0);//Pass stroke width value
+				//draw_round_area(0);//Pass stroke width value
 				
 				//Draw path
-				//draw_line_path(5);//Pass stroke width value
-				draw_round_path(5);
+				draw_line_path(5);//Pass stroke width value
+				//draw_round_path(5);
 				//Draw circle
 				draw_circle(0, 5);//Pass redius value								
 				
@@ -221,8 +206,7 @@
 				
 				
 				//*****Draw rectangle for popup
-				draw_popup_rect();					
-				
+				draw_popup_rect();
 			}			
 		}
 	</script>
