@@ -291,7 +291,7 @@ function draw_line_path(stroke_width){
 			path : p,
 		}, 400 + (150*i), "<>" );
 	}
-	draw_line_path_flag = 1;
+draw_line_path_flag = 1;
 }
 //Draw round path
 var draw_round_path_flag = 0;
@@ -949,16 +949,16 @@ function y_axis_hover_design(){
 }
 //Draw popup
 var popup_design_flag = 0;
-function popup_design(){
-	
-	var pop_rect = paper.rect(0, 0, 120, instruction.path_no*30, 3).attr({
-		fill : '#f2f4ff',
-		stroke : '#90a3ff',
+function popup_design(){	
+	var pop_rect = paper.rect(0, (height - (4*paddingy)), 0, instruction.path_no*30, 2).attr({
+		fill : '#fcfcfc',//'#f2f4ff',
+		stroke : '#b8b8b8',//'#666666','#90a3ff',
 		opacity : 0,
-	});
+	});	
+	pop_rect.blur(1);
 	elems["pop_rect"] = pop_rect;
 	for(var i=0; i<instruction.path_no; i++){
-		var text1 = paper.text(20, (15 + (30*i)), "").attr({
+		var text1 = paper.text(20, /*(15 + (30*i))*/(height - (4*paddingy)), "").attr({
 			fill : path_details[i].color,
 			'font-size' : '13px',
 			'text-anchor' : 'start',
@@ -1056,13 +1056,22 @@ function popdown(){
 }
 //Popup hover
 function popup_hover(id){
+	var a = 0, b = 0;
+	for(var i = 0; i<parseInt(instruction.path_no); i++){
+		if(Object.values(data[id].value)[i].toString().length > a){
+			a = (path_details[i].name+" : "+Object.values(data[id].value)[i]).toString().length;
+		}
+	} 
+	a = (a*7)+40;
+	//console.log(a);
 	if(id<data.length/2){
 		if(Math.max(...(Object.values(data[id].value)))>(max/2)){
-			//for rect
+			//for rect			
 			elems["pop_rect"].animate({
 				opacity : 1,
 				x : popup_point_x[id] ,
 				y : popup_point_y[id] + 15,
+				width : a,
 			},150);
 			//for text change
 			for(var i = 0; i<parseInt(instruction.path_no); i++){
@@ -1074,7 +1083,7 @@ function popup_hover(id){
 			for(var i = 0; i<parseInt(instruction.path_no); i++){
 				elems["tt"+i].animate({
 					opacity : 1,
-					x : popup_point_x[id] + 20,
+					x : popup_point_x[id]+20,
 					y : popup_point_y[id] + (15 + (30*i) + 15),
 				}, 150);
 			}
@@ -1084,6 +1093,7 @@ function popup_hover(id){
 				opacity : 1,
 				x : popup_point_x[id] ,
 				y : popup_point_y[id] - (instruction.path_no*30) - 15,
+				width : a,
 			},150);
 			//for text change
 			for(var i = 0; i<parseInt(instruction.path_no); i++){
@@ -1105,8 +1115,9 @@ function popup_hover(id){
 			//for rect
 			elems["pop_rect"].animate({
 				opacity : 1,
-				x : popup_point_x[id] - 100,
+				x : popup_point_x[id] - a,
 				y : popup_point_y[id] + 15,
+				width : a,
 			},150);
 			//for text change
 			for(var i = 0; i<parseInt(instruction.path_no); i++){
@@ -1118,7 +1129,7 @@ function popup_hover(id){
 			for(var i = 0; i<parseInt(instruction.path_no); i++){
 				elems["tt"+i].animate({
 					opacity : 1,
-					x : popup_point_x[id] + 20 - 100,
+					x : popup_point_x[id] + 20 - a,
 					y : popup_point_y[id] + (15 + (30*i))  + 15,
 				}, 150);
 			}
@@ -1126,8 +1137,9 @@ function popup_hover(id){
 			//for rect
 			elems["pop_rect"].animate({
 				opacity : 1,
-				x : popup_point_x[id] - 100,
+				x : popup_point_x[id] - a,
 				y : popup_point_y[id] - (instruction.path_no*30) - 15,
+				width : a,
 			},150);
 			//for text change
 			for(var i = 0; i<parseInt(instruction.path_no); i++){
@@ -1139,7 +1151,7 @@ function popup_hover(id){
 			for(var i = 0; i<parseInt(instruction.path_no); i++){
 				elems["tt"+i].animate({
 					opacity : 1,
-					x : popup_point_x[id] + 20 - 100,
+					x : popup_point_x[id] + 20 - a,
 					y : popup_point_y[id] + (15 + (30*i)) - (instruction.path_no*30) - 15,
 				}, 150);
 			}
