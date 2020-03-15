@@ -32,13 +32,14 @@ h3{
 	padding : 0 0 15px;
 }
 .menu-header{
+	color : #fff;
 	width : 95%;
 	padding : 10px 0 10px 5%;
 	background: #0b3e52;/*#f1f1f1;*/
 	border : 1px solid #0b3e52;
 }
 .menu-option{
-	color : #fff;
+	color : #cdcdcd;
 	padding : 5px 0 5px 5%;
 	font-size : small;
 	width : 95%;
