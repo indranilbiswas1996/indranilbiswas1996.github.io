@@ -56,11 +56,11 @@ h3{
 	display : inline-block;
 	text-align: center;
 	/*background: #fff;*/
-    padding: 20px 0 50px;
+    	padding: 20px 0 50px;
 }
 .graph-header{
-	padding: 0 0 20px 0;
-    text-align: left;
+	padding: 0 0 20px 60px;
+    	text-align: left;
 }
 .graph-header a{
 	color: white;
