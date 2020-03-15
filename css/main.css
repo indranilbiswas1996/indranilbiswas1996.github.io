@@ -1,6 +1,6 @@
 html, body{
 	margin : 0;
-	background: #fdfdfd; /*#f1f1f1;*/
+	background: #243840; /*#f1f1f1;*/
 }
 h3{
 	font-size : large;
@@ -25,8 +25,7 @@ h3{
 	display : inline-block;
 	vertical-align: top;
 	font-family : "Open Sans", sans-serif;
-	box-shadow : inset -1px -2px 1px 0.1px #e2e2e2;
-	background: #ffffff;
+	/*box-shadow : inset -1px -2px 1px 0.1px #e2e2e2;*/
 }
 
 .menu-inner{
@@ -34,17 +33,16 @@ h3{
 }
 .menu-header{
 	padding : 10px 0 10px 5px;
-	background: #f1f1f1;
-	font-weight: bold;
+	background: #0b3e52;/*#f1f1f1;*/
 }
 .menu-option{
-    color: #000;
-    padding: 5px 0 5px 4%;
-    font-size: small;
-    width: 95%;
-    display: inline-block;
-    text-decoration: none;
-    border: 1px solid #f3f3f3;
+	color : #000;
+	padding : 5px 0 5px 5%;
+	font-size : small;
+	width : 95%;
+	display : inline-block;
+	text-decoration : none;
+	border:1px solid #004f6e;
 }
 .menu-option:hover{
 	text-decoration : underline;
@@ -53,13 +51,14 @@ h3{
 	width : 84%;
 	display : inline-block;
 	text-align: center;
-    	padding: 20px 0 50px;
+	/*background: #fff;*/
+    padding: 20px 0 50px;
 }
 .inner-graph{
 	display : inline-block;
 	background : #ffffff;
 	text-align: center;
-	box-shadow: 1px 15px 25px 10px #e2e2e2;
+	/*box-shadow: 1px 15px 25px 10px #e2e2e2;*/
     border: 1px solid #ddd;
 }
 .graph svg{
