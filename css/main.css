@@ -58,6 +58,18 @@ h3{
 	/*background: #fff;*/
     padding: 20px 0 50px;
 }
+.graph-header{
+	padding: 0 0 20px 0;
+    text-align: left;
+}
+.graph-header a{
+	color: white;
+    text-decoration: none;
+	font-family: "Open Sans", sans-serif;
+}
+.graph-header a:hover{
+    text-decoration: underline;
+}
 .inner-graph{
 	display : inline-block;
 	background : #ffffff;
