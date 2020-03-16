@@ -19,6 +19,14 @@ var popup_point_x = [];
 var popup_point_y = [];
 var max_point_value = 0;
 var min_point_value = 0;
+var line_path_icon_effect_status_array = [];
+var round_path_icon_effect_status_array = [];
+var stepline_path_icon_effect_status_array = [];
+var line_area_icon_effect_status_array = [];
+var round_area_icon_effect_status_array = [];
+var stepline_area_icon_effect_status_array = [];
+var label_icon_effect_status_array = [];
+var circle_icon_effect_status_array = [];
 
 /*Sub variable*/
 var circle_radius = 0;
@@ -99,6 +107,7 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 			max_value = Math.max(...(Object.values(data[i].value)));
 		}
 	}
+	
 	min_value = 0;
 	for(var i = 0; i<data.length; i++){
 		if((Math.min(...(Object.values(data[i].value))))< min_value){
@@ -148,19 +157,515 @@ function main_title(){
 	var x = (2*paddingx);
 	for(var i = 0; i < path_details.length; i++){
 		x += (7*path_details[(path_details.length-1)-i].name.length);
-		paper.text(width - x, paddingy, path_details[(path_details.length-1)-i].name).attr({
-		'font-weight' : 'bold',
-		'text-anchor': 'start',
-		'font-size' : '13px',
-		fill : path_details[(path_details.length-1)-i].color,
+		var text = paper.text(width - x, paddingy, path_details[(path_details.length-1)-i].name).attr({
+			'font-weight' : 'bold',
+			'text-anchor': 'start',
+			'font-size' : '13px',
+			fill : path_details[(path_details.length-1)-i].color,
 		});
-		paper.circle(width- x - (.3*paddingx) , paddingy, 5).attr({
+		var circle = paper.circle(width- x - (.3*paddingx) , paddingy, 5).attr({
 			fill : path_details[(path_details.length-1)-i].color,
 			stroke : path_details[(path_details.length-1)-i].color,
 		});
+		var rect = paper.rect(width- x - (.3*paddingx) - 5, paddingy - 7.5, (path_details[(path_details.length-1)-i].name).toString().length*7 + 25 , 15).attr({
+			fill : 'transparent',
+			opacity : 0,
+			cursor : 'pointer',
+			//stroke : 'transparent',
+		});
+		rect.node.id = "icon"+i;
+		rect.node.addEventListener('click', icon_effect_click);
+		rect.node.addEventListener('mouseover', icon_effect_mouseover);
+		rect.node.addEventListener('mouseout', icon_effect_mouseout);
 		x += .75*paddingx;
+		
+	}
+	for(var i = 0; i < parseInt(instruction.path_no); i++){
+		line_path_icon_effect_status_array.push(0);
+		round_path_icon_effect_status_array.push(0);
+		stepline_path_icon_effect_status_array.push(0);
+		line_area_icon_effect_status_array.push(0);
+		round_area_icon_effect_status_array.push(0);
+		stepline_area_icon_effect_status_array.push(0);
+		label_icon_effect_status_array.push(0);
+		circle_icon_effect_status_array.push(0);
 	}
 	main_title_flag = 1;
+}
+
+//Icon click effect
+function icon_effect_click(){
+	var id = this.id.replace('icon', '');
+	id = (path_details.length-1) - id;
+	//For Line path
+	if(draw_line_path_flag == 1){
+		for(var i = 0; i < parseInt(instruction.path_no); i++){
+			if(i == id){
+				if(line_path_icon_effect_status_array[id] == 0){
+					line_path_icon_effect_status_array[id] = 1;
+					elems['line_path'+i].animate({
+						opacity: 0.1,
+					});
+					for(var i = 0; i < parseInt(instruction.path_no); i++){
+						if(i != id && line_path_icon_effect_status_array[i] == 0){
+							elems['line_path'+i].animate({
+								opacity: 1,
+							});
+						}
+					}
+				}
+				else{
+					line_path_icon_effect_status_array[id] = 0;
+					elems['line_path'+i].animate({
+						opacity: 1,
+					});
+				}
+			}
+		}
+	}
+	//For Round path
+	if(draw_round_path_flag == 1){
+		for(var i = 0; i < parseInt(instruction.path_no); i++){
+			if(i == id){
+				if(round_path_icon_effect_status_array[id] == 0){
+					round_path_icon_effect_status_array[id] = 1;
+					elems['round_path'+i].animate({
+						opacity: 0.1,
+					});
+					for(var i = 0; i < parseInt(instruction.path_no); i++){
+						if(i != id && round_path_icon_effect_status_array[i] == 0){
+							elems['round_path'+i].animate({
+								opacity: 1,
+							});
+						}
+					}
+				}
+				else{
+					round_path_icon_effect_status_array[id] = 0;
+					elems['round_path'+i].animate({
+						opacity: 1,
+					});
+				}
+			}
+		}
+	}
+	//For stepline path
+	if(draw_stepline_path_flag == 1){
+		for(var i = 0; i < parseInt(instruction.path_no); i++){
+			if(i == id){
+				if(stepline_path_icon_effect_status_array[id] == 0){
+					stepline_path_icon_effect_status_array[id] = 1;
+					elems['stepline_path'+i].animate({
+						opacity: 0.1,
+					});
+					for(var i = 0; i < parseInt(instruction.path_no); i++){
+						if(i != id && stepline_path_icon_effect_status_array[i] == 0){
+							elems['stepline_path'+i].animate({
+								opacity: 1,
+							});
+						}
+					}
+				}
+				else{
+					stepline_path_icon_effect_status_array[id] = 0;
+					elems['stepline_path'+i].animate({
+						opacity: 1,
+					});
+				}
+			}
+		}
+	}
+	//For Line area
+	if(draw_line_area_flag == 1){
+		for(var i = 0; i < parseInt(instruction.path_no); i++){
+			if(i == id){
+				if(line_area_icon_effect_status_array[id] == 0){
+					line_area_icon_effect_status_array[id] = 1;
+					elems['line_area'+i].attr({
+						fill : "#fff",
+						opacity: .1,
+					});
+					for(var j = 0; j < parseInt(instruction.path_no); j++){
+						if(j != id && line_area_icon_effect_status_array[j] == 0){
+							elems['line_area'+j].attr({
+								fill : "270-"+path_details[j].color+"-#fff",
+								opacity: .1,
+							});
+						}
+					}
+				}
+				else{
+					line_area_icon_effect_status_array[id] = 0;
+					elems['line_area'+i].attr({
+						fill : "270-"+path_details[i].color+"-#fff",
+						opacity: .1,
+					});
+				}
+			}
+		}
+	}
+	//For Round area
+	if(draw_round_area_flag == 1){
+		for(var i = 0; i < parseInt(instruction.path_no); i++){
+			if(i == id){
+				if(round_area_icon_effect_status_array[id] == 0){
+					round_area_icon_effect_status_array[id] = 1;
+					elems['round_area'+i].attr({
+						fill : "#fff",
+						opacity: .1,
+					});
+					for(var j = 0; j < parseInt(instruction.path_no); j++){
+						if(j != id && round_area_icon_effect_status_array[j] == 0){
+							elems['round_area'+j].attr({
+								fill : "270-"+path_details[j].color+"-#fff",
+								opacity: .1,
+							});
+						}
+					}
+				}
+				else{
+					round_area_icon_effect_status_array[id] = 0;
+					elems['round_area'+i].attr({
+						fill : "270-"+path_details[i].color+"-#fff",
+						opacity: .1,
+					});
+				}
+			}
+		}
+	}
+	//For Stepline area
+	if(draw_stepline_area_flag  == 1){
+		for(var i = 0; i < parseInt(instruction.path_no); i++){
+			if(i == id){
+				if(stepline_area_icon_effect_status_array[id] == 0){
+					stepline_area_icon_effect_status_array[id] = 1;
+					elems['stepline_area'+i].attr({
+						fill : "#fff",
+						opacity: .1,
+					});
+					for(var j = 0; j < parseInt(instruction.path_no); j++){
+						if(j != id && stepline_area_icon_effect_status_array[j] == 0){
+							elems['stepline_area'+j].attr({
+								fill : "270-"+path_details[j].color+"-#fff",
+								opacity: .1,
+							});
+						}
+					}
+				}
+				else{
+					stepline_area_icon_effect_status_array[id] = 0;
+					elems['stepline_area'+i].attr({
+						fill : "270-"+path_details[i].color+"-#fff",
+						opacity: .1,
+					});
+				}
+			}
+		}
+	}
+	//For Circle
+	if(draw_circle_flag  == 1){
+		console.log(circle_icon_effect_status_array);
+		for(var i = 0; i < parseInt(instruction.path_no); i++){
+			if(i == id){
+				if(circle_icon_effect_status_array[id] == 0){
+					circle_icon_effect_status_array[id] = 1;					
+					for(var k =0;k< data.length ; k++){
+						elems["c"+i+""+k].attr({
+							fill : "#fff",
+							opacity: .1,
+						});
+						for(var j = 0; j < parseInt(instruction.path_no); j++){
+							if(j != id && circle_icon_effect_status_array[j] == 0){
+								elems["c"+j+""+k].attr({
+									fill : path_details[j].color,
+									opacity: 1,
+								});
+							}
+						}
+					}
+				}
+				else{
+					circle_icon_effect_status_array[id] = 0;
+					for(var k =0;k< data.length; k++){
+						elems["c"+i+""+k].attr({
+							fill : path_details[i].color,
+							opacity: 1,
+						});
+					}
+				}
+			}
+		}		
+		console.log(circle_icon_effect_status_array);
+	}
+	//For Label
+	if(label_flag == 1){
+		for(var i = 0; i < parseInt(instruction.path_no); i++){
+			if(i == id){
+				if(label_icon_effect_status_array[id] == 0){
+					label_icon_effect_status_array[id] = 1;
+					var m = 0;
+					for(var k =0;m< data.length ; k++){
+						elems["label_rect"+i+""+k].attr({
+							fill : "#fff",
+							opacity: .1,
+						});
+						for(var j = 0; j < parseInt(instruction.path_no); j++){
+							if(j != id && label_icon_effect_status_array[j] == 0){
+								elems["label_rect"+j+""+k].attr({
+									fill : path_details[j].color,
+									opacity: 1,
+								});
+							}
+						}
+						m = m + (Math.ceil(data.length/(x_division_no)));
+					}
+				}
+				else{
+					label_icon_effect_status_array[id] = 0;
+					var m = 0;
+					for(var k =0;m< data.length; k++){
+						elems["label_rect"+i+""+k].attr({
+							fill : path_details[i].color,
+							opacity: 1,
+						});
+						m = m + (Math.ceil(data.length/(x_division_no)));
+					}
+				}
+			}
+		}
+	}
+}
+//Icon mouseover effect
+function icon_effect_mouseover(){
+	var id = this.id.replace('icon', '');
+	id = (path_details.length-1) - id;
+	var c = 0;
+	for(var i = 0; i < parseInt(instruction.path_no); i++){
+		if(line_path_icon_effect_status_array[i] == 1){
+			c++;
+		}
+		if(round_path_icon_effect_status_array[i] == 1){
+			c++;
+		}
+		if(stepline_path_icon_effect_status_array[i] == 1){
+			c++;
+		}
+		if(line_area_icon_effect_status_array == 1){
+			c++;
+		}
+		if(round_area_icon_effect_status_array[i] == 1){
+			c++;
+		}
+		if(stepline_area_icon_effect_status_array[i] == 1){
+			c++;
+		}
+		if(circle_icon_effect_status_array[i] == 1){
+			c++;
+		}
+		if(label_icon_effect_status_array[i] == 1){
+			c++;
+		}
+	}
+	if(c == 0){
+		//For line path
+		if(draw_line_path_flag == 1){
+			for(var i = 0; i< parseInt(instruction.path_no); i++){
+				if(id != i){
+					elems['line_path'+i].animate({
+						opacity: 0.1,
+					});
+				}
+			}
+		}
+		//For round path
+		if(draw_round_path_flag == 1){
+			for(var i = 0; i< parseInt(instruction.path_no); i++){
+				if(id != i){
+					elems['round_path'+i].animate({
+						opacity: 0.1,
+					});
+				}
+			}
+		}
+		//For stepline path
+		if(draw_stepline_path_flag  == 1){
+			for(var i = 0; i< parseInt(instruction.path_no); i++){
+				if(id != i){
+					elems['stepline_path'+i].animate({
+						opacity: 0.1,
+					});
+				}
+			}
+		}
+		//For line area
+		if(draw_line_area_flag == 1){
+			for(var i = 0; i< parseInt(instruction.path_no); i++){
+				if(id != i){
+					elems['line_area'+i].animate({
+						fill : "#fff",
+						opacity: 0.1,
+					});
+				}
+			}
+		}
+		//For round area
+		if(draw_round_area_flag == 1){
+			for(var i = 0; i< parseInt(instruction.path_no); i++){
+				if(id != i){
+					elems['round_area'+i].attr({
+						fill : "#fff",
+						opacity: .1,
+					});
+				}
+			}
+		}
+		//For stepline area
+		if(draw_stepline_area_flag  == 1){
+			for(var i = 0; i< parseInt(instruction.path_no); i++){
+				if(id != i){
+					elems['stepline_area'+i].attr({
+						fill : "#fff",
+						opacity: .1,
+					});
+				}
+			}
+		}
+		//For Circle
+		if(draw_circle_flag  == 1){
+			for(var i = 0; i < parseInt(instruction.path_no); i++){
+				if(id != i){					
+					for(var k =0;k< data.length ; k++){
+						elems["c"+i+""+k].animate({
+							fill : path_details[i].color,
+							opacity: .1,
+						});
+					}
+				}
+			}
+		}
+		//For Label
+		if(label_flag == 1){
+			for(var i = 0; i < parseInt(instruction.path_no); i++){
+				if(id != i){
+					var m = 0;
+					for(var k =0;m< data.length ; k++){
+						elems["label_rect"+i+""+k].animate({
+							fill : path_details[i].color,
+							opacity: .1,
+						});
+						m = m + (Math.ceil(data.length/(x_division_no)));
+					}
+				}
+			}
+		}
+	}
+}
+//Icon mouseout effect
+function icon_effect_mouseout(){
+	var c = 0;
+	for(var i = 0; i < parseInt(instruction.path_no); i++){
+		if(line_path_icon_effect_status_array[i] == 1){
+			c++;
+		}
+		if(round_path_icon_effect_status_array[i] == 1){
+			c++;
+		}
+		if(stepline_path_icon_effect_status_array[i] == 1){
+			c++;
+		}
+		if(line_area_icon_effect_status_array == 1){
+			c++;
+		}
+		if(round_area_icon_effect_status_array[i] == 1){
+			c++;
+		}
+		if(stepline_area_icon_effect_status_array[i] == 1){
+			c++;
+		}
+		if(circle_icon_effect_status_array[i] == 1){
+			c++;
+		}
+		if(label_icon_effect_status_array[i] == 1){
+			c++;
+		}
+	}
+	if(c == 0){
+		//For line path
+		if(draw_line_path_flag == 1){
+			for(var i = 0; i< parseInt(instruction.path_no); i++){
+				elems['line_path'+i].animate({
+					opacity: 1,
+				});
+			}
+		}
+		//For round path
+		if(draw_round_path_flag == 1){
+			for(var i = 0; i< parseInt(instruction.path_no); i++){
+				elems['round_path'+i].animate({
+					opacity: 1,
+				});
+			}
+		}
+		//For stepline path
+		if(draw_stepline_path_flag  == 1){
+			for(var i = 0; i< parseInt(instruction.path_no); i++){
+				elems['stepline_path'+i].animate({
+					opacity: 1,
+				});
+			}
+		}
+		//For line area
+		if(draw_line_area_flag == 1){
+			for(var i = 0; i< parseInt(instruction.path_no); i++){
+				elems['line_area'+i].animate({
+					opacity: 0.1,
+					fill : "270-"+path_details[i].color+"-#fff",
+				});
+			}
+		}
+		//For round area
+		if(draw_round_area_flag == 1){
+			for(var i = 0; i< parseInt(instruction.path_no); i++){
+				elems['round_area'+i].animate({
+					opacity: 0.1,
+					fill : "270-"+path_details[i].color+"-#fff",
+				});
+			}
+		}
+		//For round area
+		if(draw_stepline_area_flag == 1){
+			for(var i = 0; i< parseInt(instruction.path_no); i++){
+				elems['stepline_area'+i].animate({
+					opacity: 0.1,
+					fill : "270-"+path_details[i].color+"-#fff",
+				});
+			}
+		}
+		//For circle
+		if(label_flag == 1){
+			for(var i = 0; i < parseInt(instruction.path_no); i++){
+				for(var k =0;k< data.length ; k++){
+					elems["c"+i+""+k].animate({
+						fill : path_details[i].color,
+						opacity: 1,
+					});
+				}
+			}
+		}
+		//For Label
+		if(label_flag == 1){
+			for(var i = 0; i < parseInt(instruction.path_no); i++){
+				var m = 0;
+				for(var k =0;m< data.length ; k++){
+					elems["label_rect"+i+""+k].animate({
+						fill : path_details[i].color,
+						opacity: 1,
+					});
+					m = m + (Math.ceil(data.length/(x_division_no)));
+				}
+			}
+		}
+	}
 }
 
 //x axis title
@@ -280,14 +785,14 @@ function draw_line_path(stroke_width){
 			stroke : path_details[i].color,
 			opacity : 1,
 		});
-		elems['path'+i] = path1;
+		elems['line_path'+i] = path1;
 	}
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
 		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i] - min_value))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
 			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
 		}
-		elems['path'+i].animate({
+		elems['line_path'+i].animate({
 			path : p,
 		}, 400 + (150*i), "<>" );
 	}
@@ -307,11 +812,12 @@ function draw_round_path(stroke_width){
 			stroke : path_details[i].color,
 			opacity : 1,
 		});
+		elems['round_path'+i] = path1;
 		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i]   - min_value)*((height-(4*paddingy))/max))) + " R ";
 		for(var j = 1; j < data.length ; j++){
 			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " ";
 		}
-		path1.animate({
+		elems['round_path'+i].animate({
 			path : p,
 		}, 400 + (150*i), "<>" );
 	}
@@ -333,7 +839,7 @@ function draw_stepline_path(stroke_width){
 			stroke : path_details[i].color,
 			opacity : 1,
 		});
-		elems['path'+i] = path1;
+		elems['stepline_path'+i] = path1;
 	}
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
 		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]  - min_value))/max) + " ";
@@ -341,7 +847,7 @@ function draw_stepline_path(stroke_width){
 			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
 			p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
 		}
-		elems['path'+i].animate({
+		elems['stepline_path'+i].animate({
 			path : p,
 		}, 400 + (150*i), "backOut" );
 	}
@@ -385,12 +891,13 @@ function draw_line_area(stroke_width){
 			'stroke-width' : stroke_width,
 			opacity : .1,
 		});
+		elems['line_area'+i] = path1;
 		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i] - min_value))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
 			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
 		}
 		p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
-		path1.animate({
+		elems['line_area'+i].animate({
 			path : p,
 		}, 400 + (150*i), "<>");
 	}
@@ -411,14 +918,15 @@ function draw_round_area(stroke_width){
 			'stroke-width' : stroke_width,
 			stroke : path_details[i].color,
 			opacity : .1,
-			fill : "270-"+path_details[i].color+"-#fff",
+			fill : "270-"+path_details[i].color+"-#ffffff",
 		});
+		elems['round_area'+i] = path1;
 		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " R ";
 		for(var j = 1; j < data.length ; j++){
 			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " ";
 		}
 		p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
-		path1.animate({
+		elems['round_area'+i].animate({
 			path : p,
 		}, 400 + (150*i), "<>" );
 	}
@@ -442,13 +950,14 @@ function draw_stepline_area(stroke_width){
 			'stroke-width' : stroke_width,
 			opacity : .1,
 		});
+		elems['stepline_area'+i] = path1;
 		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]  - min_value))/max) + " ";
 		for(var j = 1; j < data.length ; j++){
 			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
 			p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
 		}
 		p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
-		path1.animate({
+		elems['stepline_area'+i].animate({
 			path : p,
 		}, 400 + (150*i), "backOut");
 	}
@@ -470,7 +979,7 @@ function label(){
 				opacity : 1,
 				y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max)) - 8,
 			}, 400 + (150*i), "<>" );
-			
+			elems["label_rect"+i+""+k] = rect1;
 			var text1 = paper.text( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max)) ,Object.values(data[j].value)[i]).attr({
 				//opacity : 0,
 				fill : "#fff",//path_details[i].color,
@@ -480,7 +989,8 @@ function label(){
 				x : ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))),
 				y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max)),
 				
-			}, 400 + (150*i), "<>" );
+			}, 400 + (150*i), "<>" );			
+			elems["label_text"+i+""+k] = text1;
 			j = j + (Math.ceil(data.length/(x_division_no)));		
 		}
 	}
