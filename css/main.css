@@ -86,7 +86,7 @@ h3{
 	display : inline-block;
 	background : #ffffff;
 	text-align: center;
-	/*box-shadow: 1px 15px 25px 10px #e2e2e2;*/
+	box-shadow: 1px 15px 25px 10px #181a2f;
     border: 1px solid #ddd;
 }
 .graph svg{
