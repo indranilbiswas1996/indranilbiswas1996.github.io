@@ -28,15 +28,7 @@ var stepline_area_icon_effect_status_array = [];
 var label_icon_effect_status_array = [];
 var circle_icon_effect_status_array = [];
 
-/*Sub variable*/
-var circle_radius = 0;
-var circle_radius_zoom = 0;
-var line_area_stroke = 0;
-var round_area_stroke = 0;
-var line_path_stroke = 0;
-var round_path_stroke = 0;
-var stepline_path_stroke = 0;
-var stepline_area_stroke = 0;
+
 
 /*Function Flag*/
 /*var main_title_flag = 0;
@@ -119,7 +111,8 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 	max = ((Math.ceil((max_value-min_value)/(y_division_no-1)))*(y_division_no-1))+(1*(y_division_no-1));
 	
 	//For main value
-	if(main_data_flag == 0){
+	if(main_data_flag == 0){		
+		create_paper();
 		main_data = data;
 		//Max point
 		max_point_value = Math.max(...(Object.values(main_data[0].value)));
@@ -144,7 +137,63 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 function create_paper(){	
 	paper = new Raphael(document.getElementById("cntnr1"), width, height);	
 }
-
+//All function
+function all_function(){
+	if(instruction.main_title == true){
+		main_title();
+	}
+	if(instruction.x_axis == true){
+		x_axis();
+	}
+	if(instruction.x_axis_division == true){
+		x_axis_division();
+	}
+	if(instruction.x_axis_title == true){
+		x_axis_title();
+	}
+	if(instruction.x_axis_label == true){
+		x_axis_label();
+	}
+	if(instruction.y_axis == true){
+		y_axis();
+	}
+	if(instruction.y_axis_division == true){
+		y_axis_division();
+	}
+	if(instruction.y_axis_title == true){
+		y_axis_title();
+	}
+	if(instruction.y_axis_label == true){
+		y_axis_label();
+	}
+	draw_line_area();
+	draw_round_area();
+	draw_stepline_area();
+	draw_line_path();	
+	draw_round_path();	
+	draw_stepline_path();
+	draw_circle();
+	//Collect max data on every point for view popup on that point
+	collect_popup_point();
+	if(instruction.x_axis_hover_design == true){
+		x_axis_hover_design();
+	}
+	if(instruction.y_axis_hover_design == true){
+		y_axis_hover_design();
+	}
+	label();
+	if(instruction.popup_design == true){
+		popup_design();
+	}
+	if(instruction.popup_footer_design == true){
+		popup_footer_design();
+	}
+	if(instruction.select_area == true){
+		select_area();
+	}
+	//*****Draw rectangle for popup
+	draw_popup_rect();
+}
 //All title
 var main_title_flag = 0;
 function main_title(){
@@ -203,22 +252,28 @@ function icon_effect_click(){
 			if(i == id){
 				if(line_path_icon_effect_status_array[id] == 0){
 					line_path_icon_effect_status_array[id] = 1;
-					elems['line_path'+i].animate({
-						opacity: 0.1,
-					});
+					if(elems['line_path'+i]){
+						elems['line_path'+i].animate({
+							opacity: 0.1,
+						});
+					}
 					for(var i = 0; i < parseInt(instruction.path_no); i++){
 						if(i != id && line_path_icon_effect_status_array[i] == 0){
-							elems['line_path'+i].animate({
-								opacity: 1,
-							});
+							if(elems['line_path'+i]){
+								elems['line_path'+i].animate({
+									opacity: 1,
+								});
+							}
 						}
 					}
 				}
 				else{
 					line_path_icon_effect_status_array[id] = 0;
-					elems['line_path'+i].animate({
-						opacity: 1,
-					});
+					if(elems['line_path'+i]){
+						elems['line_path'+i].animate({
+							opacity: 1,
+						});
+					}
 				}
 			}
 		}
@@ -229,22 +284,28 @@ function icon_effect_click(){
 			if(i == id){
 				if(round_path_icon_effect_status_array[id] == 0){
 					round_path_icon_effect_status_array[id] = 1;
-					elems['round_path'+i].animate({
-						opacity: 0.1,
-					});
+					if(elems['round_path'+i]){
+						elems['round_path'+i].animate({
+							opacity: 0.1,
+						});
+					}
 					for(var i = 0; i < parseInt(instruction.path_no); i++){
 						if(i != id && round_path_icon_effect_status_array[i] == 0){
-							elems['round_path'+i].animate({
-								opacity: 1,
-							});
+							if(elems['round_path'+i]){
+								elems['round_path'+i].animate({
+									opacity: 1,
+								});
+							}
 						}
 					}
 				}
 				else{
 					round_path_icon_effect_status_array[id] = 0;
-					elems['round_path'+i].animate({
-						opacity: 1,
-					});
+					if(elems['round_path'+i]){
+						elems['round_path'+i].animate({
+							opacity: 1,
+						});
+					}
 				}
 			}
 		}
@@ -255,22 +316,28 @@ function icon_effect_click(){
 			if(i == id){
 				if(stepline_path_icon_effect_status_array[id] == 0){
 					stepline_path_icon_effect_status_array[id] = 1;
-					elems['stepline_path'+i].animate({
-						opacity: 0.1,
-					});
+					if(elems['stepline_path'+i]){
+						elems['stepline_path'+i].animate({
+							opacity: 0.1,
+						});
+					}
 					for(var i = 0; i < parseInt(instruction.path_no); i++){
 						if(i != id && stepline_path_icon_effect_status_array[i] == 0){
-							elems['stepline_path'+i].animate({
-								opacity: 1,
-							});
+							if(elems['stepline_path'+i]){
+								elems['stepline_path'+i].animate({
+									opacity: 1,
+								});
+							}
 						}
 					}
 				}
 				else{
 					stepline_path_icon_effect_status_array[id] = 0;
-					elems['stepline_path'+i].animate({
-						opacity: 1,
-					});
+					if(elems['stepline_path'+i]){
+						elems['stepline_path'+i].animate({
+							opacity: 1,
+						});
+					}
 				}
 			}
 		}
@@ -281,25 +348,31 @@ function icon_effect_click(){
 			if(i == id){
 				if(line_area_icon_effect_status_array[id] == 0){
 					line_area_icon_effect_status_array[id] = 1;
-					elems['line_area'+i].attr({
-						fill : "#fff",
-						opacity: .1,
-					});
+					if(elems['line_area'+i]){
+						elems['line_area'+i].attr({
+							fill : "#fff",
+							opacity: .1,
+						});
+					}
 					for(var j = 0; j < parseInt(instruction.path_no); j++){
 						if(j != id && line_area_icon_effect_status_array[j] == 0){
-							elems['line_area'+j].attr({
-								fill : "270-"+path_details[j].color+"-#fff",
-								opacity: .1,
-							});
+							if(elems['line_area'+j]){
+								elems['line_area'+j].attr({
+									fill : "270-"+path_details[j].color+"-#fff",
+									opacity: .1,
+								});
+							}
 						}
 					}
 				}
 				else{
 					line_area_icon_effect_status_array[id] = 0;
-					elems['line_area'+i].attr({
-						fill : "270-"+path_details[i].color+"-#fff",
-						opacity: .1,
-					});
+					if(elems['line_area'+i]){
+						elems['line_area'+i].attr({
+							fill : "270-"+path_details[i].color+"-#fff",
+							opacity: .1,
+						});
+					}
 				}
 			}
 		}
@@ -310,25 +383,31 @@ function icon_effect_click(){
 			if(i == id){
 				if(round_area_icon_effect_status_array[id] == 0){
 					round_area_icon_effect_status_array[id] = 1;
-					elems['round_area'+i].attr({
-						fill : "#fff",
-						opacity: .1,
-					});
+					if(elems['round_area'+i]){
+						elems['round_area'+i].attr({
+							fill : "#fff",
+							opacity: .1,
+						});
+					}
 					for(var j = 0; j < parseInt(instruction.path_no); j++){
 						if(j != id && round_area_icon_effect_status_array[j] == 0){
-							elems['round_area'+j].attr({
-								fill : "270-"+path_details[j].color+"-#fff",
-								opacity: .1,
-							});
+							if(elems['round_area'+j]){
+								elems['round_area'+j].attr({
+									fill : "270-"+path_details[j].color+"-#fff",
+									opacity: .1,
+								});
+							}
 						}
 					}
 				}
 				else{
 					round_area_icon_effect_status_array[id] = 0;
-					elems['round_area'+i].attr({
-						fill : "270-"+path_details[i].color+"-#fff",
-						opacity: .1,
-					});
+					if(elems['round_area'+i]){
+						elems['round_area'+i].attr({
+							fill : "270-"+path_details[i].color+"-#fff",
+							opacity: .1,
+						});
+					}
 				}
 			}
 		}
@@ -339,47 +418,57 @@ function icon_effect_click(){
 			if(i == id){
 				if(stepline_area_icon_effect_status_array[id] == 0){
 					stepline_area_icon_effect_status_array[id] = 1;
-					elems['stepline_area'+i].attr({
-						fill : "#fff",
-						opacity: .1,
-					});
+					if(elems['stepline_area'+i]){
+						elems['stepline_area'+i].attr({
+							fill : "#fff",
+							opacity: .1,
+						});
+					}
 					for(var j = 0; j < parseInt(instruction.path_no); j++){
 						if(j != id && stepline_area_icon_effect_status_array[j] == 0){
-							elems['stepline_area'+j].attr({
-								fill : "270-"+path_details[j].color+"-#fff",
-								opacity: .1,
-							});
+							if(elems['stepline_area'+j]){
+								elems['stepline_area'+j].attr({
+									fill : "270-"+path_details[j].color+"-#fff",
+									opacity: .1,
+								});
+							}
 						}
 					}
 				}
 				else{
 					stepline_area_icon_effect_status_array[id] = 0;
-					elems['stepline_area'+i].attr({
-						fill : "270-"+path_details[i].color+"-#fff",
-						opacity: .1,
-					});
+					if(elems['stepline_area'+i]){
+						elems['stepline_area'+i].attr({
+							fill : "270-"+path_details[i].color+"-#fff",
+							opacity: .1,
+						});
+					}
 				}
 			}
 		}
 	}
 	//For Circle
 	if(draw_circle_flag  == 1){
-		console.log(circle_icon_effect_status_array);
+		//console.log(circle_icon_effect_status_array);
 		for(var i = 0; i < parseInt(instruction.path_no); i++){
 			if(i == id){
 				if(circle_icon_effect_status_array[id] == 0){
 					circle_icon_effect_status_array[id] = 1;					
 					for(var k =0;k< data.length ; k++){
-						elems["c"+i+""+k].attr({
-							fill : "#fff",
-							opacity: .1,
-						});
+						if(elems["c"+i+""+k]){
+							elems["c"+i+""+k].attr({
+								fill : "#fff",
+								opacity: .1,
+							});
+						}
 						for(var j = 0; j < parseInt(instruction.path_no); j++){
 							if(j != id && circle_icon_effect_status_array[j] == 0){
-								elems["c"+j+""+k].attr({
-									fill : path_details[j].color,
-									opacity: 1,
-								});
+								if(elems["c"+j+""+k]){
+									elems["c"+j+""+k].attr({
+										fill : path_details[j].color,
+										opacity: 1,
+									});
+								}
 							}
 						}
 					}
@@ -387,15 +476,17 @@ function icon_effect_click(){
 				else{
 					circle_icon_effect_status_array[id] = 0;
 					for(var k =0;k< data.length; k++){
-						elems["c"+i+""+k].attr({
-							fill : path_details[i].color,
-							opacity: 1,
-						});
+						if(elems["c"+i+""+k]){
+							elems["c"+i+""+k].attr({
+								fill : path_details[i].color,
+								opacity: 1,
+							});
+						}
 					}
 				}
 			}
 		}		
-		console.log(circle_icon_effect_status_array);
+		//console.log(circle_icon_effect_status_array);
 	}
 	//For Label
 	if(label_flag == 1){
@@ -405,16 +496,20 @@ function icon_effect_click(){
 					label_icon_effect_status_array[id] = 1;
 					var m = 0;
 					for(var k =0;m< data.length ; k++){
-						elems["label_rect"+i+""+k].attr({
-							fill : "#fff",
-							opacity: .1,
-						});
+						if(elems["label_rect"+i+""+k]){
+							elems["label_rect"+i+""+k].attr({
+								fill : "#fff",
+								opacity: .1,
+							});
+						}
 						for(var j = 0; j < parseInt(instruction.path_no); j++){
 							if(j != id && label_icon_effect_status_array[j] == 0){
-								elems["label_rect"+j+""+k].attr({
-									fill : path_details[j].color,
-									opacity: 1,
-								});
+								if(elems["label_rect"+j+""+k]){
+									elems["label_rect"+j+""+k].attr({
+										fill : path_details[j].color,
+										opacity: 1,
+									});
+								}
 							}
 						}
 						m = m + (Math.ceil(data.length/(x_division_no)));
@@ -424,10 +519,12 @@ function icon_effect_click(){
 					label_icon_effect_status_array[id] = 0;
 					var m = 0;
 					for(var k =0;m< data.length; k++){
-						elems["label_rect"+i+""+k].attr({
-							fill : path_details[i].color,
-							opacity: 1,
-						});
+						if(elems["label_rect"+i+""+k]){
+							elems["label_rect"+i+""+k].attr({
+								fill : path_details[i].color,
+								opacity: 1,
+							});
+						}
 						m = m + (Math.ceil(data.length/(x_division_no)));
 					}
 				}
@@ -471,9 +568,11 @@ function icon_effect_mouseover(){
 		if(draw_line_path_flag == 1){
 			for(var i = 0; i< parseInt(instruction.path_no); i++){
 				if(id != i){
-					elems['line_path'+i].animate({
-						opacity: 0.1,
-					});
+					if(elems['line_path'+i]){
+						elems['line_path'+i].animate({
+							opacity: 0.1,
+						});
+					}
 				}
 			}
 		}
@@ -481,9 +580,11 @@ function icon_effect_mouseover(){
 		if(draw_round_path_flag == 1){
 			for(var i = 0; i< parseInt(instruction.path_no); i++){
 				if(id != i){
-					elems['round_path'+i].animate({
-						opacity: 0.1,
-					});
+					if(elems['round_path'+i]){
+						elems['round_path'+i].animate({
+							opacity: 0.1,
+						});
+					}
 				}
 			}
 		}
@@ -491,9 +592,11 @@ function icon_effect_mouseover(){
 		if(draw_stepline_path_flag  == 1){
 			for(var i = 0; i< parseInt(instruction.path_no); i++){
 				if(id != i){
-					elems['stepline_path'+i].animate({
-						opacity: 0.1,
-					});
+					if(elems['stepline_path'+i]){
+						elems['stepline_path'+i].animate({
+							opacity: 0.1,
+						});
+					}
 				}
 			}
 		}
@@ -501,10 +604,12 @@ function icon_effect_mouseover(){
 		if(draw_line_area_flag == 1){
 			for(var i = 0; i< parseInt(instruction.path_no); i++){
 				if(id != i){
-					elems['line_area'+i].animate({
-						fill : "#fff",
-						opacity: 0.1,
-					});
+					if(elems['line_area'+i]){
+						elems['line_area'+i].animate({
+							fill : "#fff",
+							opacity: 0.1,
+						});
+					}
 				}
 			}
 		}
@@ -512,10 +617,12 @@ function icon_effect_mouseover(){
 		if(draw_round_area_flag == 1){
 			for(var i = 0; i< parseInt(instruction.path_no); i++){
 				if(id != i){
-					elems['round_area'+i].attr({
-						fill : "#fff",
-						opacity: .1,
-					});
+					if(elems['round_area'+i]){
+						elems['round_area'+i].attr({
+							fill : "#fff",
+							opacity: .1,
+						});
+					}
 				}
 			}
 		}
@@ -523,10 +630,12 @@ function icon_effect_mouseover(){
 		if(draw_stepline_area_flag  == 1){
 			for(var i = 0; i< parseInt(instruction.path_no); i++){
 				if(id != i){
-					elems['stepline_area'+i].attr({
-						fill : "#fff",
-						opacity: .1,
-					});
+					if(elems['stepline_area'+i]){
+						elems['stepline_area'+i].attr({
+							fill : "#fff",
+							opacity: .1,
+						});
+					}
 				}
 			}
 		}
@@ -535,10 +644,12 @@ function icon_effect_mouseover(){
 			for(var i = 0; i < parseInt(instruction.path_no); i++){
 				if(id != i){					
 					for(var k =0;k< data.length ; k++){
-						elems["c"+i+""+k].animate({
-							fill : path_details[i].color,
-							opacity: .1,
-						});
+						if(elems["c"+i+""+k]){
+							elems["c"+i+""+k].animate({
+								fill : path_details[i].color,
+								opacity: .1,
+							});
+						}
 					}
 				}
 			}
@@ -549,10 +660,12 @@ function icon_effect_mouseover(){
 				if(id != i){
 					var m = 0;
 					for(var k =0;m< data.length ; k++){
-						elems["label_rect"+i+""+k].animate({
-							fill : path_details[i].color,
-							opacity: .1,
-						});
+						if(elems["label_rect"+i+""+k]){
+							elems["label_rect"+i+""+k].animate({
+								fill : path_details[i].color,
+								opacity: .1,
+							});
+						}
 						m = m + (Math.ceil(data.length/(x_division_no)));
 					}
 				}
@@ -593,62 +706,76 @@ function icon_effect_mouseout(){
 		//For line path
 		if(draw_line_path_flag == 1){
 			for(var i = 0; i< parseInt(instruction.path_no); i++){
-				elems['line_path'+i].animate({
-					opacity: 1,
-				});
+				if(elems['line_path'+i]){
+					elems['line_path'+i].animate({
+						opacity: 1,
+					});
+				}
 			}
 		}
 		//For round path
 		if(draw_round_path_flag == 1){
 			for(var i = 0; i< parseInt(instruction.path_no); i++){
-				elems['round_path'+i].animate({
-					opacity: 1,
-				});
+				if(elems['round_path'+i]){
+					elems['round_path'+i].animate({
+						opacity: 1,
+					});
+				}
 			}
 		}
 		//For stepline path
 		if(draw_stepline_path_flag  == 1){
 			for(var i = 0; i< parseInt(instruction.path_no); i++){
-				elems['stepline_path'+i].animate({
-					opacity: 1,
-				});
+				if(elems['stepline_path'+i]){
+					elems['stepline_path'+i].animate({
+						opacity: 1,
+					});
+				}
 			}
 		}
 		//For line area
 		if(draw_line_area_flag == 1){
 			for(var i = 0; i< parseInt(instruction.path_no); i++){
-				elems['line_area'+i].animate({
-					opacity: 0.1,
-					fill : "270-"+path_details[i].color+"-#fff",
-				});
+				if(elems['line_area'+i]){
+					elems['line_area'+i].animate({
+						opacity: 0.1,
+						fill : "270-"+path_details[i].color+"-#fff",
+					});
+				}
 			}
 		}
 		//For round area
 		if(draw_round_area_flag == 1){
 			for(var i = 0; i< parseInt(instruction.path_no); i++){
-				elems['round_area'+i].animate({
-					opacity: 0.1,
-					fill : "270-"+path_details[i].color+"-#fff",
-				});
+				if(elems['round_area'+i]){
+					elems['round_area'+i].animate({
+						opacity: 0.1,
+						fill : "270-"+path_details[i].color+"-#fff",
+					});
+				}
 			}
 		}
 		//For round area
 		if(draw_stepline_area_flag == 1){
 			for(var i = 0; i< parseInt(instruction.path_no); i++){
-				elems['stepline_area'+i].animate({
-					opacity: 0.1,
-					fill : "270-"+path_details[i].color+"-#fff",
-				});
+				if(elems['stepline_area'+i]){
+					elems['stepline_area'+i].animate({
+						opacity: 0.1,
+						fill : "270-"+path_details[i].color+"-#fff",
+					});
+				}
 			}
 		}
 		//For circle
 		if(label_flag == 1){
 			for(var i = 0; i < parseInt(instruction.path_no); i++){
 				for(var k =0;k< data.length ; k++){
-					elems["c"+i+""+k].animate({
-						fill : path_details[i].color,
-						opacity: 1,
-					});
+					if(elems["c"+i+""+k]){
+						elems["c"+i+""+k].animate({
+							fill : path_details[i].color,
+							opacity: 1,
+						});
+					}
 				}
 			}
 		}
@@ -657,10 +784,12 @@ function icon_effect_mouseout(){
 			for(var i = 0; i < parseInt(instruction.path_no); i++){
 				var m = 0;
 				for(var k =0;m< data.length ; k++){
-					elems["label_rect"+i+""+k].animate({
-						fill : path_details[i].color,
-						opacity: 1,
-					});
+					if(elems["label_rect"+i+""+k]){
+						elems["label_rect"+i+""+k].animate({
+							fill : path_details[i].color,
+							opacity: 1,
+						});
+					}
 					m = m + (Math.ceil(data.length/(x_division_no)));
 				}
 			}
@@ -773,193 +902,213 @@ function y_axis_label(){
 }
 //Draw path
 var draw_line_path_flag = 0;
-function draw_line_path(stroke_width){
-	line_path_stroke = stroke_width;
+function draw_line_path(){
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0 - min_value))/max) + " ";
-		for(var j = 1; j < data.length ; j++){
-			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*0)/max + "";
+		for(var x = 0; x<path_details[i].type.length; x++){
+			if(path_details[i].type[x] == "line_path"){
+				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0 - min_value))/max) + " ";
+				for(var j = 1; j < data.length ; j++){
+					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*0)/max + "";
+				}
+				var path1 = paper.path(p).attr({
+					'stroke-width' : path_details[i].stroke[x],
+					stroke : path_details[i].color,
+					opacity : 1,
+				});
+				elems['line_path'+i] = path1;
+				
+				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i] - min_value))/max) + " ";
+				for(var j = 1; j < data.length ; j++){
+					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
+				}
+				elems['line_path'+i].animate({
+					path : p,
+				}, 400 + (150*i), "<>" );
+			}
 		}
-		var path1 = paper.path(p).attr({
-			'stroke-width' : stroke_width,
-			stroke : path_details[i].color,
-			opacity : 1,
-		});
-		elems['line_path'+i] = path1;
-	}
-	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i] - min_value))/max) + " ";
-		for(var j = 1; j < data.length ; j++){
-			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
-		}
-		elems['line_path'+i].animate({
-			path : p,
-		}, 400 + (150*i), "<>" );
 	}
 draw_line_path_flag = 1;
 }
 //Draw round path
 var draw_round_path_flag = 0;
-function draw_round_path(stroke_width){
-	round_path_stroke = stroke_width;
+function draw_round_path(){
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((0   - min_value)*((height-(4*paddingy))/max))) + " R ";
-		for(var j = 1; j < data.length ; j++){
-			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0 - min_value)*((height-(4*paddingy))/max))) + " ";
+		for(var x = 0; x<path_details[i].type.length; x++){
+			if(path_details[i].type[x] == "round_path"){
+				p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((0   - min_value)*((height-(4*paddingy))/max))) + " R ";
+				for(var j = 1; j < data.length ; j++){
+					p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0 - min_value)*((height-(4*paddingy))/max))) + " ";
+				}
+				var path1 = paper.path(p).attr({
+					'stroke-width' : path_details[i].stroke[x],
+					stroke : path_details[i].color,
+					opacity : 1,
+				});
+				elems['round_path'+i] = path1;
+				p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i]   - min_value)*((height-(4*paddingy))/max))) + " R ";
+				for(var j = 1; j < data.length ; j++){
+					p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " ";
+				}
+				elems['round_path'+i].animate({
+					path : p,
+				}, 400 + (150*i), "<>" );
+			}
 		}
-		var path1 = paper.path(p).attr({
-			'stroke-width' : stroke_width,
-			stroke : path_details[i].color,
-			opacity : 1,
-		});
-		elems['round_path'+i] = path1;
-		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i]   - min_value)*((height-(4*paddingy))/max))) + " R ";
-		for(var j = 1; j < data.length ; j++){
-			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " ";
-		}
-		elems['round_path'+i].animate({
-			path : p,
-		}, 400 + (150*i), "<>" );
 	}
 	draw_round_path_flag = 1;
 }
 
 //Draw stepline path
 var draw_stepline_path_flag = 0;
-function draw_stepline_path(stroke_width){
-	stepline_path_stroke = stroke_width;
+function draw_stepline_path(){
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0  - min_value))/max) + " ";
-		for(var j = 1; j < data.length ; j++){
-			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
-			p += " l "+ 0 + " "+ ((height-(4*paddingy))*0)/max + "";
+		for(var x = 0; x<path_details[i].type.length; x++){
+			if(path_details[i].type[x] == "stepline_path"){
+				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0  - min_value))/max) + " ";
+				for(var j = 1; j < data.length ; j++){
+					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
+					p += " l "+ 0 + " "+ ((height-(4*paddingy))*0)/max + "";
+				}
+				var path1 = paper.path(p).attr({
+					'stroke-width' : path_details[i].stroke[x],
+					stroke : path_details[i].color,
+					opacity : 1,
+				});
+				elems['stepline_path'+i] = path1;
+			
+				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]  - min_value))/max) + " ";
+				for(var j = 1; j < data.length ; j++){
+					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
+					p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
+				}
+				elems['stepline_path'+i].animate({
+					path : p,
+				}, 400 + (150*i), "backOut" );
+			}
 		}
-		var path1 = paper.path(p).attr({
-			'stroke-width' : stroke_width,
-			stroke : path_details[i].color,
-			opacity : 1,
-		});
-		elems['stepline_path'+i] = path1;
-	}
-	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]  - min_value))/max) + " ";
-		for(var j = 1; j < data.length ; j++){
-			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
-			p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
-		}
-		elems['stepline_path'+i].animate({
-			path : p,
-		}, 400 + (150*i), "backOut" );
 	}
 	draw_stepline_path_flag = 1;
 }
 //Draw circle on path
 var draw_circle_flag = 0;
-function draw_circle(radius, radius_zoom){
-	circle_radius = radius;
-	circle_radius_zoom = radius_zoom;
+function draw_circle(){
+	/*circle_radius = radius;
+	circle_radius_zoom = radius_zoom;*/
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		for(var j = 0; j < data.length ; j++){
-			var circle1 = paper.circle( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max)) ,radius).attr({
-				opacity : 1,
-				fill : path_details[i].color,
-				stroke : path_details[i].color,
-			});
-			circle1.animate({
-				cx : ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))),
-				cy : (height - (2*paddingy)) - ((Object.values(data[j].value)[i] - min_value)*((height-(4*paddingy))/max)),
-				
-			}, 400 + (150*i), "<>" );			
-			elems["c"+i+""+j] = circle1;
+		if(path_details[i].circle == true){
+			for(var j = 0; j < data.length ; j++){
+				var circle1 = paper.circle( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max)) ,path_details[i].circle_zoom_out).attr({
+					opacity : 1,
+					fill : path_details[i].color,
+					stroke : path_details[i].color,
+				});
+				circle1.animate({
+					cx : ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))),
+					cy : (height - (2*paddingy)) - ((Object.values(data[j].value)[i] - min_value)*((height-(4*paddingy))/max)),
+					
+				}, 400 + (150*i), "<>" );			
+				elems["c"+i+""+j] = circle1;
+			}
 		}
 	}
 	draw_circle_flag = 1;
 }
 //Draw line area
 var draw_line_area_flag = 0;
-function draw_line_area(stroke_width){
-	line_area_stroke = stroke_width;
+function draw_line_area(){
+	//line_area_stroke = stroke_width;
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0 - min_value))/max) + " ";
-		for(var j = 1; j < data.length ; j++){
-			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*0)/max + "";
+		for(var x = 0; x<path_details[i].type.length; x++){
+			if(path_details[i].type[x] == "line_area"){
+				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0 - min_value))/max) + " ";
+				for(var j = 1; j < data.length ; j++){
+					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*0)/max + "";
+				}
+				p += " l "+ 0 + " "+ ((height-(4*paddingy))*(0 - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
+				var path1 = paper.path(p).attr({
+					fill : "270-"+path_details[i].color+"-#fff",
+					stroke : path_details[i].color,
+					'stroke-width' : path_details[i].stroke[x],
+					opacity : .1,
+				});
+				elems['line_area'+i] = path1;
+				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i] - min_value))/max) + " ";
+				for(var j = 1; j < data.length ; j++){
+					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
+				}
+				p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
+				elems['line_area'+i].animate({
+					path : p,
+				}, 400 + (150*i), "<>");
+			}
 		}
-		p += " l "+ 0 + " "+ ((height-(4*paddingy))*(0 - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
-		var path1 = paper.path(p).attr({
-			fill : "270-"+path_details[i].color+"-#fff",
-			stroke : path_details[i].color,
-			'stroke-width' : stroke_width,
-			opacity : .1,
-		});
-		elems['line_area'+i] = path1;
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i] - min_value))/max) + " ";
-		for(var j = 1; j < data.length ; j++){
-			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
-		}
-		p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
-		elems['line_area'+i].animate({
-			path : p,
-		}, 400 + (150*i), "<>");
 	}
 	draw_line_area_flag = 1;
 }
 
 //Draw round area
 var draw_round_area_flag = 0;
-function draw_round_area(stroke_width){
-	round_area_stroke = stroke_width;
-	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max))) + " R ";
-		for(var j = 1; j < data.length ; j++){
-			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max))) + " ";
+function draw_round_area(){
+	for(var i = 0; i < parseInt(instruction.path_no); i++){	
+		for(var x = 0; x<path_details[i].type.length; x++){	
+			if(path_details[i].type[x] == "round_area"){
+				p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max))) + " R ";
+				for(var j = 1; j < data.length ; j++){
+					p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max))) + " ";
+				}
+				p+= ", "+ ((2*paddingx)+(data.length-1)*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max))) + " z";
+				var path1 = paper.path(p).attr({
+					'stroke-width' : path_details[i].stroke[x],
+					stroke : path_details[i].color,
+					opacity : .1,
+					fill : "270-"+path_details[i].color+"-#ffffff",
+				});
+				elems['round_area'+i] = path1;
+				p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " R ";
+				for(var j = 1; j < data.length ; j++){
+					p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " ";
+				}
+				p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
+				elems['round_area'+i].animate({
+					path : p,
+				}, 400 + (150*i), "<>" );
+			}
 		}
-		p+= ", "+ ((2*paddingx)+(data.length-1)*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max))) + " z";
-		var path1 = paper.path(p).attr({
-			'stroke-width' : stroke_width,
-			stroke : path_details[i].color,
-			opacity : .1,
-			fill : "270-"+path_details[i].color+"-#ffffff",
-		});
-		elems['round_area'+i] = path1;
-		p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " R ";
-		for(var j = 1; j < data.length ; j++){
-			p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " ";
-		}
-		p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
-		elems['round_area'+i].animate({
-			path : p,
-		}, 400 + (150*i), "<>" );
 	}
 	draw_round_area_flag = 1;
 }
 
 //Draw stepline area
 var draw_stepline_area_flag = 0;
-function draw_stepline_area(stroke_width){
-	stepline_area_stroke = stroke_width;
-	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0  - min_value))/max) + " ";
-		for(var j = 1; j < data.length ; j++){
-			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
-			p += " l "+ 0 + " "+ ((height-(4*paddingy))*0)/max + "";
+function draw_stepline_area(){
+	//stepline_area_stroke = stroke_width;
+	for(var i = 0; i < parseInt(instruction.path_no); i++){	
+		for(var x = 0; x<path_details[i].type.length; x++){
+			if(path_details[i].type[x] == "stepline_area"){
+				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0  - min_value))/max) + " ";
+				for(var j = 1; j < data.length ; j++){
+					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
+					p += " l "+ 0 + " "+ ((height-(4*paddingy))*0)/max + "";
+				}
+				p += " l "+ 0 + " "+ ((height-(4*paddingy))*(0 - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
+				var path1 = paper.path(p).attr({
+					fill : "270-"+path_details[i].color+"-#fff",
+					stroke : path_details[i].color,
+					'stroke-width' : path_details[i].stroke[x],
+					opacity : .1,
+				});
+				elems['stepline_area'+i] = path1;
+				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]  - min_value))/max) + " ";
+				for(var j = 1; j < data.length ; j++){
+					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
+					p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
+				}
+				p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
+				elems['stepline_area'+i].animate({
+					path : p,
+				}, 400 + (150*i), "backOut");
+			}
 		}
-		p += " l "+ 0 + " "+ ((height-(4*paddingy))*(0 - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
-		var path1 = paper.path(p).attr({
-			fill : "270-"+path_details[i].color+"-#fff",
-			stroke : path_details[i].color,
-			'stroke-width' : stroke_width,
-			opacity : .1,
-		});
-		elems['stepline_area'+i] = path1;
-		p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]  - min_value))/max) + " ";
-		for(var j = 1; j < data.length ; j++){
-			p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
-			p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
-		}
-		p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
-		elems['stepline_area'+i].animate({
-			path : p,
-		}, 400 + (150*i), "backOut");
 	}
 	draw_stepline_area_flag = 1;
 }
@@ -968,30 +1117,32 @@ function draw_stepline_area(stroke_width){
 var label_flag = 0;
 function label(){
 	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		var j = 0;		
-		for(var k = 0; j< data.length; k++){
-			var rect1 = paper.rect( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((((Object.values(data[j].value)[i]+"").length*7) + 10)/2) ,(height - (2*paddingy))- ((0  - min_value)*((height-(4*paddingy))/max)), ((Object.values(data[j].value)[i]+"").length*7) + 10 , 16, 2).attr({
-				//opacity : 0,
-				fill : path_details[i].color,		
-				stroke : "#fff",		
-			});
-			rect1.animate({
-				opacity : 1,
-				y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max)) - 8,
-			}, 400 + (150*i), "<>" );
-			elems["label_rect"+i+""+k] = rect1;
-			var text1 = paper.text( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max)) ,Object.values(data[j].value)[i]).attr({
-				//opacity : 0,
-				fill : "#fff",//path_details[i].color,
-			});
-			text1.animate({
-				opacity : 1,
-				x : ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))),
-				y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max)),
-				
-			}, 400 + (150*i), "<>" );			
-			elems["label_text"+i+""+k] = text1;
-			j = j + (Math.ceil(data.length/(x_division_no)));		
+		if(path_details[i].label == true){
+			var j = 0;		
+			for(var k = 0; j< data.length; k++){
+				var rect1 = paper.rect( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((((Object.values(data[j].value)[i]+"").length*7) + 10)/2) ,(height - (2*paddingy))- ((0  - min_value)*((height-(4*paddingy))/max)), ((Object.values(data[j].value)[i]+"").length*7) + 10 , 16, 2).attr({
+					//opacity : 0,
+					fill : path_details[i].color,		
+					stroke : "#fff",		
+				});
+				rect1.animate({
+					opacity : 1,
+					y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max)) - 8,
+				}, 400 + (150*i), "<>" );
+				elems["label_rect"+i+""+k] = rect1;
+				var text1 = paper.text( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max)) ,Object.values(data[j].value)[i]).attr({
+					//opacity : 0,
+					fill : "#fff",//path_details[i].color,
+				});
+				text1.animate({
+					opacity : 1,
+					x : ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))),
+					y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max)),
+					
+				}, 400 + (150*i), "<>" );			
+				elems["label_text"+i+""+k] = text1;
+				j = j + (Math.ceil(data.length/(x_division_no)));		
+			}
 		}
 	}
 	label_flag = 1;
@@ -1428,34 +1579,36 @@ var x_area_annotation_count = 0;
 // For x axis hover -----------------------------
 var x_axis_hover_design_flag = 0;
 function x_axis_hover_design(){
-	for(var i=0; i<1; i++){
-		var  p = "M "+ 2*paddingx +" " + 2*paddingy + " l 0 "+  (height-(4*paddingy)) +" 0";
-		var path1 = paper.path(p).attr({
-			stroke : 'blue',
-			'stroke-width' : .5,
-			//"stroke-dasharray": "-",
-			stroke : '#949494',
-			opacity : 0,
-		});
-		elems["px"+i] = path1;
+	if(instruction.x_axis_hover_design == true){
+		for(var i=0; i<1; i++){
+			var  p = "M "+ 2*paddingx +" " + 2*paddingy + " l 0 "+  (height-(4*paddingy)) +" 0";
+			var path1 = paper.path(p).attr({
+				'stroke-width' : .5,
+				//"stroke-dasharray": " - ",
+				stroke : '#949494',
+				opacity : 0,
+			});
+			elems["px"+i] = path1;
+		}
+		x_axis_hover_design_flag = 1;
 	}
-	x_axis_hover_design_flag = 1;
 }
 // For y axis hover -----------------------------
 var y_axis_hover_design_flag = 0;
 function y_axis_hover_design(){
-	for(var i=0; i<instruction.path_no; i++){
-		var  p = "M "+ 2*paddingx +" " + ( (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i ) + " l "+  (width-(4*paddingx)) +" 0";
-		var path1 = paper.path(p).attr({
-			stroke : 'blue',
-			'stroke-width' : .5,
-			//"stroke-dasharray": " - ",
-			stroke : '#949494',
-			opacity : 0,
-		});
-		elems["py"+i] = path1;
+	if(instruction.y_axis_hover_design == true){
+		for(var i=0; i<instruction.path_no; i++){
+			var  p = "M "+ 2*paddingx +" " + ( (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i ) + " l "+  (width-(4*paddingx)) +" 0";
+			var path1 = paper.path(p).attr({
+				'stroke-width' : .5,
+				//"stroke-dasharray": " - ",
+				stroke : '#949494',
+				opacity : 0,
+			});
+			elems["py"+i] = path1;
+		}
+		y_axis_hover_design_flag =1;
 	}
-	y_axis_hover_design_flag =1;
 }
 //Draw popup
 var popup_design_flag = 0;
@@ -1714,56 +1867,73 @@ function popup_footer_hover_out(id){
 //Circle effect on popup
 function circle_popup(id){
 	for(var i = 0; i<parseInt(instruction.path_no); i++){
-		elems["c"+i+""+id].animate({
-			opacity : 1,
-			r : circle_radius_zoom,
-		},25);
+		if(elems["c"+i+""+id]){
+			elems["c"+i+""+id].animate({
+				opacity : 1,
+				r : path_details[i].circle_zoom_in,
+			},25);
+		}
 	}
 }
 //Circle effect on popdown
 function circle_popdown(id){
 	for(var i = 0; i<parseInt(instruction.path_no); i++){
-		elems["c"+i+""+id].animate({
-			//opacity : 0,
-			r : circle_radius,
-		},25);
+		if(elems["c"+i+""+id]){
+			elems["c"+i+""+id].animate({
+				//opacity : 0,
+				r : path_details[i].circle_zoom_out,
+			},25);
+		}
 	}
 }
 //X axis hover
 function x_axis_hover(id){
-	for(var i = 0; i<parseInt(instruction.path_no); i++){
-		var  p  = "M "+ 2*paddingx +" " + ( (height - (2*paddingy)) - ((Object.values(data[id].value)[i] - min_value)*((height-(4*paddingy))/max)) ) + " l "+  (width-(4*paddingx)) +" 0";
-		elems["py"+i].animate({
-			opacity : 1,
-			path : p,
-		}, 150);
+	if(instruction.x_axis_hover_design == true){
+		for(var i = 0; i<1; i++){
+			var  p  = "M "+ ((2*paddingx)+id*((width-(4*paddingx))/(data.length-1))) +" " + (2*paddingy) + " l 0 "+  ( (height - (4*paddingy)) ) ;
+			if(elems["px"+i]){
+				elems["px"+i].animate({
+					opacity : 1,
+					path : p,
+				}, 150);
+			}		
+		}
+		
 	}
 }
 //Y axis hover
 function y_axis_hover(id){
-	for(var i = 0; i<1; i++){
-		var  p  = "M "+ ((2*paddingx)+id*((width-(4*paddingx))/(data.length-1))) +" " + (2*paddingy) + " l 0 "+  ( (height - (4*paddingy)) ) ;
-		elems["px"+i].animate({
-			opacity : 1,
-			path : p,
-		}, 150);
+	if(instruction.y_axis_hover_design == true){
+		for(var i = 0; i<parseInt(instruction.path_no); i++){
+			var  p  = "M "+ 2*paddingx +" " + ( (height - (2*paddingy)) - ((Object.values(data[id].value)[i] - min_value)*((height-(4*paddingy))/max)) ) + " l "+  (width-(4*paddingx)) +" 0";
+			if(elems["py"+i]){
+				elems["py"+i].animate({
+					opacity : 1,
+					path : p,
+				}, 150);
+			}
+		}
 	}
 	
 }
 //X axis hover out
 function x_axis_hover_out(id){
 	for(var i = 0; i<1; i++){
-		elems["px"+i].animate({
-			opacity : 0,
-		}, 150);
+		if(elems["px"+i]){
+			elems["px"+i].animate({
+				opacity : 0,
+			}, 150);
+		}
 	}
 }
 //Y axis hover out
 function y_axis_hover_out(id){
 	for(var i = 0; i<parseInt(instruction.path_no); i++){
-		elems["py"+i].animate({
-			opacity : 0,
-		}, 150);
+		if(elems["py"+i]){
+			elems["py"+i].animate({
+				opacity : 0,
+			}, 150);
+		}
 	}
 }
 
@@ -1780,147 +1950,60 @@ var val1 = 0;
 var clicked_id = 0, unclicked_id = 0;
 
 function mousedown(e){
-	var id = parseInt(this.id.replace('r',''));
-	clicked_id = id;
-	elems['zoom_rect'].attr({
-		x : ((2*paddingx)+id*((width-(4*paddingx))/(data.length-1))),
-		y :  2*paddingy,
-		'stroke-width' : 2,
-		stroke : '#00376e',
-		fill : '#0068d0',
-		opacity : .1,
-		width : 0,
-	});
-	
-	clicked_position = e.clientX;
-	val1 = ((2*paddingx)+id*((width-(4*paddingx))/(data.length-1)));
+	if(instruction.select_area == true){
+		var id = parseInt(this.id.replace('r',''));
+		clicked_id = id;
+		elems['zoom_rect'].attr({
+			x : ((2*paddingx)+id*((width-(4*paddingx))/(data.length-1))),
+			y :  2*paddingy,
+			'stroke-width' : 2,
+			stroke : '#00376e',
+			fill : '#0068d0',
+			opacity : .1,
+			width : 0,
+		});
+		clicked_position = e.clientX;
+		val1 = ((2*paddingx)+id*((width-(4*paddingx))/(data.length-1)));
+	}
 	
 }
 function mousemove(e){
 	//console.log(clicked_position+" "+ e.clientX + " : "+ (e.clientX - clicked_position) + " : "+ (clicked_position - e.clientX));
-	try{
-		if(e.clientX  >= clicked_position){
-			elems['zoom_rect'].attr({
-				width : e.clientX - clicked_position,
-			});
-		}else{		
-			elems['zoom_rect'].attr({
-				x : val1 - (clicked_position - e.clientX),
-				width : (clicked_position - e.clientX),
-			});	
+	if(instruction.select_area == true){
+		try{
+			if(e.clientX  >= clicked_position){
+				elems['zoom_rect'].attr({
+					width : e.clientX - clicked_position,
+				});
+			}else{		
+				elems['zoom_rect'].attr({
+					x : val1 - (clicked_position - e.clientX),
+					width : (clicked_position - e.clientX),
+				});	
+			}
+		}catch(err){
+			//console.log(err);
 		}
-	}catch(err){
-		//console.log(err);
 	}
 }
 function mouseup(){
 	var id = parseInt(this.id.replace('r',''));	
 	unclicked_id = id;
-	//console.log(clicked_id + "  :  "+ unclicked_id );
-	elems['zoom_rect'].attr({
-		opacity : 0,
-	});
-	if(clicked_id>unclicked_id){
-		var a = clicked_id;
-		clicked_id = unclicked_id;
-		unclicked_id = a;
-	}
-	if(clicked_id != unclicked_id && unclicked_id > (clicked_id + 1)){
-			
-		paper.clear();
-		//Load instruction
-		load_all_data(data.slice(clicked_id, unclicked_id+1), instruction, path_details);
-		
-		if(main_title_flag == 1){
-			main_title();
-		}	
-		if(x_axis_flag == 1){
-			x_axis();
+	if(instruction.select_area == true){
+		//console.log(clicked_id + "  :  "+ unclicked_id );
+		elems['zoom_rect'].attr({
+			opacity : 0,
+		});
+		if(clicked_id>unclicked_id){
+			var a = clicked_id;
+			clicked_id = unclicked_id;
+			unclicked_id = a;
 		}
-		if(x_axis_division_flag == 1){
-			x_axis_division();
+		if(clicked_id != unclicked_id && unclicked_id > (clicked_id + 1)){				
+			paper.clear();
+			//Load instruction
+			load_all_data(data.slice(clicked_id, unclicked_id+1), instruction, path_details);			
+			all_function();
 		}
-		if(x_axis_title_flag == 1){
-			x_axis_title();
-		}
-		if(x_axis_label_flag == 1){
-			x_axis_label();
-		}
-		if(y_axis_flag == 1){
-			y_axis();
-		}
-		if(y_axis_division_flag == 1){
-			y_axis_division();
-		}
-		if(y_axis_title_flag == 1){
-			y_axis_title();
-		}
-		if(y_axis_label_flag == 1){
-			y_axis_label();
-		}
-		if(draw_line_area_flag == 1){
-			draw_line_area(line_area_stroke);//Pass stroke width value
-		}
-		if(draw_round_area_flag == 1){
-			draw_round_area(round_area_stroke);//Pass stroke width value
-		}
-		if(draw_stepline_area_flag == 1){
-			draw_stepline_area(stepline_area_stroke);
-		}
-		if(draw_line_path_flag == 1){
-			draw_line_path(line_path_stroke);
-		}
-		if(draw_round_path_flag == 1){
-			draw_round_path(round_path_stroke);
-		}
-		if(draw_stepline_path_flag == 1){
-			draw_stepline_path(stepline_path_stroke);
-		}
-		//Draw circle
-		if(draw_circle_flag == 1){
-			draw_circle(circle_radius, circle_radius_zoom);//Pass radius value
-		}
-		
-		
-		//////////////////////            POPUP            //////////////////////
-		
-		//Collect max data on every point for view popup on that point
-		collect_popup_point();
-		if(x_axis_hover_design_flag == 1){
-			x_axis_hover_design();
-		}
-		if(y_axis_hover_design_flag == 1){
-			y_axis_hover_design();
-		}
-		
-		//Draw label
-		if(label_flag == 1){
-			label();
-		}
-						
-		//Draw annotations
-		if(draw_annotations_flag == 1){
-			draw_annotations();
-		}
-		
-
-		
-		//Draw popup
-		if(popup_design_flag == 1){
-			popup_design();
-		}
-		
-		//Draw popup footer
-		if(popup_footer_design_flag == 1){
-				popup_footer_design();
-		}
-		
-		
-		//Draw select area
-		select_area();
-		
-		
-		//*****Draw rectangle for popup
-		draw_popup_rect();
 	}
 }
