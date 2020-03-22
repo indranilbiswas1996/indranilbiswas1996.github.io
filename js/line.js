@@ -142,6 +142,9 @@ function all_function(){
 	if(instruction.main_title == true){
 		main_title();
 	}
+	if(instruction.icon == true){
+		icon_design();
+	}
 	if(instruction.x_axis == true){
 		x_axis();
 	}
@@ -203,6 +206,11 @@ function main_title(){
 		'text-anchor': 'start',
 		'font-size' : '15px',
 	});
+	main_title_flag = 1;
+}
+//Icon design
+var icon_design_flag = 0;
+function icon_design(){
 	var x = (2*paddingx);
 	for(var i = 0; i < path_details.length; i++){
 		x += (7*path_details[(path_details.length-1)-i].name.length);
@@ -239,7 +247,7 @@ function main_title(){
 		label_icon_effect_status_array.push(0);
 		circle_icon_effect_status_array.push(0);
 	}
-	main_title_flag = 1;
+	icon_design_flag = 1;
 }
 
 //Icon click effect
