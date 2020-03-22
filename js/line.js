@@ -185,6 +185,7 @@ function all_function(){
 		y_axis_hover_design();
 	}
 	label();
+	draw_annotations();
 	if(instruction.popup_design == true){
 		popup_design();
 	}
