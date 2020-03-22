@@ -42,6 +42,21 @@
 				x_division_no : "12",//"" means Number of data
 				y_division_no : "10",//"" means Number of data
 				path_no : 1,
+				main_title : true,
+				icon : true,
+				x_axis : true,
+				x_axis_division : false,
+				x_axis_title : true,
+				x_axis_label : true,
+				y_axis : false,
+				y_axis_division : true,
+				y_axis_title : true,
+				y_axis_label : true,
+				x_axis_hover_design : true,
+				y_axis_hover_design : false,
+				popup_design : true,
+				popup_footer_design : true,
+				select_area : true,
 				
 				//anotation
 				annotations: {
@@ -98,75 +113,18 @@
 			path_details = [{
 				name : "Laptop",
 				color : "#00aeeb",
+				type : ["line_path"],
+				stroke : [5],
+				circle : true,
+				circle_zoom_out : 0,
+				circle_zoom_in : 5,
+				label : false,
 			}];
 			
-			//Check the all data's to create graph
-			check(data, instruction, path_details);
-			
-			
-			if(flag === 1){	
-			
-				//Load instruction
-				load_all_data(data, instruction, path_details);
-				
-				//Paper set
-				create_paper();
-				
-				//Main title
-				main_title();
-				
-				
-				/* x */
-				x_axis();	
-				//x_axis_division();	
-				x_axis_title();
-				x_axis_label();
-				
-				/* y */
-				//y_axis();
-				y_axis_division();
-				y_axis_title();
-				y_axis_label();
-				
-				//Draw area
-				//draw_line_area(0);//Pass stroke width value
-				//draw_round_area(0);//Pass stroke width value
-				
-				//Draw path
-				draw_line_path(5);//Pass stroke width value
-				//draw_round_path(5);
-				//Draw circle
-				draw_circle(0, 5);//Pass redius value	
-				
-				
-				//////////////////////            POPUP            //////////////////////
-				
-				//Collect max data on every point for view popup on that point
-				collect_popup_point();
-				
-				//X axis hover
-				x_axis_hover_design();
-				//Y axis hover
-				y_axis_hover_design();
-					
-
-				draw_annotations();
-				
-				//Draw popup
-				popup_design();
-				
-				//Draw popup footer
-				popup_footer_design();
-				
-				
-				
-				
-				//Draw select area
-				select_area();
-				
-				
-				//*****Draw rectangle for popup
-				draw_popup_rect();
+			check(data, instruction, path_details);			
+			if(flag === 1){				
+				load_all_data(data, instruction, path_details);				
+				all_function();
 			}			
 		}
 	</script>
