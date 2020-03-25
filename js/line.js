@@ -135,7 +135,7 @@ function load_all_data(data,  instruction, path_details){//data_min_point = 1st 
 }
 //Paper set
 function create_paper(){	
-	paper = new Raphael(document.getElementById("cntnr1"), width, height);	
+	paper = new Raphael(document.getElementById(instruction.container), width, height);	
 }
 //All function
 function all_function(){
