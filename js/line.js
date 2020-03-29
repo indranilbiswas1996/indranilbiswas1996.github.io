@@ -1495,7 +1495,7 @@ function draw_annotations(){
 									//alert(max_values[current_graph_id]+ " "+ min_values[current_graph_id]+" "+max);								
 									elems["paper_"+current_graph_id].circle(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))), (height[current_graph_id] - (2*paddingy[current_graph_id])) - ((parseInt(instructions[current_graph_id].annotations.points[i].y) - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])), instructions[current_graph_id].annotations.points[i].marker.radius).attr({
 										fill : instructions[current_graph_id].annotations.points[i].marker.fillColor,
-										'stroke-width' : instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id],
+										'stroke-width' : instructions[current_graph_id].annotations.points[i].marker.strokewidth,
 										stroke : instructions[current_graph_id].annotations.points[i].marker.strokeColor,
 									});
 									var rect_x = 0, rect_y = 0, text_x = 0, text_y = 0;
@@ -1563,7 +1563,7 @@ function draw_annotations(){
 					}
 					elems["paper_"+current_graph_id].circle(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))), (height[current_graph_id] - (2*paddingy[current_graph_id])) - ((parseInt(max_point_values[current_graph_id]) - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])), instructions[current_graph_id].annotations.max[0].marker.radius).attr({
 						fill : instructions[current_graph_id].annotations.max[0].marker.fillColor,
-						'stroke-width' : instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id],
+						'stroke-width' : instructions[current_graph_id].annotations.max[0].marker.strokewidth,
 						stroke : instructions[current_graph_id].annotations.max[0].marker.strokeColor,
 					});
 					var rect_x = 0, rect_y = 0, text_x = 0, text_y = 0;
@@ -1626,7 +1626,7 @@ function draw_annotations(){
 					}
 					elems["paper_"+current_graph_id].circle(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))), (height[current_graph_id] - (2*paddingy[current_graph_id])) - ((parseInt(min_point_values[current_graph_id]) - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])), instructions[current_graph_id].annotations.min[0].marker.radius).attr({
 						fill : instructions[current_graph_id].annotations.min[0].marker.fillColor,
-						'stroke-width' : instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id],
+						'stroke-width' : instructions[current_graph_id].annotations.min[0].marker.strokewidth,
 						stroke : instructions[current_graph_id].annotations.min[0].marker.strokeColor,
 					});
 					var rect_x = 0, rect_y = 0, text_x = 0, text_y = 0;
