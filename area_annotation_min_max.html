@@ -32,6 +32,7 @@
 				{ month : '1 ,JAN', value : { a : -7, } },{ month : '2 ,JAN', value : { a : -10, } },{ month : '3 ,JAN', value : { a : -9, } },{ month : '4 ,JAN', value : { a : -8, } },{ month : '5 ,JAN', value : { a : 6, } },{ month : '6 ,JAN', value : { a : 25, } },{ month : '7 ,JAN', value : { a : 28, } },{ month : '8 ,JAN', value : { a : 20, } },{ month : '9 ,JAN', value : { a : 26, } },{ month : '10 ,JAN', value : { a : 31, } },{ month : '11 ,JAN', value : { a : 35, } },{ month : '12 ,JAN', value : { a : 30, } },{ month : '13 ,JAN', value : { a : 31, } },{ month : '14 ,JAN', value : { a : 42, } },{ month : '15 ,JAN', value : { a : 40, } },{ month : '16 ,JAN', value : { a : 43, } },{ month : '17 ,JAN', value : { a : 47, } },{ month : '18 ,JAN', value : { a : 35, } },{ month : '19 ,JAN', value : { a : 52, } },{ month : '20 ,JAN', value : { a : 53, } },{ month : '21 ,JAN', value : { a : 52, } },{ month : '22 ,JAN', value : { a : 38, } },{ month : '23 ,JAN', value : { a : 36, } },{ month : '24 ,JAN', value : { a : 39, } },{ month : '25 ,JAN', value : { a : 36, } },{ month : '26 ,JAN', value : { a : 33, } },{ month : '27 ,JAN', value : { a : 45, } },{ month : '28 ,JAN', value : { a : 49, } },{ month : '29 ,JAN', value : { a : 47, } },{ month : '30 ,JAN', value : { a : 48, } },{ month : '31 ,JAN', value : { a : 52, } },
 				];
 			var instruction = {
+				id : "1st",
 				container : "cntnr1",
 				title : "Product Trends by Month",
 				width : 1000,
@@ -135,10 +136,7 @@
 			}];
 			
 			check(data, instruction, path_details);			
-			if(flag === 1){				
-				load_all_data(data, instruction, path_details);				
-				all_function();
-			}		
+					
 		}
 	</script>
 	<!--For menu-->
