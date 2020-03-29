@@ -1,32 +1,34 @@
 /*Master variable*/
-var width;
-var height;
-var paddingx;
-var paddingy;
-var x_division_no;//"" means Number of data
-var y_division_no;//"" means Number of data
+var width = {};
+var height = {};
+var paddingx = {};
+var paddingy = {};
+var x_division_nos = {};
+var y_division_nos = {};
 
-var data;
-var main_data;
-var instruction;
-var path_details;
+
+var datas = {};
+var main_datas = {};
+var instructions = {};
+var path_details = {};
+var current_graph_id = "" ;
 var paper = null;
 var elems = {};
-var max = 0;
-var max_value = 0;
-var min_value = 0;
-var popup_point_x = [];
-var popup_point_y = [];
-var max_point_value = 0;
-var min_point_value = 0;
-var line_path_icon_effect_status_array = [];
-var round_path_icon_effect_status_array = [];
-var stepline_path_icon_effect_status_array = [];
-var line_area_icon_effect_status_array = [];
-var round_area_icon_effect_status_array = [];
-var stepline_area_icon_effect_status_array = [];
-var label_icon_effect_status_array = [];
-var circle_icon_effect_status_array = [];
+var maxs = {};
+var max_values = {};
+var min_values = {};
+var popup_point_xs = {};
+var popup_point_ys = {};
+var max_point_values = {};
+var min_point_values = {};
+var line_path_icon_effect_status_arrays = {};
+var round_path_icon_effect_status_arrays = {};
+var stepline_path_icon_effect_status_arrays = {};
+var line_area_icon_effect_status_arrays = {};
+var round_area_icon_effect_status_arrays = {};
+var stepline_area_icon_effect_status_arrays = {};
+var label_icon_effect_status_arrays = {};
+var circle_icon_effect_status_arrays = {};
 
 
 
@@ -52,121 +54,148 @@ var popup_design_flag = 0;
 var x_axis_hover_design_flag = 0;
 var y_axis_hover_design_flag = 0;
 var popup_footer_design_flag = 0;*/
+var graph_id = {};
 
-var flag = 0;
-function check(data, instruction, path_details){
-	if(data.length > 2){
-		if(parseInt(instruction.path_no)==path_details.length){
-			for(var i = 0 ; i<data.length; i++){
-				if(Object.keys(data[i].value).length == path_details.length){
-					flag = 1;
-				}else{
-					flag = 0;
+var flag = {};
+//var flag = 0;
+function check(data, instruction, path_detail){
+	if(!graph_id[instruction.id]){
+		graph_id[instruction.id] = instruction.id;	
+		flag[instruction.id] = 0;
+		if(data.length > 2){
+			if(parseInt(instruction.path_no)==path_detail.length){
+				for(var i = 0 ; i<data.length; i++){
+					if(Object.keys(data[i].value).length == path_detail.length){						
+						flag[instruction.id] = 1;
+						//flag = 1;
+					}else{
+						flag[instruction.id] = 0;
+					}
 				}
-			}
-			if(flag == 0){
-				alert("Check the data values");
+				if(flag[instruction.id] == 0){
+					alert("Check the data values");
+				}
+			}else{
+				alert("Check the path no and path details");
 			}
 		}else{
-			alert("Check the path no and path details");
+			alert("Give atleast 3 data");
 		}
 	}else{
-		alert("Give atleast 3 data");
+		alert("Check the graph id");
+	}
+	if(flag[instruction.id] === 1){
+		load_all_data(data, instruction, path_detail);				
+		all_function();
 	}
 }
-var main_data_flag = 0;
+var main_data_flag = {};
 //Load instruction
-function load_all_data(data,  instruction, path_details){//data_min_point = 1st array index & data_min_point = last array index
-	this.data = data;
-	this.instruction = instruction;
-	this.path_details = path_details;
-	//Default paper width, height
-	//Max width : 950, Max-height : 510
-	//Min width : 780,  Min-height : 400
+function load_all_data(data,  instruction, path_detail){//data_min_point = 1st array index & data_min_point = last array index
+	current_graph_id = instruction.id;
+	//console.log(current_graph_id);////////////////***********************
+	if(!main_data_flag[instruction.id]){
+		main_data_flag[instruction.id] = 0;
+	}
+	datas[instruction.id] = data;
+	instructions[instruction.id] = instruction;
+	path_details[instruction.id] = path_detail;
+	//Default paper width, height[current_graph_id]
+	//Max width : 950, Max-height[current_graph_id] : 510
+	//Min width : 780,  Min-height[current_graph_id] : 400
 	//Max padding : 40
 	//Min padding : 25
-	width = parseInt(instruction.width) > 950 ? 950 : parseInt(instruction.width) < 780 ? 780 : parseInt(instruction.width) || 950;
-	height = parseInt(instruction.height) > 510 ? 510 : parseInt(instruction.height) < 420 ? 420 : parseInt(instruction.height) || 510;
-	paddingx = parseInt(instruction.paddingx) > 40 ? 40 : parseInt(instruction.paddingx) < 25 ? 25 : parseInt(instruction.paddingx) || 40;
-	paddingy = parseInt(instruction.paddingy) > 40 ? 40 : parseInt(instruction.paddingy) < 25 ? 25 : parseInt(instruction.paddingy) || 40;
-	//x_division_no = parseInt(instruction.x_division_no) > (data.length/2) ? parseInt(instruction.x_division_no) == data.length ? data.length : (data.length/2) : instruction.x_division_no || data.length;
-	x_division_no = parseInt(instruction.x_division_no) > data.length ? (data.length > 18 ? 18 : data.length) : (parseInt(instruction.x_division_no) > 18 ? 18 : parseInt(instruction.x_division_no)) || (data.length > 18 ? 18 : data.length );
-	y_division_no = parseInt(instruction.y_division_no) > 12 ? 12 : (parseInt(instruction.y_division_no) < 2 ? 2 : parseInt(instruction.y_division_no) ) || 12;
+	width[current_graph_id] = parseInt(instruction.width) > 950 ? 950 : parseInt(instruction.width) < 780 ? 780 : parseInt(instruction.width) || 950;
+	height[current_graph_id] = parseInt(instruction.height) > 510 ? 510 : parseInt(instruction.height) < 420 ? 420 : parseInt(instruction.height) || 510;
+	paddingx[current_graph_id] = parseInt(instruction.paddingx) > 40 ? 40 : parseInt(instruction.paddingx) < 25 ? 25 : parseInt(instruction.paddingx) || 40;
+	paddingy[current_graph_id] = parseInt(instruction.paddingy) > 40 ? 40 : parseInt(instruction.paddingy) < 25 ? 25 : parseInt(instruction.paddingy) || 40;
+	//x_division_nos[current_graph_id] = parseInt(instruction.x_division_nos[current_graph_id]) > (data.length/2) ? parseInt(instruction.x_division_nos[current_graph_id]) == data.length ? data.length : (data.length/2) : instruction.x_division_nos[current_graph_id] || data.length;
+	x_division_nos[current_graph_id] = parseInt(instruction.x_division_no) > data.length ? (data.length > 18 ? 18 : data.length) : (parseInt(instruction.x_division_no) > 18 ? 18 : parseInt(instruction.x_division_no)) || (data.length > 18 ? 18 : data.length );
+	y_division_nos[current_graph_id] = parseInt(instruction.y_division_no) > 12 ? 12 : (parseInt(instruction.y_division_no) < 2 ? 2 : parseInt(instruction.y_division_no) ) || 12;
 	//max for division of y axis
-	max_value = Math.max(...(Object.values(data[0].value)));
+	max_values[current_graph_id] = Math.max(...(Object.values(data[0].value)));
 	for(var i = 0; i<data.length; i++){
-		if((Math.max(...(Object.values(data[i].value))))>max_value){
-			max_value = Math.max(...(Object.values(data[i].value)));
+		if((Math.max(...(Object.values(data[i].value))))>max_values[current_graph_id]){
+			max_values[current_graph_id] = Math.max(...(Object.values(data[i].value)));
 		}
 	}
-	
-	min_value = 0;
+	//max_values[current_graph_id]s[current_graph_id] = max_values[current_graph_id];
+	min_values[current_graph_id] = 0;
 	for(var i = 0; i<data.length; i++){
-		if((Math.min(...(Object.values(data[i].value))))< min_value){
-			min_value = Math.min(...(Object.values(data[i].value)));
+		if((Math.min(...(Object.values(data[i].value))))< min_values[current_graph_id]){
+			min_values[current_graph_id] = Math.min(...(Object.values(data[i].value)));
 		}
 	}
-	//min_value = min_value + (Math.ceil((min_value)/(y_division_no-1)));
-	//max = ((Math.ceil(max_value/(y_division_no-1)))*(y_division_no-1))+(1*(y_division_no-1));
-	max = ((Math.ceil((max_value-min_value)/(y_division_no-1)))*(y_division_no-1))+(1*(y_division_no-1));
-	
+	//min_values[current_graph_id]s[current_graph_id] = min_values[current_graph_id];
+	//min_values[current_graph_id] = min_values[current_graph_id] + (Math.ceil((min_values[current_graph_id])/(y_division_nos[current_graph_id]-1)));
+	//max = ((Math.ceil(max_values[current_graph_id]/(y_division_nos[current_graph_id]-1)))*(y_division_nos[current_graph_id]-1))+(1*(y_division_nos[current_graph_id]-1));
+	max = ((Math.ceil((max_values[current_graph_id]-min_values[current_graph_id])/(y_division_nos[current_graph_id]-1)))*(y_division_nos[current_graph_id]-1))+(1*(y_division_nos[current_graph_id]-1));
+	maxs[current_graph_id] = max;
 	//For main value
-	if(main_data_flag == 0){		
+	if(main_data_flag[instruction.id] == 0){	
+		//console.log(instructions[current_graph_id].container);
 		create_paper();
 		main_data = data;
+		main_datas[current_graph_id] = data;
 		//Max point
-		max_point_value = Math.max(...(Object.values(main_data[0].value)));
-		for(var i = 0; i<main_data.length; i++){
-			if((Math.max(...(Object.values(main_data[i].value))))>max_point_value){
-				max_point_value = Math.max(...(Object.values(main_data[i].value)));
+		max_point_values[current_graph_id] = Math.max(...(Object.values(main_datas[current_graph_id][0].value)));
+		for(var i = 0; i<main_datas[current_graph_id].length; i++){
+			if((Math.max(...(Object.values(main_datas[current_graph_id][i].value))))>max_point_values[current_graph_id]){
+				max_point_values[current_graph_id] = Math.max(...(Object.values(main_datas[current_graph_id][i].value)));
 			}
 		}
+		//max_point_values[current_graph_id]s[current_graph_id] = max_point_values[current_graph_id];
 		//Min point value
-		min_point_value = Math.min(...(Object.values(main_data[0].value)));
-		for(var i = 0; i<main_data.length; i++){
-			if((Math.min(...(Object.values(main_data[i].value))))< min_point_value){
-				min_point_value = Math.min(...(Object.values(main_data[i].value)));
+		min_point_values[current_graph_id] = Math.min(...(Object.values(main_datas[current_graph_id][0].value)));
+		for(var i = 0; i<main_datas[current_graph_id].length; i++){
+			if((Math.min(...(Object.values(main_datas[current_graph_id][i].value))))< min_point_values[current_graph_id]){
+				min_point_values[current_graph_id] = Math.min(...(Object.values(main_datas[current_graph_id][i].value)));
 			}
 		}
+		//min_point_values[current_graph_id]s[current_graph_id] = min_point_values[current_graph_id];
 	}
-	//console.log(max_point_value+ " "+ min_point_value);
-	//console.log(max_value+ " "+ min_value);
-	main_data_flag = 1;
+	//console.log(max_point_values[current_graph_id]+ " "+ min_point_values[current_graph_id]);
+	//console.log(max_values[current_graph_id]+ " "+ min_values[current_graph_id]);
+	main_data_flag[instruction.id] = 1;
 }
 //Paper set
-function create_paper(){	
-	paper = new Raphael(document.getElementById(instruction.container), width, height);	
+function create_paper(){
+	//console.log(instructions[current_graph_id].container+width+" "+height[current_graph_id]);
+	paper = new Raphael(document.getElementById(instructions[current_graph_id].container), width[current_graph_id], height[current_graph_id]);	
+	elems["paper_"+current_graph_id] = paper;
 }
 //All function
 function all_function(){
-	if(instruction.main_title == true){
+	//console.log(current_graph_id);
+	if(instructions[current_graph_id].main_title == true){
 		main_title();
+		//console.log(current_graph_id);
 	}
-	if(instruction.icon == true){
+	if(instructions[current_graph_id].icon == true){
 		icon_design();
 	}
-	if(instruction.x_axis == true){
+	if(instructions[current_graph_id].x_axis == true){
 		x_axis();
 	}
-	if(instruction.x_axis_division == true){
+	if(instructions[current_graph_id].x_axis_division == true){
 		x_axis_division();
 	}
-	if(instruction.x_axis_title == true){
+	if(instructions[current_graph_id].x_axis_title == true){
 		x_axis_title();
 	}
-	if(instruction.x_axis_label == true){
+	if(instructions[current_graph_id].x_axis_label == true){
 		x_axis_label();
 	}
-	if(instruction.y_axis == true){
+	if(instructions[current_graph_id].y_axis == true){
 		y_axis();
 	}
-	if(instruction.y_axis_division == true){
+	if(instructions[current_graph_id].y_axis_division == true){
 		y_axis_division();
 	}
-	if(instruction.y_axis_title == true){
+	if(instructions[current_graph_id].y_axis_title == true){
 		y_axis_title();
 	}
-	if(instruction.y_axis_label == true){
+	if(instructions[current_graph_id].y_axis_label == true){
 		y_axis_label();
 	}
 	draw_line_area();
@@ -178,21 +207,21 @@ function all_function(){
 	draw_circle();
 	//Collect max data on every point for view popup on that point
 	collect_popup_point();
-	if(instruction.x_axis_hover_design == true){
+	if(instructions[current_graph_id].x_axis_hover_design == true){
 		x_axis_hover_design();
 	}
-	if(instruction.y_axis_hover_design == true){
+	if(instructions[current_graph_id].y_axis_hover_design == true){
 		y_axis_hover_design();
 	}
 	label();
 	draw_annotations();
-	if(instruction.popup_design == true){
+	if(instructions[current_graph_id].popup_design == true){
 		popup_design();
 	}
-	if(instruction.popup_footer_design == true){
+	if(instructions[current_graph_id].popup_footer_design == true){
 		popup_footer_design();
 	}
-	if(instruction.select_area == true){
+	if(instructions[current_graph_id].select_area == true){
 		select_area();
 	}
 	//*****Draw rectangle for popup
@@ -202,43 +231,55 @@ function all_function(){
 var main_title_flag = 0;
 function main_title(){
 	//alert(data.length);
-	paper.text((2*paddingx), paddingy, instruction.title).attr({
+	elems["paper_"+current_graph_id].text((2*paddingx[current_graph_id]), paddingy[current_graph_id], instructions[current_graph_id].title).attr({
 		'font-weight' : 'bold',
 		'text-anchor': 'start',
 		'font-size' : '15px',
 	});
+	//console.log(current_graph_id);
+	//elems["main_title_"+current_graph_id] = text;
 	main_title_flag = 1;
 }
 //Icon design
 var icon_design_flag = 0;
 function icon_design(){
-	var x = (2*paddingx);
-	for(var i = 0; i < path_details.length; i++){
-		x += (7*path_details[(path_details.length-1)-i].name.length);
-		var text = paper.text(width - x, paddingy, path_details[(path_details.length-1)-i].name).attr({
+	var x = (2*paddingx[current_graph_id]);
+	//console.log(path_details[current_graph_id]s[current_graph_id].length);
+	for(var i = 0; i < path_details[current_graph_id].length; i++){
+		//console.log(path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].name.length);
+		x += (7*path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].name.length);
+		var text = elems["paper_"+current_graph_id].text(width[current_graph_id] - x, paddingy[current_graph_id], path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].name).attr({
 			'font-weight' : 'bold',
 			'text-anchor': 'start',
 			'font-size' : '13px',
-			fill : path_details[(path_details.length-1)-i].color,
+			fill : path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].color,
 		});
-		var circle = paper.circle(width- x - (.3*paddingx) , paddingy, 5).attr({
-			fill : path_details[(path_details.length-1)-i].color,
-			stroke : path_details[(path_details.length-1)-i].color,
+		var circle = elems["paper_"+current_graph_id].circle(width[current_graph_id]- x - (.3*paddingx[current_graph_id]) , paddingy[current_graph_id], 5).attr({
+			fill : path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].color,
+			stroke : path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].color,
 		});
-		var rect = paper.rect(width- x - (.3*paddingx) - 5, paddingy - 7.5, (path_details[(path_details.length-1)-i].name).toString().length*7 + 25 , 15).attr({
+		var rect = elems["paper_"+current_graph_id].rect(width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 5, paddingy[current_graph_id] - 7.5, (path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].name).toString().length*7 + 25 , 15).attr({
 			fill : 'transparent',
 			opacity : 0,
 			cursor : 'pointer',
 			//stroke : 'transparent',
 		});
-		rect.node.id = "icon"+i;
+		rect.node.id = "icon_"+current_graph_id+"_"+i;
 		rect.node.addEventListener('click', icon_effect_click);
 		rect.node.addEventListener('mouseover', icon_effect_mouseover);
 		rect.node.addEventListener('mouseout', icon_effect_mouseout);
-		x += .75*paddingx;
+		x += .75*paddingx[current_graph_id];
 		
 	}
-	for(var i = 0; i < parseInt(instruction.path_no); i++){
+	var line_path_icon_effect_status_array = [];
+	var round_path_icon_effect_status_array = [];
+	var stepline_path_icon_effect_status_array = [];
+	var line_area_icon_effect_status_array = [];
+	var round_area_icon_effect_status_array = [];
+	var stepline_area_icon_effect_status_array = [];
+	var label_icon_effect_status_array = [];
+	var circle_icon_effect_status_array = [];
+	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		line_path_icon_effect_status_array.push(0);
 		round_path_icon_effect_status_array.push(0);
 		stepline_path_icon_effect_status_array.push(0);
@@ -248,28 +289,41 @@ function icon_design(){
 		label_icon_effect_status_array.push(0);
 		circle_icon_effect_status_array.push(0);
 	}
-	icon_design_flag = 1;
+	line_path_icon_effect_status_arrays[current_graph_id] = line_path_icon_effect_status_array;
+	round_path_icon_effect_status_arrays[current_graph_id] = round_path_icon_effect_status_array;
+	stepline_path_icon_effect_status_arrays[current_graph_id] = stepline_path_icon_effect_status_array;
+	line_area_icon_effect_status_arrays[current_graph_id] = line_area_icon_effect_status_array;
+	round_area_icon_effect_status_arrays[current_graph_id] = round_area_icon_effect_status_array;
+	stepline_area_icon_effect_status_arrays[current_graph_id] = stepline_area_icon_effect_status_array;
+	label_icon_effect_status_arrays[current_graph_id] = label_icon_effect_status_array;
+	circle_icon_effect_status_arrays[current_graph_id] = circle_icon_effect_status_array;
+	//icon_design_flag = 1;
 }
 
 //Icon click effect
 function icon_effect_click(){
-	var id = this.id.replace('icon', '');
-	id = (path_details.length-1) - id;
+	//console.log(this.id);
+	var id = this.id.replace('icon_', '');
+	var res = id.split("_");
+	id = parseInt(res[1]);
+	var graph_id = res[0];
+	//console.log(path_details[graph_id][graph_id]);
+	id = (path_details[graph_id].length-1) - id;
 	//For Line path
-	if(draw_line_path_flag == 1){
-		for(var i = 0; i < parseInt(instruction.path_no); i++){
+	//if(draw_line_path_flag == 1){
+		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 			if(i == id){
-				if(line_path_icon_effect_status_array[id] == 0){
-					line_path_icon_effect_status_array[id] = 1;
-					if(elems['line_path'+i]){
-						elems['line_path'+i].animate({
+				if(line_path_icon_effect_status_arrays[graph_id][id] == 0){
+					line_path_icon_effect_status_arrays[graph_id][id] = 1;
+					if(elems["line_path_"+graph_id+"_"+i]){
+						elems["line_path_"+graph_id+"_"+i].animate({
 							opacity: 0.1,
 						});
 					}
-					for(var i = 0; i < parseInt(instruction.path_no); i++){
-						if(i != id && line_path_icon_effect_status_array[i] == 0){
-							if(elems['line_path'+i]){
-								elems['line_path'+i].animate({
+					for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+						if(i != id && line_path_icon_effect_status_arrays[graph_id][i] == 0){
+							if(elems["line_path_"+graph_id+"_"+i]){
+								elems["line_path_"+graph_id+"_"+i].animate({
 									opacity: 1,
 								});
 							}
@@ -277,31 +331,31 @@ function icon_effect_click(){
 					}
 				}
 				else{
-					line_path_icon_effect_status_array[id] = 0;
-					if(elems['line_path'+i]){
-						elems['line_path'+i].animate({
+					line_path_icon_effect_status_arrays[graph_id][id] = 0;
+					if(elems["line_path_"+graph_id+"_"+i]){
+						elems["line_path_"+graph_id+"_"+i].animate({
 							opacity: 1,
 						});
 					}
 				}
 			}
 		}
-	}
+	//}
 	//For Round path
-	if(draw_round_path_flag == 1){
-		for(var i = 0; i < parseInt(instruction.path_no); i++){
+	//if(draw_round_path_flag == 1){
+		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 			if(i == id){
-				if(round_path_icon_effect_status_array[id] == 0){
-					round_path_icon_effect_status_array[id] = 1;
-					if(elems['round_path'+i]){
-						elems['round_path'+i].animate({
+				if(round_path_icon_effect_status_arrays[graph_id][id] == 0){
+					round_path_icon_effect_status_arrays[graph_id][id] = 1;
+					if(elems["round_path_"+graph_id+"_"+i]){
+						elems["round_path_"+graph_id+"_"+i].animate({
 							opacity: 0.1,
 						});
 					}
-					for(var i = 0; i < parseInt(instruction.path_no); i++){
-						if(i != id && round_path_icon_effect_status_array[i] == 0){
-							if(elems['round_path'+i]){
-								elems['round_path'+i].animate({
+					for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+						if(i != id && round_path_icon_effect_status_arrays[graph_id][i] == 0){
+							if(elems["round_path_"+graph_id+"_"+i]){
+								elems["round_path_"+graph_id+"_"+i].animate({
 									opacity: 1,
 								});
 							}
@@ -309,31 +363,31 @@ function icon_effect_click(){
 					}
 				}
 				else{
-					round_path_icon_effect_status_array[id] = 0;
-					if(elems['round_path'+i]){
-						elems['round_path'+i].animate({
+					round_path_icon_effect_status_arrays[graph_id][id] = 0;
+					if(elems["round_path_"+graph_id+"_"+i]){
+						elems["round_path_"+graph_id+"_"+i].animate({
 							opacity: 1,
 						});
 					}
 				}
 			}
 		}
-	}
+	//}
 	//For stepline path
-	if(draw_stepline_path_flag == 1){
-		for(var i = 0; i < parseInt(instruction.path_no); i++){
+	//if(draw_stepline_path_flag == 1){
+		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 			if(i == id){
-				if(stepline_path_icon_effect_status_array[id] == 0){
-					stepline_path_icon_effect_status_array[id] = 1;
-					if(elems['stepline_path'+i]){
-						elems['stepline_path'+i].animate({
+				if(stepline_path_icon_effect_status_arrays[graph_id][id] == 0){
+					stepline_path_icon_effect_status_arrays[graph_id][id] = 1;
+					if(elems["stepline_path_"+graph_id+"_"+i]){
+						elems["stepline_path_"+graph_id+"_"+i].animate({
 							opacity: 0.1,
 						});
 					}
-					for(var i = 0; i < parseInt(instruction.path_no); i++){
-						if(i != id && stepline_path_icon_effect_status_array[i] == 0){
-							if(elems['stepline_path'+i]){
-								elems['stepline_path'+i].animate({
+					for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+						if(i != id && stepline_path_icon_effect_status_arrays[graph_id][i] == 0){
+							if(elems["stepline_path_"+graph_id+"_"+i]){
+								elems["stepline_path_"+graph_id+"_"+i].animate({
 									opacity: 1,
 								});
 							}
@@ -341,140 +395,141 @@ function icon_effect_click(){
 					}
 				}
 				else{
-					stepline_path_icon_effect_status_array[id] = 0;
-					if(elems['stepline_path'+i]){
-						elems['stepline_path'+i].animate({
+					stepline_path_icon_effect_status_arrays[graph_id][id] = 0;
+					if(elems["stepline_path_"+graph_id+"_"+i]){
+						elems["stepline_path_"+graph_id+"_"+i].animate({
 							opacity: 1,
 						});
 					}
 				}
 			}
 		}
-	}
+	//}
 	//For Line area
-	if(draw_line_area_flag == 1){
-		for(var i = 0; i < parseInt(instruction.path_no); i++){
+	//if(draw_line_area_flag == 1){
+		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 			if(i == id){
-				if(line_area_icon_effect_status_array[id] == 0){
-					line_area_icon_effect_status_array[id] = 1;
-					if(elems['line_area'+i]){
-						elems['line_area'+i].attr({
+				if(line_area_icon_effect_status_arrays[graph_id][id] == 0){
+					line_area_icon_effect_status_arrays[graph_id][id] = 1;
+					if(elems["line_area_"+graph_id+"_"+i]){
+						elems["line_area_"+graph_id+"_"+i].attr({
 							fill : "#fff",
-							opacity: .1,
+							opacity: 0,
 						});
 					}
-					for(var j = 0; j < parseInt(instruction.path_no); j++){
-						if(j != id && line_area_icon_effect_status_array[j] == 0){
-							if(elems['line_area'+j]){
-								elems['line_area'+j].attr({
-									fill : "270-"+path_details[j].color+"-#fff",
-									opacity: .1,
+					for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
+						if(j != id && line_area_icon_effect_status_arrays[graph_id][j] == 0){
+							if(elems["line_area_"+graph_id+"_"+j]){
+								elems["line_area_"+graph_id+"_"+j].attr({
+									fill : "270-"+path_details[graph_id][j].color+"-#fff",
+									opacity: 0,
 								});
 							}
 						}
 					}
 				}
 				else{
-					line_area_icon_effect_status_array[id] = 0;
-					if(elems['line_area'+i]){
-						elems['line_area'+i].attr({
-							fill : "270-"+path_details[i].color+"-#fff",
-							opacity: .1,
+					line_area_icon_effect_status_arrays[graph_id][id] = 0;
+					if(elems["line_area_"+graph_id+"_"+i]){
+						elems["line_area_"+graph_id+"_"+i].attr({
+							fill : "270-"+path_details[graph_id][i].color+"-#fff",
+							opacity: 0,
 						});
 					}
 				}
 			}
 		}
-	}
+	//}
 	//For Round area
-	if(draw_round_area_flag == 1){
-		for(var i = 0; i < parseInt(instruction.path_no); i++){
+	//if(draw_round_area_flag == 1){
+		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 			if(i == id){
-				if(round_area_icon_effect_status_array[id] == 0){
-					round_area_icon_effect_status_array[id] = 1;
-					if(elems['round_area'+i]){
-						elems['round_area'+i].attr({
+				if(round_area_icon_effect_status_arrays[graph_id][id] == 0){
+					round_area_icon_effect_status_arrays[graph_id][id] = 1;
+					if(elems["round_area_"+graph_id+"_"+i]){
+						elems["round_area_"+graph_id+"_"+i].attr({
 							fill : "#fff",
-							opacity: .1,
+							opacity: 0,
 						});
 					}
-					for(var j = 0; j < parseInt(instruction.path_no); j++){
-						if(j != id && round_area_icon_effect_status_array[j] == 0){
-							if(elems['round_area'+j]){
-								elems['round_area'+j].attr({
-									fill : "270-"+path_details[j].color+"-#fff",
-									opacity: .1,
+					for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
+						if(j != id && round_area_icon_effect_status_arrays[graph_id][j] == 0){
+							if(elems["round_area_"+graph_id+"_"+j]){
+								elems["round_area_"+graph_id+"_"+j].attr({
+									fill : "270-"+path_details[graph_id][j].color+"-#fff",
+									opacity: 0,
 								});
 							}
 						}
 					}
 				}
 				else{
-					round_area_icon_effect_status_array[id] = 0;
-					if(elems['round_area'+i]){
-						elems['round_area'+i].attr({
-							fill : "270-"+path_details[i].color+"-#fff",
-							opacity: .1,
+					round_area_icon_effect_status_arrays[graph_id][id] = 0;
+					if(elems["round_area_"+graph_id+"_"+i]){
+						elems["round_area_"+graph_id+"_"+i].attr({
+							fill : "270-"+path_details[graph_id][i].color+"-#fff",
+							opacity: 0,
 						});
 					}
 				}
 			}
 		}
-	}
+	//}
 	//For Stepline area
-	if(draw_stepline_area_flag  == 1){
-		for(var i = 0; i < parseInt(instruction.path_no); i++){
+	//if(draw_stepline_area_flag  == 1){
+		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 			if(i == id){
-				if(stepline_area_icon_effect_status_array[id] == 0){
-					stepline_area_icon_effect_status_array[id] = 1;
-					if(elems['stepline_area'+i]){
-						elems['stepline_area'+i].attr({
+				if(stepline_area_icon_effect_status_arrays[graph_id][id] == 0){
+					stepline_area_icon_effect_status_arrays[graph_id][id] = 1;
+					if(elems["stepline_area_"+graph_id+"_"+i]){
+						elems["stepline_area_"+graph_id+"_"+i].attr({
 							fill : "#fff",
-							opacity: .1,
+							opacity: 0,
 						});
 					}
-					for(var j = 0; j < parseInt(instruction.path_no); j++){
-						if(j != id && stepline_area_icon_effect_status_array[j] == 0){
-							if(elems['stepline_area'+j]){
-								elems['stepline_area'+j].attr({
-									fill : "270-"+path_details[j].color+"-#fff",
-									opacity: .1,
+					for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
+						if(j != id && stepline_area_icon_effect_status_arrays[graph_id][j] == 0){
+							if(elems["stepline_area_"+graph_id+"_"+j]){
+								elems["stepline_area_"+graph_id+"_"+j].attr({
+									fill : "270-"+path_details[graph_id][j].color+"-#fff",
+									opacity: 0,
 								});
 							}
 						}
 					}
 				}
 				else{
-					stepline_area_icon_effect_status_array[id] = 0;
-					if(elems['stepline_area'+i]){
-						elems['stepline_area'+i].attr({
-							fill : "270-"+path_details[i].color+"-#fff",
-							opacity: .1,
+					stepline_area_icon_effect_status_arrays[graph_id][id] = 0;
+					if(elems["stepline_area_"+graph_id+"_"+i]){
+						elems["stepline_area_"+graph_id+"_"+i].attr({
+							fill : "270-"+path_details[graph_id][i].color+"-#fff",
+							opacity: 0,
 						});
 					}
 				}
 			}
 		}
-	}
+	//}
 	//For Circle
-	if(draw_circle_flag  == 1){
-		//console.log(circle_icon_effect_status_array);
-		for(var i = 0; i < parseInt(instruction.path_no); i++){
+	//if(draw_circle_flag  == 1){
+		//console.log(circle_icon_effect_status_arrays[graph_id]);
+		
+		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 			if(i == id){
-				if(circle_icon_effect_status_array[id] == 0){
-					circle_icon_effect_status_array[id] = 1;					
-					for(var k =0;k< data.length ; k++){
-						if(elems["c"+i+""+k]){
-							elems["c"+i+""+k].attr({
+				if(circle_icon_effect_status_arrays[graph_id][id] == 0){
+					circle_icon_effect_status_arrays[graph_id][id] = 1;					
+					for(var k =0;k< datas[graph_id].length ; k++){
+						if(elems["c_"+graph_id+"_"+i+""+k]){
+							elems["c_"+graph_id+"_"+i+""+k].attr({
 								fill : "#fff",
-								opacity: .1,
+								opacity: 0,
 							});
 						}
-						for(var j = 0; j < parseInt(instruction.path_no); j++){
-							if(j != id && circle_icon_effect_status_array[j] == 0){
-								if(elems["c"+j+""+k]){
-									elems["c"+j+""+k].attr({
-										fill : path_details[j].color,
+						for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
+							if(j != id && circle_icon_effect_status_arrays[graph_id][j] == 0){
+								if(elems["c_"+graph_id+"_"+j+""+k]){
+									elems["c_"+graph_id+"_"+j+""+k].attr({
+										fill : path_details[graph_id][j].color,
 										opacity: 1,
 									});
 								}
@@ -483,11 +538,11 @@ function icon_effect_click(){
 					}
 				}
 				else{
-					circle_icon_effect_status_array[id] = 0;
-					for(var k =0;k< data.length; k++){
-						if(elems["c"+i+""+k]){
-							elems["c"+i+""+k].attr({
-								fill : path_details[i].color,
+					circle_icon_effect_status_arrays[graph_id][id] = 0;
+					for(var k =0;k< datas[graph_id].length; k++){
+						if(elems["c_"+graph_id+"_"+i+""+k]){
+							elems["c_"+graph_id+"_"+i+""+k].attr({
+								fill : path_details[graph_id][i].color,
 								opacity: 1,
 							});
 						}
@@ -495,328 +550,376 @@ function icon_effect_click(){
 				}
 			}
 		}		
-		//console.log(circle_icon_effect_status_array);
-	}
+		//console.log(circle_icon_effect_status_arrays[graph_id]);
+	//}
 	//For Label
-	if(label_flag == 1){
-		for(var i = 0; i < parseInt(instruction.path_no); i++){
+	//if(label_flag == 1){
+		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 			if(i == id){
-				if(label_icon_effect_status_array[id] == 0){
-					label_icon_effect_status_array[id] = 1;
+				if(label_icon_effect_status_arrays[graph_id][id] == 0){
+					label_icon_effect_status_arrays[graph_id][id] = 1;
 					var m = 0;
-					for(var k =0;m< data.length ; k++){
-						if(elems["label_rect"+i+""+k]){
-							elems["label_rect"+i+""+k].attr({
+					for(var k =0;m< datas[graph_id].length ; k++){
+						if(elems["label_rect_"+graph_id+"_"+i+""+k]){
+							elems["label_rect_"+graph_id+"_"+i+""+k].attr({
 								fill : "#fff",
-								opacity: .1,
+								opacity: 0,
 							});
 						}
-						for(var j = 0; j < parseInt(instruction.path_no); j++){
-							if(j != id && label_icon_effect_status_array[j] == 0){
-								if(elems["label_rect"+j+""+k]){
-									elems["label_rect"+j+""+k].attr({
-										fill : path_details[j].color,
+						if(elems["label_text_"+graph_id+"_"+i+""+k]){
+							elems["label_text_"+graph_id+"_"+i+""+k].animate({
+								//fill : path_details[graph_id][i].color,
+								opacity: 0,
+							});
+						}
+						for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
+							if(j != id && label_icon_effect_status_arrays[graph_id][j] == 0){
+								if(elems["label_rect_"+graph_id+"_"+j+""+k]){
+									elems["label_rect_"+graph_id+"_"+j+""+k].attr({
+										fill : path_details[graph_id][j].color,
+										opacity: 1,
+									});
+								}
+								if(elems["label_text_"+graph_id+"_"+j+""+k]){
+									elems["label_text_"+graph_id+"_"+j+""+k].animate({
+										//fill : path_details[graph_id][i].color,
 										opacity: 1,
 									});
 								}
 							}
 						}
-						m = m + (Math.ceil(data.length/(x_division_no)));
+						m = m + (Math.ceil(datas[graph_id].length/(x_division_nos[graph_id])));
 					}
 				}
 				else{
-					label_icon_effect_status_array[id] = 0;
+					label_icon_effect_status_arrays[graph_id][id] = 0;
 					var m = 0;
-					for(var k =0;m< data.length; k++){
-						if(elems["label_rect"+i+""+k]){
-							elems["label_rect"+i+""+k].attr({
-								fill : path_details[i].color,
+					for(var k =0;m< datas[graph_id].length; k++){
+						if(elems["label_rect_"+graph_id+"_"+i+""+k]){
+							elems["label_rect_"+graph_id+"_"+i+""+k].attr({
+								fill : path_details[graph_id][i].color,
 								opacity: 1,
 							});
 						}
-						m = m + (Math.ceil(data.length/(x_division_no)));
+						if(elems["label_text_"+graph_id+"_"+i+""+k]){
+							elems["label_text_"+graph_id+"_"+i+""+k].animate({
+								//fill : path_details[graph_id][i].color,
+								opacity: 1,
+							});
+						}
+						m = m + (Math.ceil(datas[graph_id].length/(x_division_nos[graph_id])));
 					}
 				}
 			}
 		}
-	}
+	//}
 }
+
 //Icon mouseover effect
 function icon_effect_mouseover(){
-	var id = this.id.replace('icon', '');
-	id = (path_details.length-1) - id;
+	//console.log(this.id);
+	var id = this.id.replace('icon_', '');
+	var res = id.split("_");
+	id = parseInt(res[1]);
+	var graph_id = res[0];
+	//console.log(path_details[graph_id]);
+	id = (path_details[graph_id].length-1) - id;
 	var c = 0;
-	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		if(line_path_icon_effect_status_array[i] == 1){
+	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+		if(line_path_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(round_path_icon_effect_status_array[i] == 1){
+		if(round_path_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(stepline_path_icon_effect_status_array[i] == 1){
+		if(stepline_path_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(line_area_icon_effect_status_array == 1){
+		if(line_area_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(round_area_icon_effect_status_array[i] == 1){
+		if(round_area_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(stepline_area_icon_effect_status_array[i] == 1){
+		if(stepline_area_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(circle_icon_effect_status_array[i] == 1){
+		if(circle_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(label_icon_effect_status_array[i] == 1){
+		if(label_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
 	}
 	if(c == 0){
+		//console.log(label_icon_effect_status_arrays["1st"]);
+		
 		//For line path
-		if(draw_line_path_flag == 1){
-			for(var i = 0; i< parseInt(instruction.path_no); i++){
+		//if(draw_line_path_flag == 1){
+			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
 				if(id != i){
-					if(elems['line_path'+i]){
-						elems['line_path'+i].animate({
-							opacity: 0.1,
+					//console.log("Oi");
+					if(elems["line_path_"+graph_id+"_"+i]){
+						elems["line_path_"+graph_id+"_"+i].animate({
+							opacity: 0,
 						});
 					}
 				}
 			}
-		}
+		//}
 		//For round path
-		if(draw_round_path_flag == 1){
-			for(var i = 0; i< parseInt(instruction.path_no); i++){
+		//if(draw_round_path_flag == 1){
+			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
 				if(id != i){
-					if(elems['round_path'+i]){
-						elems['round_path'+i].animate({
-							opacity: 0.1,
+					if(elems["round_path_"+graph_id+"_"+i]){
+						elems["round_path_"+graph_id+"_"+i].animate({
+							opacity: 0,
 						});
 					}
 				}
 			}
-		}
+		//}
 		//For stepline path
-		if(draw_stepline_path_flag  == 1){
-			for(var i = 0; i< parseInt(instruction.path_no); i++){
+		//if(draw_stepline_path_flag  == 1){
+			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
 				if(id != i){
-					if(elems['stepline_path'+i]){
-						elems['stepline_path'+i].animate({
-							opacity: 0.1,
+					if(elems["stepline_path_"+graph_id+"_"+i]){
+						elems["stepline_path_"+graph_id+"_"+i].animate({
+							opacity: 0,
 						});
 					}
 				}
 			}
-		}
+		//}
 		//For line area
-		if(draw_line_area_flag == 1){
-			for(var i = 0; i< parseInt(instruction.path_no); i++){
+		//if(draw_line_area_flag == 1){
+			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
 				if(id != i){
-					if(elems['line_area'+i]){
-						elems['line_area'+i].animate({
+					if(elems["line_area_"+graph_id+"_"+i]){
+						elems["line_area_"+graph_id+"_"+i].animate({
 							fill : "#fff",
-							opacity: 0.1,
+							opacity: 0,
 						});
 					}
 				}
 			}
-		}
+		//}
 		//For round area
-		if(draw_round_area_flag == 1){
-			for(var i = 0; i< parseInt(instruction.path_no); i++){
+		//if(draw_round_area_flag == 1){
+			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
 				if(id != i){
-					if(elems['round_area'+i]){
-						elems['round_area'+i].attr({
+					if(elems["round_area_"+graph_id+"_"+i]){
+						elems["round_area_"+graph_id+"_"+i].attr({
 							fill : "#fff",
-							opacity: .1,
+							opacity: 0,
 						});
 					}
 				}
 			}
-		}
+		//}
 		//For stepline area
-		if(draw_stepline_area_flag  == 1){
-			for(var i = 0; i< parseInt(instruction.path_no); i++){
+		//if(draw_stepline_area_flag  == 1){
+			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
 				if(id != i){
-					if(elems['stepline_area'+i]){
-						elems['stepline_area'+i].attr({
+					if(elems["stepline_area_"+graph_id+"_"+i]){
+						elems["stepline_area_"+graph_id+"_"+i].attr({
 							fill : "#fff",
-							opacity: .1,
+							opacity: 0,
 						});
 					}
 				}
 			}
-		}
+		//}
 		//For Circle
-		if(draw_circle_flag  == 1){
-			for(var i = 0; i < parseInt(instruction.path_no); i++){
+		//if(draw_circle_flag  == 1){
+			for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 				if(id != i){					
-					for(var k =0;k< data.length ; k++){
-						if(elems["c"+i+""+k]){
-							elems["c"+i+""+k].animate({
-								fill : path_details[i].color,
-								opacity: .1,
+					for(var k =0;k< datas[graph_id].length ; k++){
+						if(elems["c_"+graph_id+"_"+i+""+k]){
+							elems["c_"+graph_id+"_"+i+""+k].animate({
+								fill : path_details[graph_id][i].color,
+								opacity: 0,
 							});
 						}
 					}
 				}
 			}
-		}
+		//}
 		//For Label
-		if(label_flag == 1){
-			for(var i = 0; i < parseInt(instruction.path_no); i++){
+		//if(label_flag == 1){
+			for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 				if(id != i){
 					var m = 0;
-					for(var k =0;m< data.length ; k++){
-						if(elems["label_rect"+i+""+k]){
-							elems["label_rect"+i+""+k].animate({
-								fill : path_details[i].color,
-								opacity: .1,
+					for(var k =0;m< datas[graph_id].length ; k++){
+						
+						if(elems["label_rect_"+graph_id+"_"+i+""+k]){
+							elems["label_rect_"+graph_id+"_"+i+""+k].animate({
+								//fill : path_details[graph_id][i].color,
+								opacity: 0,
+							});
+							//console.log(elems["label_rect_"+graph_id+"_"+i+""+k]);
+						}
+						if(elems["label_text_"+graph_id+"_"+i+""+k]){
+							elems["label_text_"+graph_id+"_"+i+""+k].animate({
+								//fill : path_details[graph_id][i].color,
+								opacity: 0,
 							});
 						}
-						m = m + (Math.ceil(data.length/(x_division_no)));
+						m = m + (Math.ceil(datas[graph_id].length/(x_division_nos[graph_id])));
 					}
 				}
 			}
-		}
+		//}
 	}
 }
+
+
 //Icon mouseout effect
 function icon_effect_mouseout(){
+	var id = this.id.replace('icon_', '');
+	var res = id.split("_");
+	id = parseInt(res[1]);
+	var graph_id = res[0];
+	id = (path_details[graph_id].length-1) - id;
 	var c = 0;
-	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		if(line_path_icon_effect_status_array[i] == 1){
+	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+		if(line_path_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(round_path_icon_effect_status_array[i] == 1){
+		if(round_path_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(stepline_path_icon_effect_status_array[i] == 1){
+		if(stepline_path_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(line_area_icon_effect_status_array == 1){
+		if(line_area_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(round_area_icon_effect_status_array[i] == 1){
+		if(round_area_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(stepline_area_icon_effect_status_array[i] == 1){
+		if(stepline_area_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(circle_icon_effect_status_array[i] == 1){
+		if(circle_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
-		if(label_icon_effect_status_array[i] == 1){
+		if(label_icon_effect_status_arrays[graph_id][i] == 1){
 			c++;
 		}
 	}
 	if(c == 0){
 		//For line path
-		if(draw_line_path_flag == 1){
-			for(var i = 0; i< parseInt(instruction.path_no); i++){
-				if(elems['line_path'+i]){
-					elems['line_path'+i].animate({
+		//if(draw_line_path_flag == 1){
+			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+				if(elems["line_path_"+graph_id+"_"+i]){
+					elems["line_path_"+graph_id+"_"+i].animate({
 						opacity: 1,
 					});
 				}
 			}
-		}
+		//}
 		//For round path
-		if(draw_round_path_flag == 1){
-			for(var i = 0; i< parseInt(instruction.path_no); i++){
-				if(elems['round_path'+i]){
-					elems['round_path'+i].animate({
+		//if(draw_round_path_flag == 1){
+			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+				if(elems["round_path_"+graph_id+"_"+i]){
+					elems["round_path_"+graph_id+"_"+i].animate({
 						opacity: 1,
 					});
 				}
 			}
-		}
+		//}
 		//For stepline path
-		if(draw_stepline_path_flag  == 1){
-			for(var i = 0; i< parseInt(instruction.path_no); i++){
-				if(elems['stepline_path'+i]){
-					elems['stepline_path'+i].animate({
+		//if(draw_stepline_path_flag  == 1){
+			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+				if(elems["stepline_path_"+graph_id+"_"+i]){
+					elems["stepline_path_"+graph_id+"_"+i].animate({
 						opacity: 1,
 					});
 				}
 			}
-		}
+		//}
 		//For line area
-		if(draw_line_area_flag == 1){
-			for(var i = 0; i< parseInt(instruction.path_no); i++){
-				if(elems['line_area'+i]){
-					elems['line_area'+i].animate({
+		//if(draw_line_area_flag == 1){
+			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+				if(elems["line_area_"+graph_id+"_"+i]){
+					elems["line_area_"+graph_id+"_"+i].animate({
 						opacity: 0.1,
-						fill : "270-"+path_details[i].color+"-#fff",
+						fill : "270-"+path_details[graph_id][i].color+"-#fff",
 					});
 				}
 			}
-		}
+		//}
 		//For round area
-		if(draw_round_area_flag == 1){
-			for(var i = 0; i< parseInt(instruction.path_no); i++){
-				if(elems['round_area'+i]){
-					elems['round_area'+i].animate({
+		//if(draw_round_area_flag == 1){
+			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+				if(elems["round_area_"+graph_id+"_"+i]){
+					elems["round_area_"+graph_id+"_"+i].animate({
 						opacity: 0.1,
-						fill : "270-"+path_details[i].color+"-#fff",
+						fill : "270-"+path_details[graph_id][i].color+"-#fff",
 					});
 				}
 			}
-		}
-		//For round area
-		if(draw_stepline_area_flag == 1){
-			for(var i = 0; i< parseInt(instruction.path_no); i++){
-				if(elems['stepline_area'+i]){
-					elems['stepline_area'+i].animate({
+		//}
+		//For stepline area
+		//if(draw_stepline_area_flag == 1){
+			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+				if(elems["stepline_area_"+graph_id+"_"+i]){
+					elems["stepline_area_"+graph_id+"_"+i].animate({
 						opacity: 0.1,
-						fill : "270-"+path_details[i].color+"-#fff",
+						fill : "270-"+path_details[graph_id][i].color+"-#fff",
 					});
 				}
 			}
-		}
+		//}
 		//For circle
-		if(label_flag == 1){
-			for(var i = 0; i < parseInt(instruction.path_no); i++){
-				for(var k =0;k< data.length ; k++){
-					if(elems["c"+i+""+k]){
-						elems["c"+i+""+k].animate({
-							fill : path_details[i].color,
+		//if(label_flag == 1){
+			for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+				for(var k =0;k< datas[graph_id].length ; k++){
+					if(elems["c_"+graph_id+"_"+i+""+k]){
+						elems["c_"+graph_id+"_"+i+""+k].animate({
+							fill : path_details[graph_id][i].color,
 							opacity: 1,
 						});
 					}
 				}
 			}
-		}
+		//}
 		//For Label
-		if(label_flag == 1){
-			for(var i = 0; i < parseInt(instruction.path_no); i++){
+		//if(label_flag == 1){
+			for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 				var m = 0;
-				for(var k =0;m< data.length ; k++){
-					if(elems["label_rect"+i+""+k]){
-						elems["label_rect"+i+""+k].animate({
-							fill : path_details[i].color,
+				for(var k =0;m< datas[graph_id].length ; k++){
+					if(elems["label_rect_"+graph_id+"_"+i+""+k]){
+						elems["label_rect_"+graph_id+"_"+i+""+k].animate({
+							fill : path_details[graph_id][i].color,
 							opacity: 1,
 						});
 					}
-					m = m + (Math.ceil(data.length/(x_division_no)));
+					if(elems["label_text_"+graph_id+"_"+i+""+k]){
+						elems["label_text_"+graph_id+"_"+i+""+k].animate({
+							//fill : path_details[graph_id][i].color,
+							opacity: 1,
+						});
+					}
+					m = m + (Math.ceil(datas[graph_id].length/(x_division_nos[graph_id])));
 				}
 			}
-		}
+		//}
 	}
 }
 
 //x axis title
 var x_axis_title_flag = 0;
 function x_axis_title(){
-	paper.text(width/2, height-paddingy, instruction.x_axis_name);
+	elems["paper_"+current_graph_id].text(width[current_graph_id]/2, height[current_graph_id]-paddingy[current_graph_id], instructions[current_graph_id].x_axis_name);
 	x_axis_title_flag = 1;
 }
 
 //y axis title
 var y_axis_title_flag = 0;
 function y_axis_title(){
-	paper.text(paddingx, height/2, instruction.y_axis_name).attr({
+	elems["paper_"+current_graph_id].text(paddingx[current_graph_id], height[current_graph_id]/2, instructions[current_graph_id].y_axis_name).attr({
 		transform : "r270",
 	});
 	y_axis_title_flag = 1;
@@ -825,12 +928,12 @@ function y_axis_title(){
 //Draw x axis
 var x_axis_flag = 0;
 function x_axis(){
-	if(0 <= max_value && 0 >= min_value){
-		paper.path("M " + (2*paddingx) + " " + ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0 - min_value))/max) + "l "+ (width - (4*paddingx)) + " 0").attr({
-			stroke : instruction.axis_color || "#9d9d9d",
+	if(0 <= max_values[current_graph_id] && 0 >= min_values[current_graph_id]){
+		elems["paper_"+current_graph_id].path("M " + (2*paddingx[current_graph_id]) + " " + ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(0 - min_values[current_graph_id]))/maxs[current_graph_id]) + "l "+ (width[current_graph_id] - (4*paddingx[current_graph_id])) + " 0").attr({
+			stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
 		});
 	}else{
-		paper.path("M " + (2*paddingx) + " " + ( (height-(2*paddingy)) ) + "l "+ (width - (4*paddingx)) + " 0").attr({
+		elems["paper_"+current_graph_id].path("M " + (2*paddingx[current_graph_id]) + " " + ( (height[current_graph_id]-(2*paddingy[current_graph_id])) ) + "l "+ (width[current_graph_id] - (4*paddingx[current_graph_id])) + " 0").attr({
 			stroke : instruction.axis_color || "#9d9d9d",
 		});
 	}
@@ -840,8 +943,8 @@ function x_axis(){
 //Draw y axis
 var y_axis_flag = 0;
 function y_axis(){
-	paper.path("M " + (2*paddingx) + " " + (2*paddingy) +" l  0 " + (height-(4*paddingy)) ).attr({
-		stroke : instruction.axis_color || "#9d9d9d",
+	elems["paper_"+current_graph_id].path("M " + (2*paddingx[current_graph_id]) + " " + (2*paddingy[current_graph_id]) +" l  0 " + (height[current_graph_id]-(4*paddingy[current_graph_id])) ).attr({
+		stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
 	});
 	y_axis_flag = 1;
 }
@@ -851,12 +954,12 @@ function y_axis(){
 var x_axis_division_flag = 0;
 function x_axis_division(){
 	var j = 0;
-	for(var i = 0; j< data.length; i++){	
-		paper.path("M " + ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j) + " "+ (height - (2*paddingy)) + " l 0 " + (-(height-(4*paddingy))) ).attr({
+	for(var i = 0; j< datas[current_graph_id].length; i++){	
+		elems["paper_"+current_graph_id].path("M " + ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) + " "+ (height[current_graph_id] - (2*paddingy[current_graph_id])) + " l 0 " + (-(height[current_graph_id]-(4*paddingy[current_graph_id]))) ).attr({
 			stroke : "#ececec",
 			opacity : .8,
 		});
-		j = j + (Math.ceil(data.length/(x_division_no)));
+		j = j + (Math.ceil(datas[current_graph_id].length/(x_division_nos[current_graph_id])));
 	}
 	x_axis_division_flag = 1;
 }
@@ -864,21 +967,21 @@ function x_axis_division(){
 var x_axis_label_flag = 0;
 function x_axis_label(){
 	var j = 0;		
-	for(var i = 0; j< data.length; i++){		
-		paper.path( "M " + ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j) + " "+ (height - (2*paddingy)) + " l 0 3" ).attr({
-			stroke : instruction.axis_color || "#9d9d9d",
+	for(var i = 0; j< datas[current_graph_id].length; i++){		
+		elems["paper_"+current_graph_id].path( "M " + ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) + " "+ (height[current_graph_id] - (2*paddingy[current_graph_id])) + " l 0 3" ).attr({
+			stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
 		});
-		if(x_division_no>15){
-			paper.text(((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j) , (height - (1.5*paddingy)), data[j].month).attr({
-				fill : instruction.axis_color || "#9d9d9d",
+		if(x_division_nos[current_graph_id]>15){
+			elems["paper_"+current_graph_id].text(((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) , (height[current_graph_id] - (1.5*paddingy[current_graph_id])), datas[current_graph_id][j].month).attr({
+				fill : instructions[current_graph_id].axis_color || "#9d9d9d",
 				transform : "r325",
 			});
 		}else{
-			paper.text(((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j) , (height - (1.5*paddingy)), data[j].month).attr({
-				fill : instruction.axis_color || "#9d9d9d",
+			elems["paper_"+current_graph_id].text(((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) , (height[current_graph_id] - (1.5*paddingy[current_graph_id])), datas[current_graph_id][j].month).attr({
+				fill : instructions[current_graph_id].axis_color || "#9d9d9d",
 			});
 		}
-		j = j + (Math.ceil(data.length/(x_division_no)));		
+		j = j + (Math.ceil(datas[current_graph_id].length/(x_division_nos[current_graph_id])));		
 	}
 	x_axis_label_flag = 1;
 }
@@ -887,8 +990,8 @@ function x_axis_label(){
 var y_axis_division_flag = 0;
 function y_axis_division(){
 				
-	for(var i = 0 ; i<y_division_no ; i++){		
-		paper.path( "M "+ 2*paddingx +" " + ( (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i ) + " l "+  (width-(4*paddingx)) +" 0").attr({
+	for(var i = 0 ; i<y_division_nos[current_graph_id] ; i++){		
+		elems["paper_"+current_graph_id].path( "M "+ 2*paddingx[current_graph_id] +" " + ( (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i ) + " l "+  (width[current_graph_id]-(4*paddingx[current_graph_id])) +" 0").attr({
 			stroke : "#ececec",
 			opacity : .8,
 		});
@@ -898,12 +1001,12 @@ function y_axis_division(){
 /* y axis label */
 var y_axis_label_flag = 0;
 function y_axis_label(){
-	for(var i = 0 ; i<y_division_no ; i++){
-		paper.path( "M "+ 2*paddingx +" " + ( (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i ) + " l -3 0").attr({
-			stroke : instruction.axis_color || "#9d9d9d",
+	for(var i = 0 ; i<y_division_nos[current_graph_id] ; i++){
+		elems["paper_"+current_graph_id].path( "M "+ 2*paddingx[current_graph_id] +" " + ( (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i ) + " l -3 0").attr({
+			stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
 		});
-		paper.text(2*paddingx - 5, (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i, ((max/(y_division_no-1))*i)+min_value).attr({
-			fill : instruction.axis_color || "#9d9d9d",
+		elems["paper_"+current_graph_id].text(2*paddingx[current_graph_id] - 5, (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i, ((maxs[current_graph_id]/(y_division_nos[current_graph_id]-1))*i)+min_values[current_graph_id]).attr({
+			fill : instructions[current_graph_id].axis_color || "#9d9d9d",
 			'text-anchor' : "end",
 		});		
 	}
@@ -912,25 +1015,25 @@ function y_axis_label(){
 //Draw path
 var draw_line_path_flag = 0;
 function draw_line_path(){
-	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		for(var x = 0; x<path_details[i].type.length; x++){
-			if(path_details[i].type[x] == "line_path"){
-				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0 - min_value))/max) + " ";
-				for(var j = 1; j < data.length ; j++){
-					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*0)/max + "";
+	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
+		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
+			if(path_details[current_graph_id][i].type[x] == "line_path"){
+				p = "M "+ (2*paddingx[current_graph_id]) + " "+ ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(0 - min_values[current_graph_id]))/maxs[current_graph_id]) + " ";
+				for(var j = 1; j < datas[current_graph_id].length ; j++){
+					p += " l "+ (width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1) + " "+ ((height[current_graph_id]-(4*paddingy[current_graph_id]))*0)/maxs[current_graph_id] + "";
 				}
-				var path1 = paper.path(p).attr({
-					'stroke-width' : path_details[i].stroke[x],
-					stroke : path_details[i].color,
+				var path1 = elems["paper_"+current_graph_id].path(p).attr({
+					'stroke-width' : path_details[current_graph_id][i].stroke[x],
+					stroke : path_details[current_graph_id][i].color,
 					opacity : 1,
 				});
-				elems['line_path'+i] = path1;
+				elems["line_path_"+current_graph_id+"_"+i] = path1;
 				
-				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i] - min_value))/max) + " ";
-				for(var j = 1; j < data.length ; j++){
-					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
+				p = "M "+ (2*paddingx[current_graph_id]) + " "+ ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(Object.values(datas[current_graph_id][0].value)[i] - min_values[current_graph_id]))/maxs[current_graph_id]) + " ";
+				for(var j = 1; j < datas[current_graph_id].length ; j++){
+					p += " l "+ (width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1) + " "+ ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(Object.values(datas[current_graph_id][j-1].value)[i] - Object.values(datas[current_graph_id][j].value)[i]))/maxs[current_graph_id] + "";
 				}
-				elems['line_path'+i].animate({
+				elems["line_path_"+current_graph_id+"_"+i].animate({
 					path : p,
 				}, 400 + (150*i), "<>" );
 			}
@@ -941,24 +1044,24 @@ draw_line_path_flag = 1;
 //Draw round path
 var draw_round_path_flag = 0;
 function draw_round_path(){
-	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		for(var x = 0; x<path_details[i].type.length; x++){
-			if(path_details[i].type[x] == "round_path"){
-				p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((0   - min_value)*((height-(4*paddingy))/max))) + " R ";
-				for(var j = 1; j < data.length ; j++){
-					p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0 - min_value)*((height-(4*paddingy))/max))) + " ";
+	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
+		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
+			if(path_details[current_graph_id][i].type[x] == "round_path"){
+				p = "M "+ (2*paddingx[current_graph_id]) + " "+ ((height[current_graph_id] - (2*paddingy[current_graph_id])) - ((0   - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id]))) + " R ";
+				for(var j = 1; j < datas[current_graph_id].length ; j++){
+					p += ", "+ ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ", "+ ((height[current_graph_id] - (2*paddingy[current_graph_id])) - ((0 - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id]))) + " ";
 				}
-				var path1 = paper.path(p).attr({
-					'stroke-width' : path_details[i].stroke[x],
-					stroke : path_details[i].color,
+				var path1 = elems["paper_"+current_graph_id].path(p).attr({
+					'stroke-width' : path_details[current_graph_id][i].stroke[x],
+					stroke : path_details[current_graph_id][i].color,
 					opacity : 1,
 				});
-				elems['round_path'+i] = path1;
-				p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i]   - min_value)*((height-(4*paddingy))/max))) + " R ";
-				for(var j = 1; j < data.length ; j++){
-					p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " ";
+				elems["round_path_"+current_graph_id+"_"+i] = path1;
+				p = "M "+ (2*paddingx[current_graph_id]) + " "+ ((height[current_graph_id] - (2*paddingy[current_graph_id])) - ((Object.values(datas[current_graph_id][0].value)[i]   - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id]))) + " R ";
+				for(var j = 1; j < datas[current_graph_id].length ; j++){
+					p += ", "+ ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ", "+ ((height[current_graph_id] - (2*paddingy[current_graph_id])) - ((Object.values(datas[current_graph_id][j].value)[i]  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id]))) + " ";
 				}
-				elems['round_path'+i].animate({
+				elems["round_path_"+current_graph_id+"_"+i].animate({
 					path : p,
 				}, 400 + (150*i), "<>" );
 			}
@@ -970,27 +1073,27 @@ function draw_round_path(){
 //Draw stepline path
 var draw_stepline_path_flag = 0;
 function draw_stepline_path(){
-	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		for(var x = 0; x<path_details[i].type.length; x++){
-			if(path_details[i].type[x] == "stepline_path"){
-				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0  - min_value))/max) + " ";
-				for(var j = 1; j < data.length ; j++){
-					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
-					p += " l "+ 0 + " "+ ((height-(4*paddingy))*0)/max + "";
+	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
+		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
+			if(path_details[current_graph_id][i].type[x] == "stepline_path"){
+				p = "M "+ (2*paddingx[current_graph_id]) + " "+ ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(0  - min_values[current_graph_id]))/maxs[current_graph_id]) + " ";
+				for(var j = 1; j < datas[current_graph_id].length ; j++){
+					p += " l "+ (width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1) + " "+ 0 + "";
+					p += " l "+ 0 + " "+ ((height[current_graph_id]-(4*paddingy[current_graph_id]))*0)/maxs[current_graph_id] + "";
 				}
-				var path1 = paper.path(p).attr({
-					'stroke-width' : path_details[i].stroke[x],
-					stroke : path_details[i].color,
+				var path1 = elems["paper_"+current_graph_id].path(p).attr({
+					'stroke-width' : path_details[current_graph_id][i].stroke[x],
+					stroke : path_details[current_graph_id][i].color,
 					opacity : 1,
 				});
-				elems['stepline_path'+i] = path1;
+				elems["stepline_path_"+current_graph_id+"_"+i] = path1;
 			
-				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]  - min_value))/max) + " ";
-				for(var j = 1; j < data.length ; j++){
-					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
-					p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
+				p = "M "+ (2*paddingx[current_graph_id]) + " "+ ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(Object.values(datas[current_graph_id][0].value)[i]  - min_values[current_graph_id]))/maxs[current_graph_id]) + " ";
+				for(var j = 1; j < datas[current_graph_id].length ; j++){
+					p += " l "+ (width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1) + " "+ 0 + "";
+					p += " l "+ 0 + " "+ ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(Object.values(datas[current_graph_id][j-1].value)[i] - Object.values(datas[current_graph_id][j].value)[i]))/maxs[current_graph_id] + "";
 				}
-				elems['stepline_path'+i].animate({
+				elems["stepline_path_"+current_graph_id+"_"+i].animate({
 					path : p,
 				}, 400 + (150*i), "backOut" );
 			}
@@ -1003,20 +1106,20 @@ var draw_circle_flag = 0;
 function draw_circle(){
 	/*circle_radius = radius;
 	circle_radius_zoom = radius_zoom;*/
-	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		if(path_details[i].circle == true){
-			for(var j = 0; j < data.length ; j++){
-				var circle1 = paper.circle( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max)) ,path_details[i].circle_zoom_out).attr({
+	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
+		if(path_details[current_graph_id][i].circle == true){
+			for(var j = 0; j < datas[current_graph_id].length ; j++){
+				var circle1 = elems["paper_"+current_graph_id].circle( ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))), (height[current_graph_id] - (2*paddingy[current_graph_id])) - ((0  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])) ,path_details[current_graph_id][i].circle_zoom_out).attr({
 					opacity : 1,
-					fill : path_details[i].color,
-					stroke : path_details[i].color,
+					fill : path_details[current_graph_id][i].color,
+					stroke : path_details[current_graph_id][i].color,
 				});
 				circle1.animate({
-					cx : ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))),
-					cy : (height - (2*paddingy)) - ((Object.values(data[j].value)[i] - min_value)*((height-(4*paddingy))/max)),
+					cx : ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))),
+					cy : (height[current_graph_id] - (2*paddingy[current_graph_id])) - ((Object.values(datas[current_graph_id][j].value)[i] - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])),
 					
 				}, 400 + (150*i), "<>" );			
-				elems["c"+i+""+j] = circle1;
+				elems["c_"+current_graph_id+"_"+i+""+j] = circle1;
 			}
 		}
 	}
@@ -1025,28 +1128,28 @@ function draw_circle(){
 //Draw line area
 var draw_line_area_flag = 0;
 function draw_line_area(){
-	//line_area_stroke = stroke_width;
-	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		for(var x = 0; x<path_details[i].type.length; x++){
-			if(path_details[i].type[x] == "line_area"){
-				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0 - min_value))/max) + " ";
-				for(var j = 1; j < data.length ; j++){
-					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*0)/max + "";
+	//line_area_stroke = stroke_width[current_graph_id];
+	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
+		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
+			if(path_details[current_graph_id][i].type[x] == "line_area"){
+				p = "M "+ (2*paddingx[current_graph_id]) + " "+ ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(0 - min_values[current_graph_id]))/maxs[current_graph_id]) + " ";
+				for(var j = 1; j < datas[current_graph_id].length ; j++){
+					p += " l "+ (width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1) + " "+ ((height[current_graph_id]-(4*paddingy[current_graph_id]))*0)/maxs[current_graph_id] + "";
 				}
-				p += " l "+ 0 + " "+ ((height-(4*paddingy))*(0 - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
-				var path1 = paper.path(p).attr({
-					fill : "270-"+path_details[i].color+"-#fff",
-					stroke : path_details[i].color,
-					'stroke-width' : path_details[i].stroke[x],
+				p += " l "+ 0 + " "+ ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(0 - 0))/maxs[current_graph_id] + "l -" + (width[current_graph_id] - (4*paddingx[current_graph_id])) + " 0z";
+				var path1 = elems["paper_"+current_graph_id].path(p).attr({
+					fill : "270-"+path_details[current_graph_id][i].color+"-#fff",
+					stroke : path_details[current_graph_id][i].color,
+					'stroke-width' : path_details[current_graph_id][i].stroke[x],
 					opacity : .1,
 				});
-				elems['line_area'+i] = path1;
-				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i] - min_value))/max) + " ";
-				for(var j = 1; j < data.length ; j++){
-					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
+				elems["line_area_"+current_graph_id+"_"+i] = path1;
+				p = "M "+ (2*paddingx[current_graph_id]) + " "+ ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(Object.values(datas[current_graph_id][0].value)[i] - min_values[current_graph_id]))/maxs[current_graph_id]) + " ";
+				for(var j = 1; j < datas[current_graph_id].length ; j++){
+					p += " l "+ (width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1) + " "+ ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(Object.values(datas[current_graph_id][j-1].value)[i] - Object.values(datas[current_graph_id][j].value)[i]))/maxs[current_graph_id] + "";
 				}
-				p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
-				elems['line_area'+i].animate({
+				p += " l "+ 0 + " "+ ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(Object.values(datas[current_graph_id][j-1].value)[i] - 0))/maxs[current_graph_id] + "l -" + (width[current_graph_id] - (4*paddingx[current_graph_id])) + " 0z";
+				elems["line_area_"+current_graph_id+"_"+i].animate({
 					path : p,
 				}, 400 + (150*i), "<>");
 			}
@@ -1058,27 +1161,27 @@ function draw_line_area(){
 //Draw round area
 var draw_round_area_flag = 0;
 function draw_round_area(){
-	for(var i = 0; i < parseInt(instruction.path_no); i++){	
-		for(var x = 0; x<path_details[i].type.length; x++){	
-			if(path_details[i].type[x] == "round_area"){
-				p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max))) + " R ";
-				for(var j = 1; j < data.length ; j++){
-					p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max))) + " ";
+	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){	
+		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){	
+			if(path_details[current_graph_id][i].type[x] == "round_area"){
+				p = "M "+ (2*paddingx[current_graph_id]) + " "+ ((height[current_graph_id] - (2*paddingy[current_graph_id])) - ((0  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id]))) + " R ";
+				for(var j = 1; j < datas[current_graph_id].length ; j++){
+					p += ", "+ ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ", "+ ((height[current_graph_id] - (2*paddingy[current_graph_id])) - ((0  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id]))) + " ";
 				}
-				p+= ", "+ ((2*paddingx)+(data.length-1)*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max))) + " z";
-				var path1 = paper.path(p).attr({
-					'stroke-width' : path_details[i].stroke[x],
-					stroke : path_details[i].color,
+				p+= ", "+ ((2*paddingx[current_graph_id])+(datas[current_graph_id].length-1)*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ", "+ ((height[current_graph_id] - (2*paddingy[current_graph_id])) - ((0  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id]))) + " z";
+				var path1 = elems["paper_"+current_graph_id].path(p).attr({
+					'stroke-width' : path_details[current_graph_id][i].stroke[x],
+					stroke : path_details[current_graph_id][i].color,
 					opacity : .1,
-					fill : "270-"+path_details[i].color+"-#ffffff",
+					fill : "270-"+path_details[current_graph_id][i].color+"-#ffffff",
 				});
-				elems['round_area'+i] = path1;
-				p = "M "+ (2*paddingx) + " "+ ((height - (2*paddingy)) - ((Object.values(data[0].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " R ";
-				for(var j = 1; j < data.length ; j++){
-					p += ", "+ ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ", "+ ((height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max))) + " ";
+				elems["round_area_"+current_graph_id+"_"+i] = path1;
+				p = "M "+ (2*paddingx[current_graph_id]) + " "+ ((height[current_graph_id] - (2*paddingy[current_graph_id])) - ((Object.values(datas[current_graph_id][0].value)[i]  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id]))) + " R ";
+				for(var j = 1; j < datas[current_graph_id].length ; j++){
+					p += ", "+ ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ", "+ ((height[current_graph_id] - (2*paddingy[current_graph_id])) - ((Object.values(datas[current_graph_id][j].value)[i]  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id]))) + " ";
 				}
-				p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
-				elems['round_area'+i].animate({
+				p += " l "+ 0 + " "+ ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(Object.values(datas[current_graph_id][j-1].value)[i] - 0))/maxs[current_graph_id] + "l -" + (width[current_graph_id] - (4*paddingx[current_graph_id])) + " 0z";
+				elems["round_area_"+current_graph_id+"_"+i].animate({
 					path : p,
 				}, 400 + (150*i), "<>" );
 			}
@@ -1090,30 +1193,30 @@ function draw_round_area(){
 //Draw stepline area
 var draw_stepline_area_flag = 0;
 function draw_stepline_area(){
-	//stepline_area_stroke = stroke_width;
-	for(var i = 0; i < parseInt(instruction.path_no); i++){	
-		for(var x = 0; x<path_details[i].type.length; x++){
-			if(path_details[i].type[x] == "stepline_area"){
-				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(0  - min_value))/max) + " ";
-				for(var j = 1; j < data.length ; j++){
-					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
-					p += " l "+ 0 + " "+ ((height-(4*paddingy))*0)/max + "";
+	//stepline_area_stroke = stroke_width[current_graph_id];
+	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){	
+		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
+			if(path_details[current_graph_id][i].type[x] == "stepline_area"){
+				p = "M "+ (2*paddingx[current_graph_id]) + " "+ ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(0  - min_values[current_graph_id]))/maxs[current_graph_id]) + " ";
+				for(var j = 1; j < datas[current_graph_id].length ; j++){
+					p += " l "+ (width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1) + " "+ 0 + "";
+					p += " l "+ 0 + " "+ ((height[current_graph_id]-(4*paddingy[current_graph_id]))*0)/maxs[current_graph_id] + "";
 				}
-				p += " l "+ 0 + " "+ ((height-(4*paddingy))*(0 - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
-				var path1 = paper.path(p).attr({
-					fill : "270-"+path_details[i].color+"-#fff",
-					stroke : path_details[i].color,
-					'stroke-width' : path_details[i].stroke[x],
+				p += " l "+ 0 + " "+ ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(0 - 0))/maxs[current_graph_id] + "l -" + (width[current_graph_id] - (4*paddingx[current_graph_id])) + " 0z";
+				var path1 = elems["paper_"+current_graph_id].path(p).attr({
+					fill : "270-"+path_details[current_graph_id][i].color+"-#fff",
+					stroke : path_details[current_graph_id][i].color,
+					'stroke-width' : path_details[current_graph_id][i].stroke[x],
 					opacity : .1,
 				});
-				elems['stepline_area'+i] = path1;
-				p = "M "+ (2*paddingx) + " "+ ( (height-(2*paddingy)) - ((height-(4*paddingy))*(Object.values(data[0].value)[i]  - min_value))/max) + " ";
-				for(var j = 1; j < data.length ; j++){
-					p += " l "+ (width-(4*paddingx))/(data.length-1) + " "+ 0 + "";
-					p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - Object.values(data[j].value)[i]))/max + "";
+				elems["stepline_area_"+current_graph_id+"_"+i] = path1;
+				p = "M "+ (2*paddingx[current_graph_id]) + " "+ ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(Object.values(datas[current_graph_id][0].value)[i]  - min_values[current_graph_id]))/maxs[current_graph_id]) + " ";
+				for(var j = 1; j < datas[current_graph_id].length ; j++){
+					p += " l "+ (width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1) + " "+ 0 + "";
+					p += " l "+ 0 + " "+ ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(Object.values(datas[current_graph_id][j-1].value)[i] - Object.values(datas[current_graph_id][j].value)[i]))/maxs[current_graph_id] + "";
 				}
-				p += " l "+ 0 + " "+ ((height-(4*paddingy))*(Object.values(data[j-1].value)[i] - 0))/max + "l -" + (width - (4*paddingx)) + " 0z";
-				elems['stepline_area'+i].animate({
+				p += " l "+ 0 + " "+ ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(Object.values(datas[current_graph_id][j-1].value)[i] - 0))/maxs[current_graph_id] + "l -" + (width[current_graph_id] - (4*paddingx[current_graph_id])) + " 0z";
+				elems["stepline_area_"+current_graph_id+"_"+i].animate({
 					path : p,
 				}, 400 + (150*i), "backOut");
 			}
@@ -1125,32 +1228,32 @@ function draw_stepline_area(){
 //Draw label on path
 var label_flag = 0;
 function label(){
-	for(var i = 0; i < parseInt(instruction.path_no); i++){
-		if(path_details[i].label == true){
+	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
+		if(path_details[current_graph_id][i].label == true){
 			var j = 0;		
-			for(var k = 0; j< data.length; k++){
-				var rect1 = paper.rect( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((((Object.values(data[j].value)[i]+"").length*7) + 10)/2) ,(height - (2*paddingy))- ((0  - min_value)*((height-(4*paddingy))/max)), ((Object.values(data[j].value)[i]+"").length*7) + 10 , 16, 2).attr({
+			for(var k = 0; j< datas[current_graph_id].length; k++){
+				var rect1 = elems["paper_"+current_graph_id].rect( ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((((Object.values(datas[current_graph_id][j].value)[i]+"").length*7) + 10)/2) ,(height[current_graph_id] - (2*paddingy[current_graph_id]))- ((0  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])), ((Object.values(datas[current_graph_id][j].value)[i]+"").length*7) + 10 , 16, 2).attr({
 					//opacity : 0,
-					fill : path_details[i].color,		
+					fill : path_details[current_graph_id][i].color,		
 					stroke : "#fff",		
 				});
 				rect1.animate({
 					opacity : 1,
-					y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max)) - 8,
+					y : (height[current_graph_id] - (2*paddingy[current_graph_id])) - ((Object.values(datas[current_graph_id][j].value)[i]  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])) - 8,
 				}, 400 + (150*i), "<>" );
-				elems["label_rect"+i+""+k] = rect1;
-				var text1 = paper.text( ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((0  - min_value)*((height-(4*paddingy))/max)) ,Object.values(data[j].value)[i]).attr({
+				elems["label_rect_"+current_graph_id+"_"+i+""+k] = rect1;
+				var text1 = elems["paper_"+current_graph_id].text( ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))), (height[current_graph_id] - (2*paddingy[current_graph_id])) - ((0  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])) ,Object.values(datas[current_graph_id][j].value)[i]).attr({
 					//opacity : 0,
-					fill : "#fff",//path_details[i].color,
+					fill : "#fff",//path_detail[i].color,
 				});
 				text1.animate({
 					opacity : 1,
-					x : ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))),
-					y : (height - (2*paddingy)) - ((Object.values(data[j].value)[i]  - min_value)*((height-(4*paddingy))/max)),
+					x : ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))),
+					y : (height[current_graph_id] - (2*paddingy[current_graph_id])) - ((Object.values(datas[current_graph_id][j].value)[i]  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])),
 					
 				}, 400 + (150*i), "<>" );			
-				elems["label_text"+i+""+k] = text1;
-				j = j + (Math.ceil(data.length/(x_division_no)));		
+				elems["label_text_"+current_graph_id+"_"+i+""+k] = text1;
+				j = j + (Math.ceil(datas[current_graph_id].length/(x_division_nos[current_graph_id])));		
 			}
 		}
 	}
@@ -1160,38 +1263,37 @@ function label(){
 //Draw annotations
 var draw_annotations_flag = 0;
 function draw_annotations(){
-	if(instruction.annotations){
+	if(instructions[current_graph_id].annotations){
 		//x axis annotations
-		if(instruction.annotations.xaxis){
-			if(instruction.annotations.xaxis.length > 0){
-				
-var x_area_annotation_count = 0;
-				for(var i = 0; i< instruction.annotations.xaxis.length; i++){
+		if(instructions[current_graph_id].annotations.xaxis){
+			if(instructions[current_graph_id].annotations.xaxis.length > 0){				
+			var x_area_annotation_count = 0;
+				for(var i = 0; i< instructions[current_graph_id].annotations.xaxis.length; i++){
 					//Path annotations
-					if(instruction.annotations.xaxis[i].x){
-						for(var j = 0; j < data.length; j++){
-							if(data[j].month == instruction.annotations.xaxis[i].x){
-								paper.path("M " + ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j) + " "+ (height - (2*paddingy)) + " l 0 " + (-(height-(4*paddingy))) ).attr({
-									stroke : instruction.annotations.xaxis[i].borderColor,
+					if(instructions[current_graph_id].annotations.xaxis[i].x){
+						for(var j = 0; j < datas[current_graph_id].length; j++){
+							if(datas[current_graph_id][j].month == instructions[current_graph_id].annotations.xaxis[i].x){
+								elems["paper_"+current_graph_id].path("M " + ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) + " "+ (height[current_graph_id] - (2*paddingy[current_graph_id])) + " l 0 " + (-(height[current_graph_id]-(4*paddingy[current_graph_id]))) ).attr({
+									stroke : instructions[current_graph_id].annotations.xaxis[i].borderColor,
 								}).toBack();
 								var rect_x, rect_y, text_x, text_y;
-								if(j < data.length/2){
-									rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j);
-									rect_y = 2*paddingy +10;//+ (j*5);
+								if(j < datas[current_graph_id].length/2){
+									rect_x = ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j);
+									rect_y = 2*paddingy[current_graph_id] +10;//+ (j*5);
 									text_x = rect_x + 10;
-									text_y = rect_y + ((instruction.annotations.xaxis[i].label.text.length*7)+20)/2;
+									text_y = rect_y + ((instructions[current_graph_id].annotations.xaxis[i].label.text.length*7)+20)/2;
 								}else{
-									rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*j)-20;
-									rect_y = 2*paddingy +10;//+ (j*5);
+									rect_x = ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j)-20;
+									rect_y = 2*paddingy[current_graph_id] +10;//+ (j*5);
 									text_x = rect_x + 10;
-									text_y = rect_y + ((instruction.annotations.xaxis[i].label.text.length*7)+20)/2;
+									text_y = rect_y + ((instructions[current_graph_id].annotations.xaxis[i].label.text.length*7)+20)/2;
 								}
-								paper.rect(rect_x, rect_y, 20, (instruction.annotations.xaxis[i].label.text.length*7)+20).attr({
-									fill : instruction.annotations.xaxis[i].label.style.background,
-									stroke : instruction.annotations.xaxis[i].label.borderColor,
+								elems["paper_"+current_graph_id].rect(rect_x, rect_y, 20, (instructions[current_graph_id].annotations.xaxis[i].label.text.length*7)+20).attr({
+									fill : instructions[current_graph_id].annotations.xaxis[i].label.style.background,
+									stroke : instructions[current_graph_id].annotations.xaxis[i].label.borderColor,
 								});
-								paper.text(text_x,text_y,(instruction.annotations.xaxis[i].label.text)).attr({
-									fill : instruction.annotations.xaxis[i].label.style.color,
+								elems["paper_"+current_graph_id].text(text_x,text_y,(instructions[current_graph_id].annotations.xaxis[i].label.text)).attr({
+									fill : instructions[current_graph_id].annotations.xaxis[i].label.style.color,
 									transform : "r270",
 								});
 							}
@@ -1199,15 +1301,15 @@ var x_area_annotation_count = 0;
 						}
 					}
 					//Area annotations
-					if(instruction.annotations.xaxis[i].x1){
-						if(instruction.annotations.xaxis[i].x2){							
+					if(instructions[current_graph_id].annotations.xaxis[i].x1){
+						if(instructions[current_graph_id].annotations.xaxis[i].x2){							
 							var main_x1, main_x2;
 							var x1 = -1, x2 =-1;
-							for(var j = 0; j < main_data.length; j++){
-								if(main_data[j].month == instruction.annotations.xaxis[i].x1){
+							for(var j = 0; j < main_datas[current_graph_id].length; j++){
+								if(main_datas[current_graph_id][j].month == instructions[current_graph_id].annotations.xaxis[i].x1){
 									main_x1 = j;
 								}
-								if(main_data[j].month == instruction.annotations.xaxis[i].x2){
+								if(main_datas[current_graph_id][j].month == instructions[current_graph_id].annotations.xaxis[i].x2){
 									main_x2 = j;
 								}
 							}
@@ -1216,21 +1318,21 @@ var x_area_annotation_count = 0;
 								main_x1 = main_x2;
 								main_x2 = a;
 							}
-							for(var j = 0; j < data.length; j++){
-								if(data[j].month == instruction.annotations.xaxis[i].x1){
+							for(var j = 0; j < datas[current_graph_id].length; j++){
+								if(datas[current_graph_id][j].month == instructions[current_graph_id].annotations.xaxis[i].x1){
 									x1 = j;
 								}
-								if(data[j].month == instruction.annotations.xaxis[i].x2){
+								if(datas[current_graph_id][j].month == instructions[current_graph_id].annotations.xaxis[i].x2){
 									x2 = j;
 								}
 							}
 							var inner_flag = 0;
 							for(var k = main_x1; k <= main_x2; k++){
-								if(data[0].month == main_data[k].month){
+								if(datas[current_graph_id][0].month == main_datas[current_graph_id][k].month){
 									inner_flag++;
 								}
 								
-								if(data[data.length-1].month == main_data[k].month){
+								if(datas[current_graph_id][datas[current_graph_id].length-1].month == main_datas[current_graph_id][k].month){
 									inner_flag++;
 								}
 							}
@@ -1244,65 +1346,65 @@ var x_area_annotation_count = 0;
 									x1= x2;
 									x2= a;
 								}
-								area_rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*x1);
-								area_rect_y = (2*paddingy);
-								area_rect_width = ((width-(4*paddingx))/(data.length-1))*(x2-x1);
-								area_rect_height = (height-(4*paddingy));
-								rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*x1);
-								rect_y = height - (4*paddingy) -30 - (x_area_annotation_count*30);
+								area_rect_x = ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*x1);
+								area_rect_y = (2*paddingy[current_graph_id]);
+								area_rect_width = ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*(x2-x1);
+								area_rect_height = (height[current_graph_id]-(4*paddingy[current_graph_id]));
+								rect_x = ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*x1);
+								rect_y = height[current_graph_id] - (4*paddingy[current_graph_id]) -30 - (x_area_annotation_count*30);
 								text_x = rect_x + 10;
-								text_y = rect_y + ((instruction.annotations.xaxis[i].label.text.length*7)+20)/2;
+								text_y = rect_y + ((instructions[current_graph_id].annotations.xaxis[i].label.text.length*7)+20)/2;
 							}
 							if(x1 == -1 && x2 >=0){
-								area_rect_x = (2*paddingx);
-								area_rect_y = (2*paddingy);
-								area_rect_width = ((width-(4*paddingx))/(data.length-1))*x2;
-								area_rect_height = (height-(4*paddingy));
+								area_rect_x = (2*paddingx[current_graph_id]);
+								area_rect_y = (2*paddingy[current_graph_id]);
+								area_rect_width = ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*x2;
+								area_rect_height = (height[current_graph_id]-(4*paddingy[current_graph_id]));
 								if(x2==0){
-									rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*0) - 5000;
+									rect_x = ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*0) - 5000;
 								}else{
-									rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*0);
+									rect_x = ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*0);
 								}
-								rect_y = height - (4*paddingy) -30 - (x_area_annotation_count*30);
+								rect_y = height[current_graph_id] - (4*paddingy[current_graph_id]) -30 - (x_area_annotation_count*30);
 								text_x = rect_x + 10;
-								text_y = rect_y + ((instruction.annotations.xaxis[i].label.text.length*7)+20)/2;
+								text_y = rect_y + ((instructions[current_graph_id].annotations.xaxis[i].label.text.length*7)+20)/2;
 							}
 							if(x1 >=0 && x2 == -1){
-								area_rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*x1);
-								area_rect_y = (2*paddingy);
-								area_rect_width = (width-(4*paddingx)) - ((width-(4*paddingx))/(data.length-1))*x1;
-								area_rect_height = (height-(4*paddingy));								
-								if(data.length == x1+1){
-									rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*x1) +5000;									
+								area_rect_x = ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*x1);
+								area_rect_y = (2*paddingy[current_graph_id]);
+								area_rect_width = (width[current_graph_id]-(4*paddingx[current_graph_id])) - ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*x1;
+								area_rect_height = (height[current_graph_id]-(4*paddingy[current_graph_id]));								
+								if(datas[current_graph_id].length == x1+1){
+									rect_x = ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*x1) +5000;									
 								}else{
-									rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*x1);
+									rect_x = ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*x1);
 								}
-								rect_y = height - (4*paddingy) -30 - (x_area_annotation_count*30);
+								rect_y = height[current_graph_id] - (4*paddingy[current_graph_id]) -30 - (x_area_annotation_count*30);
 								text_x = rect_x + 10;
-								text_y = rect_y + ((instruction.annotations.xaxis[i].label.text.length*7)+20)/2;
+								text_y = rect_y + ((instructions[current_graph_id].annotations.xaxis[i].label.text.length*7)+20)/2;
 							}
 							if(inner_flag == 2){
-								area_rect_x = ((2*paddingx));
-								area_rect_y = (2*paddingy);
-								area_rect_width = (width-(4*paddingx));
-								area_rect_height = (height-(4*paddingy));
-								rect_x = ((2*paddingx) + ((width-(4*paddingx))/(data.length-1))*0);
-								rect_y = height - (4*paddingy) -30 - (x_area_annotation_count*30);
+								area_rect_x = ((2*paddingx[current_graph_id]));
+								area_rect_y = (2*paddingy[current_graph_id]);
+								area_rect_width = (width[current_graph_id]-(4*paddingx[current_graph_id]));
+								area_rect_height = (height[current_graph_id]-(4*paddingy[current_graph_id]));
+								rect_x = ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*0);
+								rect_y = height[current_graph_id] - (4*paddingy[current_graph_id]) -30 - (x_area_annotation_count*30);
 								text_x = rect_x + 10;
-								text_y = rect_y + ((instruction.annotations.xaxis[i].label.text.length*7)+20)/2;
+								text_y = rect_y + ((instructions[current_graph_id].annotations.xaxis[i].label.text.length*7)+20)/2;
 							}
 							console.log(x1+" "+x2);
-							paper.rect(area_rect_x, area_rect_y, area_rect_width, area_rect_height).attr({
-								stroke : instruction.annotations.xaxis[i].borderColor,
-								fill : instruction.annotations.xaxis[i].fillColor,
-								opacity : instruction.annotations.xaxis[i].opacity,
+							elems["paper_"+current_graph_id].rect(area_rect_x, area_rect_y, area_rect_width, area_rect_height).attr({
+								stroke : instructions[current_graph_id].annotations.xaxis[i].borderColor,
+								fill : instructions[current_graph_id].annotations.xaxis[i].fillColor,
+								opacity : instructions[current_graph_id].annotations.xaxis[i].opacity,
 							}).toBack();
-							paper.rect(rect_x, rect_y, 20, (instruction.annotations.xaxis[i].label.text.length*7)+20).attr({
-								fill : instruction.annotations.xaxis[i].label.style.background,
-								stroke : instruction.annotations.xaxis[i].label.borderColor,
+							elems["paper_"+current_graph_id].rect(rect_x, rect_y, 20, (instructions[current_graph_id].annotations.xaxis[i].label.text.length*7)+20).attr({
+								fill : instructions[current_graph_id].annotations.xaxis[i].label.style.background,
+								stroke : instructions[current_graph_id].annotations.xaxis[i].label.borderColor,
 							});
-							paper.text(text_x,text_y,(instruction.annotations.xaxis[i].label.text)).attr({
-								fill : instruction.annotations.xaxis[i].label.style.color,
+							elems["paper_"+current_graph_id].text(text_x,text_y,(instructions[current_graph_id].annotations.xaxis[i].label.text)).attr({
+								fill : instructions[current_graph_id].annotations.xaxis[i].label.style.color,
 								transform : "r270",
 							});
 							x_area_annotation_count++;
@@ -1312,70 +1414,70 @@ var x_area_annotation_count = 0;
 			}
 		}
 		//y axis annotations
-		if(instruction.annotations.yaxis){
-			if(instruction.annotations.yaxis.length > 0){
-				for(var i = 0; i< instruction.annotations.yaxis.length; i++){
+		if(instructions[current_graph_id].annotations.yaxis){
+			if(instructions[current_graph_id].annotations.yaxis.length > 0){
+				for(var i = 0; i< instructions[current_graph_id].annotations.yaxis.length; i++){
 					//Path annotations
-					if(instruction.annotations.yaxis[i].y || instruction.annotations.yaxis[i].y == 0){
-						if(instruction.annotations.yaxis[i].y < max_value && instruction.annotations.yaxis[i].y > min_value){
-							paper.path("M "+ 2*paddingx +" " + ( (height-(2*paddingy)) - ((height-(4*paddingy))*(instruction.annotations.yaxis[i].y - min_value))/max) + " l "+  (width-(4*paddingx)) +" 0").attr({
-								stroke : instruction.annotations.yaxis[i].borderColor,
+					if(instructions[current_graph_id].annotations.yaxis[i].y || instructions[current_graph_id].annotations.yaxis[i].y == 0){
+						if(instructions[current_graph_id].annotations.yaxis[i].y < max_values[current_graph_id] && instructions[current_graph_id].annotations.yaxis[i].y > min_values[current_graph_id]){
+							elems["paper_"+current_graph_id].path("M "+ 2*paddingx[current_graph_id] +" " + ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(instructions[current_graph_id].annotations.yaxis[i].y - min_values[current_graph_id]))/maxs[current_graph_id]) + " l "+  (width[current_graph_id]-(4*paddingx[current_graph_id])) +" 0").attr({
+								stroke : instructions[current_graph_id].annotations.yaxis[i].borderColor,
 							}).toBack();
-							if((instruction.annotations.yaxis[i].y - min_value) > max/2){
-								paper.rect((2*paddingx) + (i*50+50), (( (height-(2*paddingy)) - ((height-(4*paddingy))*(instruction.annotations.yaxis[i].y - min_value))/max)), (instruction.annotations.yaxis[i].label.text.length*7)+20, 20).attr({
-									fill : instruction.annotations.yaxis[i].label.style.background,
-									stroke : instruction.annotations.yaxis[i].label.borderColor,
+							if((instructions[current_graph_id].annotations.yaxis[i].y - min_values[current_graph_id]) > maxs[current_graph_id]/2){
+								elems["paper_"+current_graph_id].rect((2*paddingx[current_graph_id]) + (i*50+50), (( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(instructions[current_graph_id].annotations.yaxis[i].y - min_values[current_graph_id]))/maxs[current_graph_id])), (instructions[current_graph_id].annotations.yaxis[i].label.text.length*7)+20, 20).attr({
+									fill : instructions[current_graph_id].annotations.yaxis[i].label.style.background,
+									stroke : instructions[current_graph_id].annotations.yaxis[i].label.borderColor,
 								});
-								paper.text((2*paddingx) + (i*50+50) + ((instruction.annotations.yaxis[i].label.text.length*7)+20)/2, (( (height-(2*paddingy)) - ((height-(4*paddingy))*(instruction.annotations.yaxis[i].y - min_value))/max))+10, (instruction.annotations.yaxis[i].label.text)).attr({
-									fill : instruction.annotations.yaxis[i].label.style.color,
+								elems["paper_"+current_graph_id].text((2*paddingx[current_graph_id]) + (i*50+50) + ((instructions[current_graph_id].annotations.yaxis[i].label.text.length*7)+20)/2, (( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(instructions[current_graph_id].annotations.yaxis[i].y - min_values[current_graph_id]))/maxs[current_graph_id]))+10, (instructions[current_graph_id].annotations.yaxis[i].label.text)).attr({
+									fill : instructions[current_graph_id].annotations.yaxis[i].label.style.color,
 								});
 							}else{
-								paper.rect((2*paddingx) + (i*50+50), (( (height-(2*paddingy)) - ((height-(4*paddingy))*(instruction.annotations.yaxis[i].y - min_value))/max))-20, (instruction.annotations.yaxis[i].label.text.length*7)+20, 20).attr({
-									fill : instruction.annotations.yaxis[i].label.style.background,
-									stroke : instruction.annotations.yaxis[i].label.borderColor,
+								elems["paper_"+current_graph_id].rect((2*paddingx[current_graph_id]) + (i*50+50), (( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(instructions[current_graph_id].annotations.yaxis[i].y - min_values[current_graph_id]))/maxs[current_graph_id]))-20, (instructions[current_graph_id].annotations.yaxis[i].label.text.length*7)+20, 20).attr({
+									fill : instructions[current_graph_id].annotations.yaxis[i].label.style.background,
+									stroke : instructions[current_graph_id].annotations.yaxis[i].label.borderColor,
 								});
-								paper.text((2*paddingx) + (i*50+50) + ((instruction.annotations.yaxis[i].label.text.length*7)+20)/2, (( (height-(2*paddingy)) - ((height-(4*paddingy))*(instruction.annotations.yaxis[i].y - min_value))/max))+10-20, (instruction.annotations.yaxis[i].label.text)).attr({
-									fill : instruction.annotations.yaxis[i].label.style.color,
+								elems["paper_"+current_graph_id].text((2*paddingx[current_graph_id]) + (i*50+50) + ((instructions[current_graph_id].annotations.yaxis[i].label.text.length*7)+20)/2, (( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(instructions[current_graph_id].annotations.yaxis[i].y - min_values[current_graph_id]))/maxs[current_graph_id]))+10-20, (instructions[current_graph_id].annotations.yaxis[i].label.text)).attr({
+									fill : instructions[current_graph_id].annotations.yaxis[i].label.style.color,
 								});
 							}
 						}
 					}
 					//Area annotations
-					if((instruction.annotations.yaxis[i].y1 && instruction.annotations.yaxis[i].y2) || (instruction.annotations.yaxis[i].y1 == 0 || instruction.annotations.yaxis[i].y2 == 0)){
-						var y1 = instruction.annotations.yaxis[i].y1;
-						var y2 = instruction.annotations.yaxis[i].y2;
+					if((instructions[current_graph_id].annotations.yaxis[i].y1 && instructions[current_graph_id].annotations.yaxis[i].y2) || (instructions[current_graph_id].annotations.yaxis[i].y1 == 0 || instructions[current_graph_id].annotations.yaxis[i].y2 == 0)){
+						var y1 = instructions[current_graph_id].annotations.yaxis[i].y1;
+						var y2 = instructions[current_graph_id].annotations.yaxis[i].y2;
 						if(y1 > y2){
 							var a = y1;
 							y1 = y2;
 							y2 = a;
 						}
-						if(y1 < min_value){
-							y1=min_value;
+						if(y1 < min_values[current_graph_id]){
+							y1=min_values[current_graph_id];
 						}
-						if(y2 > (max+min_value)){
-							y2 = max+min_value;
+						if(y2 > (maxs[current_graph_id]+min_values[current_graph_id])){
+							y2 = maxs[current_graph_id]+min_values[current_graph_id];
 						}
-						paper.rect((2*paddingx),  (( (height-(2*paddingy)) - ((height-(4*paddingy))*(y2 - min_value))/max)), width - (4*paddingx) , ((height-(4*paddingy))*(y2 -y1))/max).attr({
-							stroke : instruction.annotations.yaxis[i].borderColor,
-							fill : instruction.annotations.yaxis[i].fillColor,
-							opacity : instruction.annotations.yaxis[i].opacity,
+						elems["paper_"+current_graph_id].rect((2*paddingx[current_graph_id]),  (( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(y2 - min_values[current_graph_id]))/maxs[current_graph_id])), width[current_graph_id] - (4*paddingx[current_graph_id]) , ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(y2 -y1))/maxs[current_graph_id]).attr({
+							stroke : instructions[current_graph_id].annotations.yaxis[i].borderColor,
+							fill : instructions[current_graph_id].annotations.yaxis[i].fillColor,
+							opacity : instructions[current_graph_id].annotations.yaxis[i].opacity,
 						}).toBack();
-						if((y2-min_value) > max/2){
-							paper.rect((2*paddingx) + (i*50+50), (( (height-(2*paddingy)) - ((height-(4*paddingy))*(y2 - min_value))/max)), (instruction.annotations.yaxis[i].label.text.length*7)+20, 20).attr({
-								fill : instruction.annotations.yaxis[i].label.style.background,
-								stroke : instruction.annotations.yaxis[i].label.borderColor,
+						if((y2-min_values[current_graph_id]) > maxs[current_graph_id]/2){
+							elems["paper_"+current_graph_id].rect((2*paddingx[current_graph_id]) + (i*50+50), (( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(y2 - min_values[current_graph_id]))/maxs[current_graph_id])), (instructions[current_graph_id].annotations.yaxis[i].label.text.length*7)+20, 20).attr({
+								fill : instructions[current_graph_id].annotations.yaxis[i].label.style.background,
+								stroke : instructions[current_graph_id].annotations.yaxis[i].label.borderColor,
 							});
-							paper.text((2*paddingx) + (i*50+50) + ((instruction.annotations.yaxis[i].label.text.length*7)+20)/2, (( (height-(2*paddingy)) - ((height-(4*paddingy))*(y2 - min_value))/max))+10, (instruction.annotations.yaxis[i].label.text)).attr({
-								fill : instruction.annotations.yaxis[i].label.style.color,
+							elems["paper_"+current_graph_id].text((2*paddingx[current_graph_id]) + (i*50+50) + ((instructions[current_graph_id].annotations.yaxis[i].label.text.length*7)+20)/2, (( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(y2 - min_values[current_graph_id]))/maxs[current_graph_id]))+10, (instructions[current_graph_id].annotations.yaxis[i].label.text)).attr({
+								fill : instructions[current_graph_id].annotations.yaxis[i].label.style.color,
 							});
 							
 						}else{
-							paper.rect((2*paddingx) + (i*50+50), (( (height-(2*paddingy)) - ((height-(4*paddingy))*(y2 - min_value))/max))-20, (instruction.annotations.yaxis[i].label.text.length*7)+20, 20).attr({
-								fill : instruction.annotations.yaxis[i].label.style.background,
-								stroke : instruction.annotations.yaxis[i].label.borderColor,
+							elems["paper_"+current_graph_id].rect((2*paddingx[current_graph_id]) + (i*50+50), (( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(y2 - min_values[current_graph_id]))/maxs[current_graph_id]))-20, (instructions[current_graph_id].annotations.yaxis[i].label.text.length*7)+20, 20).attr({
+								fill : instructions[current_graph_id].annotations.yaxis[i].label.style.background,
+								stroke : instructions[current_graph_id].annotations.yaxis[i].label.borderColor,
 							});
-							paper.text((2*paddingx) + (i*50+50) + ((instruction.annotations.yaxis[i].label.text.length*7)+20)/2, ( (height-(2*paddingy)) - ((height-(4*paddingy))*(y2 - min_value))/max)-10, (instruction.annotations.yaxis[i].label.text)).attr({
-								fill : instruction.annotations.yaxis[i].label.style.color,
+							elems["paper_"+current_graph_id].text((2*paddingx[current_graph_id]) + (i*50+50) + ((instructions[current_graph_id].annotations.yaxis[i].label.text.length*7)+20)/2, ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(y2 - min_values[current_graph_id]))/maxs[current_graph_id])-10, (instructions[current_graph_id].annotations.yaxis[i].label.text)).attr({
+								fill : instructions[current_graph_id].annotations.yaxis[i].label.style.color,
 							});
 						}
 					}
@@ -1383,63 +1485,63 @@ var x_area_annotation_count = 0;
 			}
 		}
 		//Point annotations
-		if(instruction.annotations.points){
+		if(instructions[current_graph_id].annotations.points){
 			try{
-				if(instruction.annotations.points.length > 0){
-					for(var i = 0; i<instruction.annotations.points.length; i++){
-						for(var j = 0; j < data.length ; j ++){
-							if(data[j].month == instruction.annotations.points[i].x){
-								if(instruction.annotations.points[i].y <= max_value && instruction.annotations.points[i].y >= min_value){
-									//alert(max_value+ " "+ min_value+" "+max);								
-									paper.circle(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((parseInt(instruction.annotations.points[i].y) - min_value)*((height-(4*paddingy))/max)), instruction.annotations.points[i].marker.radius).attr({
-										fill : instruction.annotations.points[i].marker.fillColor,
-										'stroke-width' : instruction.annotations.points[i].marker.strokeWidth,
-										stroke : instruction.annotations.points[i].marker.strokeColor,
+				if(instructions[current_graph_id].annotations.points.length > 0){
+					for(var i = 0; i<instructions[current_graph_id].annotations.points.length; i++){
+						for(var j = 0; j < datas[current_graph_id].length ; j ++){
+							if(datas[current_graph_id][j].month == instructions[current_graph_id].annotations.points[i].x){
+								if(instructions[current_graph_id].annotations.points[i].y <= max_values[current_graph_id] && instructions[current_graph_id].annotations.points[i].y >= min_values[current_graph_id]){
+									//alert(max_values[current_graph_id]+ " "+ min_values[current_graph_id]+" "+max);								
+									elems["paper_"+current_graph_id].circle(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))), (height[current_graph_id] - (2*paddingy[current_graph_id])) - ((parseInt(instructions[current_graph_id].annotations.points[i].y) - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])), instructions[current_graph_id].annotations.points[i].marker.radius).attr({
+										fill : instructions[current_graph_id].annotations.points[i].marker.fillColor,
+										'stroke-width' : instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id],
+										stroke : instructions[current_graph_id].annotations.points[i].marker.strokeColor,
 									});
 									var rect_x = 0, rect_y = 0, text_x = 0, text_y = 0;
-									if(parseInt(instruction.annotations.points[i].y - min_value) > max/2){
-										if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) < 1*((width-(4*paddingx))/4)){
-											rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1)))  + (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
-											rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max))- 10;
-											text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.points[i].label.text.length*7)+20)/2 + (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
-											text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) ;
+									if(parseInt(instructions[current_graph_id].annotations.points[i].y - min_values[current_graph_id]) > maxs[current_graph_id]/2){
+										if(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) < 1*((width[current_graph_id]-(4*paddingx[current_graph_id]))/4)){
+											rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1)))  + (instructions[current_graph_id].annotations.points[i].marker.radius + instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id] + 3);
+											rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(instructions[current_graph_id].annotations.points[i].y - min_values[current_graph_id]))/maxs[current_graph_id]))- 10;
+											text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20)/2 + (instructions[current_graph_id].annotations.points[i].marker.radius + instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id] + 3);
+											text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(instructions[current_graph_id].annotations.points[i].y - min_values[current_graph_id]))/maxs[current_graph_id])) ;
 										}
-										else if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) > 3*((width-(4*paddingx))/4)){
-											rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.points[i].label.text.length*7)+20) - (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
-											rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) - 10;
-											text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.points[i].label.text.length*7)+20)/2 - ((instruction.annotations.points[i].label.text.length*7)+20) - (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
-											text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max));
+										else if(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) > 3*((width[current_graph_id]-(4*paddingx[current_graph_id]))/4)){
+											rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20) - (instructions[current_graph_id].annotations.points[i].marker.radius + instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id] + 3);
+											rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(instructions[current_graph_id].annotations.points[i].y - min_values[current_graph_id]))/maxs[current_graph_id])) - 10;
+											text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20)/2 - ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20) - (instructions[current_graph_id].annotations.points[i].marker.radius + instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id] + 3);
+											text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(instructions[current_graph_id].annotations.points[i].y - min_values[current_graph_id]))/maxs[current_graph_id]));
 										}else {
-											rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.points[i].label.text.length*7)+20)/2;
-											rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) + (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
-											text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.points[i].label.text.length*7)+20)/2 - ((instruction.annotations.points[i].label.text.length*7)+20)/2;
-											text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max))+10 + (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+											rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20)/2;
+											rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(instructions[current_graph_id].annotations.points[i].y - min_values[current_graph_id]))/maxs[current_graph_id])) + (instructions[current_graph_id].annotations.points[i].marker.radius + instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id] + 3);
+											text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20)/2 - ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20)/2;
+											text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(instructions[current_graph_id].annotations.points[i].y - min_values[current_graph_id]))/maxs[current_graph_id]))+10 + (instructions[current_graph_id].annotations.points[i].marker.radius + instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id] + 3);
 										}
 									}else{
-										if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) < 1*((width-(4*paddingx))/4)){
-											rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1)))  + (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
-											rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max))- 10;
-											text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.points[i].label.text.length*7)+20)/2 + (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
-											text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) ;
+										if(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) < 1*((width[current_graph_id]-(4*paddingx[current_graph_id]))/4)){
+											rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1)))  + (instructions[current_graph_id].annotations.points[i].marker.radius + instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id] + 3);
+											rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(instructions[current_graph_id].annotations.points[i].y - min_values[current_graph_id]))/maxs[current_graph_id]))- 10;
+											text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20)/2 + (instructions[current_graph_id].annotations.points[i].marker.radius + instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id] + 3);
+											text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(instructions[current_graph_id].annotations.points[i].y - min_values[current_graph_id]))/maxs[current_graph_id])) ;
 										}
-										else if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) > 3*((width-(4*paddingx))/4)){
-											rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.points[i].label.text.length*7)+20) - (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
-											rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) - 10;
-											text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.points[i].label.text.length*7)+20)/2 - ((instruction.annotations.points[i].label.text.length*7)+20) - (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
-											text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max));
+										else if(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) > 3*((width[current_graph_id]-(4*paddingx[current_graph_id]))/4)){
+											rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20) - (instructions[current_graph_id].annotations.points[i].marker.radius + instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id] + 3);
+											rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(instructions[current_graph_id].annotations.points[i].y - min_values[current_graph_id]))/maxs[current_graph_id])) - 10;
+											text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20)/2 - ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20) - (instructions[current_graph_id].annotations.points[i].marker.radius + instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id] + 3);
+											text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(instructions[current_graph_id].annotations.points[i].y - min_values[current_graph_id]))/maxs[current_graph_id]));
 										}else {
-											rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.points[i].label.text.length*7)+20)/2;
-											rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) - 20 - (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
-											text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.points[i].label.text.length*7)+20)/2 - ((instruction.annotations.points[i].label.text.length*7)+20)/2;
-											text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(instruction.annotations.points[i].y - min_value))/max)) - 10 - (instruction.annotations.points[i].marker.radius + instruction.annotations.points[i].marker.strokeWidth + 3);
+											rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20)/2;
+											rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(instructions[current_graph_id].annotations.points[i].y - min_values[current_graph_id]))/maxs[current_graph_id])) - 20 - (instructions[current_graph_id].annotations.points[i].marker.radius + instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id] + 3);
+											text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20)/2 - ((instructions[current_graph_id].annotations.points[i].label.text.length*7)+20)/2;
+											text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(instructions[current_graph_id].annotations.points[i].y - min_values[current_graph_id]))/maxs[current_graph_id])) - 10 - (instructions[current_graph_id].annotations.points[i].marker.radius + instructions[current_graph_id].annotations.points[i].marker.strokewidth[current_graph_id] + 3);
 										}
 									}
-									paper.rect(rect_x, rect_y, (instruction.annotations.points[i].label.text.length*7)+20, 20).attr({
-										fill : instruction.annotations.points[i].label.style.background,
-										stroke : instruction.annotations.points[i].label.borderColor,
+									elems["paper_"+current_graph_id].rect(rect_x, rect_y, (instructions[current_graph_id].annotations.points[i].label.text.length*7)+20, 20).attr({
+										fill : instructions[current_graph_id].annotations.points[i].label.style.background,
+										stroke : instructions[current_graph_id].annotations.points[i].label.borderColor,
 									});
-									paper.text(text_x, text_y, (instruction.annotations.points[i].label.text)).attr({
-										fill : instruction.annotations.points[i].label.style.color,
+									elems["paper_"+current_graph_id].text(text_x, text_y, (instructions[current_graph_id].annotations.points[i].label.text)).attr({
+										fill : instructions[current_graph_id].annotations.points[i].label.style.color,
 									});	
 								}
 							}
@@ -1450,127 +1552,127 @@ var x_area_annotation_count = 0;
 		}
 		
 		//Max point annotations
-		if(instruction.annotations.max){
-			if(instruction.annotations.max.length > 0){	
-				if(max_point_value <= max_value && max_point_value >= min_value){
+		if(instructions[current_graph_id].annotations.max){
+			if(instructions[current_graph_id].annotations.max.length > 0){	
+				if(max_point_values[current_graph_id] <= max_values[current_graph_id] && max_point_values[current_graph_id] >= min_values[current_graph_id]){
 					var j = 0;
-					for(var i = 0; i<data.length; i++){
-						if((Math.max(...(Object.values(data[i].value)))) == max_point_value){
+					for(var i = 0; i<datas[current_graph_id].length; i++){
+						if((Math.max(...(Object.values(datas[current_graph_id][i].value)))) == max_point_values[current_graph_id]){
 							j = i;
 						}
 					}
-					paper.circle(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((parseInt(max_point_value) - min_value)*((height-(4*paddingy))/max)), instruction.annotations.max[0].marker.radius).attr({
-						fill : instruction.annotations.max[0].marker.fillColor,
-						'stroke-width' : instruction.annotations.max[0].marker.strokeWidth,
-						stroke : instruction.annotations.max[0].marker.strokeColor,
+					elems["paper_"+current_graph_id].circle(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))), (height[current_graph_id] - (2*paddingy[current_graph_id])) - ((parseInt(max_point_values[current_graph_id]) - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])), instructions[current_graph_id].annotations.max[0].marker.radius).attr({
+						fill : instructions[current_graph_id].annotations.max[0].marker.fillColor,
+						'stroke-width' : instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id],
+						stroke : instructions[current_graph_id].annotations.max[0].marker.strokeColor,
 					});
 					var rect_x = 0, rect_y = 0, text_x = 0, text_y = 0;
-					if(parseInt(max_point_value - min_value) > max/2){
-						if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) < 1*((width-(4*paddingx))/4)){
-							rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1)))  + (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
-							rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max))- 10;
-							text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.max[0].label.text.length*7)+20)/2 + (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
-							text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) ;
+					if(parseInt(max_point_values[current_graph_id] - min_values[current_graph_id]) > maxs[current_graph_id]/2){
+						if(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) < 1*((width[current_graph_id]-(4*paddingx[current_graph_id]))/4)){
+							rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1)))  + (instructions[current_graph_id].annotations.max[0].marker.radius + instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id] + 3);
+							rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(max_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id]))- 10;
+							text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20)/2 + (instructions[current_graph_id].annotations.max[0].marker.radius + instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id] + 3);
+							text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(max_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) ;
 						}
-						else if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) > 3*((width-(4*paddingx))/4)){
-							rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.max[0].label.text.length*7)+20) - (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
-							rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) - 10;
-							text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.max[0].label.text.length*7)+20)/2 - ((instruction.annotations.max[0].label.text.length*7)+20) - (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
-							text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max));
+						else if(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) > 3*((width[current_graph_id]-(4*paddingx[current_graph_id]))/4)){
+							rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20) - (instructions[current_graph_id].annotations.max[0].marker.radius + instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id] + 3);
+							rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(max_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) - 10;
+							text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20)/2 - ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20) - (instructions[current_graph_id].annotations.max[0].marker.radius + instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id] + 3);
+							text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(max_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id]));
 						}else {
-							rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.max[0].label.text.length*7)+20)/2;
-							rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) + (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
-							text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.max[0].label.text.length*7)+20)/2 - ((instruction.annotations.max[0].label.text.length*7)+20)/2;
-							text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max))+10 + (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+							rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20)/2;
+							rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(max_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) + (instructions[current_graph_id].annotations.max[0].marker.radius + instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id] + 3);
+							text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20)/2 - ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20)/2;
+							text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(max_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id]))+10 + (instructions[current_graph_id].annotations.max[0].marker.radius + instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id] + 3);
 						}
 					}else{
-						if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) < 1*((width-(4*paddingx))/4)){
-							rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1)))  + (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
-							rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max))- 10;
-							text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.max[0].label.text.length*7)+20)/2 + (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
-							text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) ;
+						if(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) < 1*((width[current_graph_id]-(4*paddingx[current_graph_id]))/4)){
+							rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1)))  + (instructions[current_graph_id].annotations.max[0].marker.radius + instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id] + 3);
+							rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(max_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id]))- 10;
+							text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20)/2 + (instructions[current_graph_id].annotations.max[0].marker.radius + instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id] + 3);
+							text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(max_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) ;
 						}
-						else if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) > 3*((width-(4*paddingx))/4)){
-							rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.max[0].label.text.length*7)+20) - (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
-							rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) - 10;
-							text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.max[0].label.text.length*7)+20)/2 - ((instruction.annotations.max[0].label.text.length*7)+20) - (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
-							text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max));
+						else if(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) > 3*((width[current_graph_id]-(4*paddingx[current_graph_id]))/4)){
+							rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20) - (instructions[current_graph_id].annotations.max[0].marker.radius + instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id] + 3);
+							rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(max_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) - 10;
+							text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20)/2 - ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20) - (instructions[current_graph_id].annotations.max[0].marker.radius + instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id] + 3);
+							text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(max_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id]));
 						}else {
-							rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.max[0].label.text.length*7)+20)/2;
-							rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) - 20 - (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
-							text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.max[0].label.text.length*7)+20)/2 - ((instruction.annotations.max[0].label.text.length*7)+20)/2;
-							text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(max_point_value - min_value))/max)) - 10 - (instruction.annotations.max[0].marker.radius + instruction.annotations.max[0].marker.strokeWidth + 3);
+							rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20)/2;
+							rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(max_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) - 20 - (instructions[current_graph_id].annotations.max[0].marker.radius + instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id] + 3);
+							text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20)/2 - ((instructions[current_graph_id].annotations.max[0].label.text.length*7)+20)/2;
+							text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(max_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) - 10 - (instructions[current_graph_id].annotations.max[0].marker.radius + instructions[current_graph_id].annotations.max[0].marker.strokewidth[current_graph_id] + 3);
 						}
 					}
-					paper.rect(rect_x, rect_y, (instruction.annotations.max[0].label.text.length*7)+20, 20).attr({
-						fill : instruction.annotations.max[0].label.style.background,
-						stroke : instruction.annotations.max[0].label.borderColor,
+					elems["paper_"+current_graph_id].rect(rect_x, rect_y, (instructions[current_graph_id].annotations.max[0].label.text.length*7)+20, 20).attr({
+						fill : instructions[current_graph_id].annotations.max[0].label.style.background,
+						stroke : instructions[current_graph_id].annotations.max[0].label.borderColor,
 					});
-					paper.text(text_x, text_y, (instruction.annotations.max[0].label.text)).attr({
-						fill : instruction.annotations.max[0].label.style.color,
+					elems["paper_"+current_graph_id].text(text_x, text_y, (instructions[current_graph_id].annotations.max[0].label.text)).attr({
+						fill : instructions[current_graph_id].annotations.max[0].label.style.color,
 					});
 				}
 			}
 		}
 		//Min point annotations
-		if(instruction.annotations.min){
-			if(instruction.annotations.min.length > 0){	
-				if(min_point_value <= max_value && min_point_value >= min_value){
+		if(instructions[current_graph_id].annotations.min){
+			if(instructions[current_graph_id].annotations.min.length > 0){	
+				if(min_point_values[current_graph_id] <= max_values[current_graph_id] && min_point_values[current_graph_id] >= min_values[current_graph_id]){
 					var j = 0;
-					for(var i = 0; i<data.length; i++){
-						if((Math.min(...(Object.values(data[i].value)))) == min_point_value){
+					for(var i = 0; i<datas[current_graph_id].length; i++){
+						if((Math.min(...(Object.values(datas[current_graph_id][i].value)))) == min_point_values[current_graph_id]){
 							j = i;
 						}
 					}
-					paper.circle(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))), (height - (2*paddingy)) - ((parseInt(min_point_value) - min_value)*((height-(4*paddingy))/max)), instruction.annotations.min[0].marker.radius).attr({
-						fill : instruction.annotations.min[0].marker.fillColor,
-						'stroke-width' : instruction.annotations.min[0].marker.strokeWidth,
-						stroke : instruction.annotations.min[0].marker.strokeColor,
+					elems["paper_"+current_graph_id].circle(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))), (height[current_graph_id] - (2*paddingy[current_graph_id])) - ((parseInt(min_point_values[current_graph_id]) - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])), instructions[current_graph_id].annotations.min[0].marker.radius).attr({
+						fill : instructions[current_graph_id].annotations.min[0].marker.fillColor,
+						'stroke-width' : instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id],
+						stroke : instructions[current_graph_id].annotations.min[0].marker.strokeColor,
 					});
 					var rect_x = 0, rect_y = 0, text_x = 0, text_y = 0;
-					if(parseInt(min_point_value - min_value) > max/2){
-						if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) < 1*((width-(4*paddingx))/4)){
-							rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1)))  + (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
-							rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max))- 10;
-							text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.min[0].label.text.length*7)+20)/2 + (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
-							text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) ;
+					if(parseInt(min_point_values[current_graph_id] - min_values[current_graph_id]) > maxs[current_graph_id]/2){
+						if(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) < 1*((width[current_graph_id]-(4*paddingx[current_graph_id]))/4)){
+							rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1)))  + (instructions[current_graph_id].annotations.min[0].marker.radius + instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id] + 3);
+							rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(min_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id]))- 10;
+							text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20)/2 + (instructions[current_graph_id].annotations.min[0].marker.radius + instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id] + 3);
+							text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(min_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) ;
 						}
-						else if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) > 3*((width-(4*paddingx))/4)){
-							rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.min[0].label.text.length*7)+20) - (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
-							rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) - 10;
-							text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.min[0].label.text.length*7)+20)/2 - ((instruction.annotations.min[0].label.text.length*7)+20) - (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
-							text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max));
+						else if(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) > 3*((width[current_graph_id]-(4*paddingx[current_graph_id]))/4)){
+							rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20) - (instructions[current_graph_id].annotations.min[0].marker.radius + instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id] + 3);
+							rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(min_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) - 10;
+							text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20)/2 - ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20) - (instructions[current_graph_id].annotations.min[0].marker.radius + instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id] + 3);
+							text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(min_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id]));
 						}else {
-							rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.min[0].label.text.length*7)+20)/2;
-							rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) + (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
-							text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.min[0].label.text.length*7)+20)/2 - ((instruction.annotations.min[0].label.text.length*7)+20)/2;
-							text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max))+10 + (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+							rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20)/2;
+							rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(min_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) + (instructions[current_graph_id].annotations.min[0].marker.radius + instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id] + 3);
+							text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20)/2 - ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20)/2;
+							text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(min_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id]))+10 + (instructions[current_graph_id].annotations.min[0].marker.radius + instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id] + 3);
 						}
 					}else{
-						if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) < 1*((width-(4*paddingx))/4)){
-							rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1)))  + (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
-							rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max))- 10;
-							text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.min[0].label.text.length*7)+20)/2 + (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
-							text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) ;
+						if(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) < 1*((width[current_graph_id]-(4*paddingx[current_graph_id]))/4)){
+							rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1)))  + (instructions[current_graph_id].annotations.min[0].marker.radius + instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id] + 3);
+							rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(min_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id]))- 10;
+							text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20)/2 + (instructions[current_graph_id].annotations.min[0].marker.radius + instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id] + 3);
+							text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(min_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) ;
 						}
-						else if(((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) > 3*((width-(4*paddingx))/4)){
-							rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.min[0].label.text.length*7)+20) - (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
-							rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) - 10;
-							text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.min[0].label.text.length*7)+20)/2 - ((instruction.annotations.min[0].label.text.length*7)+20) - (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
-							text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max));
+						else if(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) > 3*((width[current_graph_id]-(4*paddingx[current_graph_id]))/4)){
+							rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20) - (instructions[current_graph_id].annotations.min[0].marker.radius + instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id] + 3);
+							rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(min_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) - 10;
+							text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20)/2 - ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20) - (instructions[current_graph_id].annotations.min[0].marker.radius + instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id] + 3);
+							text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(min_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id]));
 						}else {
-							rect_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) - ((instruction.annotations.min[0].label.text.length*7)+20)/2;
-							rect_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) - 20 - (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
-							text_x = ((2*paddingx)+j*((width-(4*paddingx))/(data.length-1))) + ((instruction.annotations.min[0].label.text.length*7)+20)/2 - ((instruction.annotations.min[0].label.text.length*7)+20)/2;
-							text_y = ( (height-(2*paddingy)) - ((height-(4*paddingy))*(parseInt(min_point_value - min_value))/max)) - 10 - (instruction.annotations.min[0].marker.radius + instruction.annotations.min[0].marker.strokeWidth + 3);
+							rect_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20)/2;
+							rect_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(min_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) - 20 - (instructions[current_graph_id].annotations.min[0].marker.radius + instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id] + 3);
+							text_x = ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) + ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20)/2 - ((instructions[current_graph_id].annotations.min[0].label.text.length*7)+20)/2;
+							text_y = ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(parseInt(min_point_values[current_graph_id] - min_values[current_graph_id]))/maxs[current_graph_id])) - 10 - (instructions[current_graph_id].annotations.min[0].marker.radius + instructions[current_graph_id].annotations.min[0].marker.strokewidth[current_graph_id] + 3);
 						}
 					}
-					paper.rect(rect_x, rect_y, (instruction.annotations.min[0].label.text.length*7)+20, 20).attr({
-						fill : instruction.annotations.min[0].label.style.background,
-						stroke : instruction.annotations.min[0].label.borderColor,
+					elems["paper_"+current_graph_id].rect(rect_x, rect_y, (instructions[current_graph_id].annotations.min[0].label.text.length*7)+20, 20).attr({
+						fill : instructions[current_graph_id].annotations.min[0].label.style.background,
+						stroke : instructions[current_graph_id].annotations.min[0].label.borderColor,
 					});
-					paper.text(text_x, text_y, (instruction.annotations.min[0].label.text)).attr({
-						fill : instruction.annotations.min[0].label.style.color,
+					elems["paper_"+current_graph_id].text(text_x, text_y, (instructions[current_graph_id].annotations.min[0].label.text)).attr({
+						fill : instructions[current_graph_id].annotations.min[0].label.style.color,
 					});
 				}
 			}
@@ -1585,36 +1687,36 @@ var x_area_annotation_count = 0;
 /////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////
 
-// For x axis hover -----------------------------
+// For x axis hover design -----------------------------
 var x_axis_hover_design_flag = 0;
 function x_axis_hover_design(){
-	if(instruction.x_axis_hover_design == true){
+	if(instructions[current_graph_id].x_axis_hover_design == true){
 		for(var i=0; i<1; i++){
-			var  p = "M "+ 2*paddingx +" " + 2*paddingy + " l 0 "+  (height-(4*paddingy)) +" 0";
-			var path1 = paper.path(p).attr({
+			var  p = "M "+ 2*paddingx[current_graph_id] +" " + 2*paddingy[current_graph_id] + " l 0 "+  (height[current_graph_id]-(4*paddingy[current_graph_id])) +" 0";
+			var path1 = elems["paper_"+current_graph_id].path(p).attr({
 				'stroke-width' : .5,
 				//"stroke-dasharray": " - ",
 				stroke : '#949494',
 				opacity : 0,
 			});
-			elems["px"+i] = path1;
+			elems["px_"+current_graph_id+"_"+i] = path1;
 		}
 		x_axis_hover_design_flag = 1;
 	}
 }
-// For y axis hover -----------------------------
+// For y axis hover design-----------------------------
 var y_axis_hover_design_flag = 0;
 function y_axis_hover_design(){
-	if(instruction.y_axis_hover_design == true){
-		for(var i=0; i<instruction.path_no; i++){
-			var  p = "M "+ 2*paddingx +" " + ( (height-(2*paddingy))-((height-(4*paddingy))/(y_division_no-1))*i ) + " l "+  (width-(4*paddingx)) +" 0";
-			var path1 = paper.path(p).attr({
+	if(instructions[current_graph_id].y_axis_hover_design == true){
+		for(var i=0; i<instructions[current_graph_id].path_no; i++){
+			var  p = "M "+ 2*paddingx[current_graph_id] +" " + ( (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i ) + " l "+  (width[current_graph_id]-(4*paddingx[current_graph_id])) +" 0";
+			var path1 = elems["paper_"+current_graph_id].path(p).attr({
 				'stroke-width' : .5,
 				//"stroke-dasharray": " - ",
 				stroke : '#949494',
 				opacity : 0,
 			});
-			elems["py"+i] = path1;
+			elems["py_"+current_graph_id+"_"+i] = path1;
 		}
 		y_axis_hover_design_flag =1;
 	}
@@ -1622,22 +1724,22 @@ function y_axis_hover_design(){
 //Draw popup
 var popup_design_flag = 0;
 function popup_design(){	
-	var pop_rect = paper.rect(0, (height - (4*paddingy)), 0, instruction.path_no*30, 2).attr({
+	var pop_rect = elems["paper_"+current_graph_id].rect(0, (height[current_graph_id] - (4*paddingy[current_graph_id])), 0, instructions[current_graph_id].path_no*30, 2).attr({
 		fill : '#fcfcfc',//'#f2f4ff',
 		stroke : '#b8b8b8',//'#666666','#90a3ff',
 		opacity : 0,
 	});	
 	pop_rect.blur(1);
-	elems["pop_rect"] = pop_rect;
-	for(var i=0; i<instruction.path_no; i++){
-		var text1 = paper.text(20, /*(15 + (30*i))*/(height - (4*paddingy)), "").attr({
-			fill : path_details[i].color,
+	elems["pop_rect_"+current_graph_id] = pop_rect;
+	for(var i=0; i<instructions[current_graph_id].path_no; i++){
+		var text1 = elems["paper_"+current_graph_id].text(20, /*(15 + (30*i))*/(height[current_graph_id] - (4*paddingy[current_graph_id])), "").attr({
+			fill : path_details[current_graph_id][i].color,
 			'font-size' : '13px',
 			'text-anchor' : 'start',
 			'font-weight' : 'bold',
 			opacity : 0,
 		});
-		elems["tt"+i] = text1;
+		elems["tt_"+current_graph_id+"_"+i] = text1;
 	}
 	popup_design_flag = 1;
 }
@@ -1646,40 +1748,42 @@ function popup_design(){
 var popup_footer_design_flag = 0;
 function popup_footer_design(){
 	//for rect
-	var rect1 = paper.rect(2*paddingx, height - (2*paddingy), 0, 40, 5).attr({
+	var rect1 = elems["paper_"+current_graph_id].rect(2*paddingx[current_graph_id], height[current_graph_id] - (2*paddingy[current_graph_id]), 0, 40, 5).attr({
 		fill : '#f1f1f1',
 		stroke : '#b6b6b6',
 		opacity : 0,
 	});
-	elems["pfd_r"] = rect1;
+	elems["pfd_r_"+current_graph_id] = rect1;
 	//for text
-	var text1 = paper.text(2*paddingx, height - (1.5*paddingy), "2019").attr({
+	var text1 = elems["paper_"+current_graph_id].text(2*paddingx[current_graph_id], height[current_graph_id] - (1.5*paddingy[current_graph_id]), "2019").attr({
 		'font-size' : '13px',
 			'font-weight' : 'bold',
 		opacity : 0,
 	});
-	elems["pfd_t"] = text1;
+	elems["pfd_t_"+current_graph_id] = text1;
 	popup_footer_design_flag = 1;
 }
 //Collect max data on every point for view popup on that point
 function collect_popup_point(){
-	popup_point_x = [];
-	popup_point_y = [];
-	for(var i = 0; i < data.length; i++){
-		popup_point_x.push(((2*paddingx)+i*((width-(4*paddingx))/(data.length-1))));
-		popup_point_y.push((height - (2*paddingy)) - ((Math.max(...Object.values(data[i].value))  - min_value)*((height-(4*paddingy))/max)));
+	var popup_point_x = [];
+	var popup_point_y = [];
+	for(var i = 0; i < datas[current_graph_id].length; i++){
+		popup_point_x.push(((2*paddingx[current_graph_id])+i*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))));
+		popup_point_y.push((height[current_graph_id] - (2*paddingy[current_graph_id])) - ((Math.max(...Object.values(datas[current_graph_id][i].value))  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])));
 	}
+	popup_point_xs[current_graph_id] = popup_point_x;
+	popup_point_ys[current_graph_id] = popup_point_y;
 }
 
 //*****Draw rectangle for popup
 function draw_popup_rect(){
-	for(var i = 0; i< data.length; i++){
-		var rect = paper.rect((((2*paddingx)-(((width-(4*paddingx))/(data.length-1))/2))+i*((width-(4*paddingx))/(data.length-1))),2*paddingy,((width-(4*paddingx))/(data.length-1)),(height - (4*paddingy)));
+	for(var i = 0; i< datas[current_graph_id].length; i++){
+		var rect = elems["paper_"+current_graph_id].rect((((2*paddingx[current_graph_id])-(((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))/2))+i*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))),2*paddingy[current_graph_id],((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1)),(height[current_graph_id] - (4*paddingy[current_graph_id])));
 		rect.attr({
 			fill : "transparent",
 			opacity : 0,
 		});
-		rect.node.id = "r"+i;
+		rect.node.id = "r_"+current_graph_id+"_"+i;
 		rect.node.addEventListener('mouseover', popup);
 		rect.node.addEventListener('mouseout', popdown);
 		rect.node.addEventListener('mouseup', mouseup);
@@ -1691,140 +1795,149 @@ function draw_popup_rect(){
 
 //////////////////////////////////////////////////PopUp////////////////////////////////////////////////////
 function popup(){
-	var id = parseInt(this.id.replace('r',''));
-	if(draw_circle_flag == 1){
+	//console.log(this.id);
+	//var id = parseInt(this.id.replace('r',''));
+	var id = this.id.replace('r_','');
+	//console.log(id);
+	//instructions[current_graph_id].x_axis_hover_design
+	//if(draw_circle_flag == 1){
 		circle_popup(id);
-	}
-	if(x_axis_hover_design_flag == 1){
+	//}
+	//if(instructions[current_graph_id].x_axis_hover_design == true){
 		x_axis_hover(id);
-	}
-	if(y_axis_hover_design_flag == 1){
+	//}
+	//if(instructions[current_graph_id].y_axis_hover_design == true){
 		y_axis_hover(id);
-	}
-	if(popup_design_flag == 1){
+	//}
+	//if(instructions[current_graph_id].popup_design == true){
 		popup_hover(id);
-	}
-	if(popup_footer_design_flag == 1){
+	//}
+	//if(instructions[current_graph_id].popup_footer_design == true){
 		popup_footer_hover(id);
-	}
+	//}
 }
 function popdown(){
-	var id = parseInt(this.id.replace('r',''));
-	if(draw_circle_flag == 1){
+	//console.log(this.id);
+	var id = this.id.replace('r_','');
+	//console.log(id);
+	//if(draw_circle_flag == 1){
 		circle_popdown(id);
-	}
-	if(x_axis_hover_design_flag == 1){
+	//}
+	//if(instructions[current_graph_id].x_axis_hover_design == true){
 		x_axis_hover_out(id);
-	}
-	if(y_axis_hover_design_flag == 1){
+	//}
+	//if(instructions[current_graph_id].y_axis_hover_design == true){
 		y_axis_hover_out(id);
-	}
-	if(popup_design_flag == 1){
+	//}
+	//if(instructions[current_graph_id].popup_design == true){
 		popup_hover_out(id);
-	}
-	if(popup_footer_design_flag == 1){
+	//}
+	//if(instructions[current_graph_id].popup_footer_design == true){
 		popup_footer_hover_out(id);
-	}
+	//}
 }
 //Popup hover
 function popup_hover(id){
+	var res = id.split("_");
+	var id = parseInt(res[1]);
+	var graph_id = res[0];
 	var a = 0, b = 0;
-	for(var i = 0; i<parseInt(instruction.path_no); i++){
-		if(Object.values(data[id].value)[i].toString().length > a){
-			a = (path_details[i].name+" : "+Object.values(data[id].value)[i]).toString().length;
+	for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+		if(Object.values(datas[graph_id][id].value)[i].toString().length > a){
+			a = (path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i]).toString().length;
 		}
 	} 
 	a = (a*7)+40;
 	//console.log(a);
-	if(id<data.length/2){
-		if(Math.max(...(Object.values(data[id].value)))>(max/2)){
+	if(id<datas[graph_id].length/2){
+		if(Math.max(...(Object.values(datas[graph_id][id].value)))>(maxs[graph_id]/2)){
 			//for rect			
-			elems["pop_rect"].animate({
+			elems["pop_rect_"+graph_id].animate({
 				opacity : 1,
-				x : popup_point_x[id] ,
-				y : popup_point_y[id] + 15,
+				x : popup_point_xs[graph_id][id] ,
+				y : popup_point_ys[graph_id][id] + 15,
 				width : a,
 			},150);
 			//for text change
-			for(var i = 0; i<parseInt(instruction.path_no); i++){
-				elems["tt"+i].attr({
-					text : path_details[i].name+" : "+Object.values(data[id].value)[i],
+			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+				elems["tt_"+graph_id+"_"+i].attr({
+					text : path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i],
 				});
 			}
 			//for text animation
-			for(var i = 0; i<parseInt(instruction.path_no); i++){
-				elems["tt"+i].animate({
+			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+				elems["tt_"+graph_id+"_"+i].animate({
 					opacity : 1,
-					x : popup_point_x[id]+20,
-					y : popup_point_y[id] + (15 + (30*i) + 15),
+					x : popup_point_xs[graph_id][id]+20,
+					y : popup_point_ys[graph_id][id] + (15 + (30*i) + 15),
 				}, 150);
 			}
 		}else{
 			//for rect
-			elems["pop_rect"].animate({
+			elems["pop_rect_"+graph_id].animate({
 				opacity : 1,
-				x : popup_point_x[id] ,
-				y : popup_point_y[id] - (instruction.path_no*30) - 15,
+				x : popup_point_xs[graph_id][id] ,
+				y : popup_point_ys[graph_id][id] - (instructions[graph_id].path_no*30) - 15,
 				width : a,
 			},150);
 			//for text change
-			for(var i = 0; i<parseInt(instruction.path_no); i++){
-				elems["tt"+i].attr({
-					text : path_details[i].name+" : "+Object.values(data[id].value)[i],
+			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+				elems["tt_"+graph_id+"_"+i].attr({
+					text : path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i],
 				});
 			}
 			//for text animation
-			for(var i = 0; i<parseInt(instruction.path_no); i++){
-				elems["tt"+i].animate({
+			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+				elems["tt_"+graph_id+"_"+i].animate({
 					opacity : 1,
-					x : popup_point_x[id] + 20,
-					y : popup_point_y[id] + (15 + (30*i)) - (instruction.path_no*30) - 15,
+					x : popup_point_xs[graph_id][id] + 20,
+					y : popup_point_ys[graph_id][id] + (15 + (30*i)) - (instructions[graph_id].path_no*30) - 15,
 				}, 150);
 			}
 		}
 	}else{
-		if(Math.max(...(Object.values(data[id].value)))>(max/2)){
+		if(Math.max(...(Object.values(datas[graph_id][id].value)))>(maxs[graph_id]/2)){
 			//for rect
-			elems["pop_rect"].animate({
+			elems["pop_rect_"+graph_id].animate({
 				opacity : 1,
-				x : popup_point_x[id] - a,
-				y : popup_point_y[id] + 15,
+				x : popup_point_xs[graph_id][id] - a,
+				y : popup_point_ys[graph_id][id] + 15,
 				width : a,
 			},150);
 			//for text change
-			for(var i = 0; i<parseInt(instruction.path_no); i++){
-				elems["tt"+i].attr({
-					text : path_details[i].name+" : "+Object.values(data[id].value)[i],
+			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+				elems["tt_"+graph_id+"_"+i].attr({
+					text : path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i],
 				});
 			}
 			//for text animation
-			for(var i = 0; i<parseInt(instruction.path_no); i++){
-				elems["tt"+i].animate({
+			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+				elems["tt_"+graph_id+"_"+i].animate({
 					opacity : 1,
-					x : popup_point_x[id] + 20 - a,
-					y : popup_point_y[id] + (15 + (30*i))  + 15,
+					x : popup_point_xs[graph_id][id] + 20 - a,
+					y : popup_point_ys[graph_id][id] + (15 + (30*i))  + 15,
 				}, 150);
 			}
 		}else{
 			//for rect
-			elems["pop_rect"].animate({
+			elems["pop_rect_"+graph_id].animate({
 				opacity : 1,
-				x : popup_point_x[id] - a,
-				y : popup_point_y[id] - (instruction.path_no*30) - 15,
+				x : popup_point_xs[graph_id][id] - a,
+				y : popup_point_ys[graph_id][id] - (instructions[graph_id].path_no*30) - 15,
 				width : a,
 			},150);
 			//for text change
-			for(var i = 0; i<parseInt(instruction.path_no); i++){
-				elems["tt"+i].attr({
-					text : path_details[i].name+" : "+Object.values(data[id].value)[i],
+			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+				elems["tt_"+graph_id+"_"+i].attr({
+					text : path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i],
 				});
 			}
 			//for text animation
-			for(var i = 0; i<parseInt(instruction.path_no); i++){
-				elems["tt"+i].animate({
+			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+				elems["tt_"+graph_id+"_"+i].animate({
 					opacity : 1,
-					x : popup_point_x[id] + 20 - a,
-					y : popup_point_y[id] + (15 + (30*i)) - (instruction.path_no*30) - 15,
+					x : popup_point_xs[graph_id][id] + 20 - a,
+					y : popup_point_ys[graph_id][id] + (15 + (30*i)) - (instructions[graph_id].path_no*30) - 15,
 				}, 150);
 			}
 		}
@@ -1832,13 +1945,16 @@ function popup_hover(id){
 }
 //Popup hover out
 function popup_hover_out(id){
+	var res = id.split("_");
+	var id = parseInt(res[1]);
+	var graph_id = res[0];
 	//for rect
-	elems["pop_rect"].animate({
+	elems["pop_rect_"+graph_id].animate({
 		opacity : 0,
 	}, 150);
 	//for text
-	for(var i = 0; i<parseInt(instruction.path_no); i++){
-		elems["tt"+i].animate({
+	for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+		elems["tt_"+graph_id+"_"+i].animate({
 			opacity : 0,
 		}, 150);
 	}
@@ -1846,62 +1962,78 @@ function popup_hover_out(id){
 
 //Popup footer hover
 function popup_footer_hover(id){
+	var res = id.split("_");
+	var id = parseInt(res[1]);
+	var graph_id = res[0];
 	//for rect
-	elems["pfd_r"].animate({
+	elems["pfd_r_"+graph_id].animate({
 		opacity : 1,
-		x : popup_point_x[id] - (((data[id].month.length*7)+20)/2),
-		width : (data[id].month.length*7) + 20,
+		x : popup_point_xs[graph_id][id] - (((datas[graph_id][id].month.length*7)+20)/2),
+		width : (datas[graph_id][id].month.length*7) + 20,
 	},150);
 	//for text change
-	elems["pfd_t"].attr({
-		text : data[id].month,
+	elems["pfd_t_"+graph_id].attr({
+		text : datas[graph_id][id].month,
 	});
 	//for text
-	elems["pfd_t"].animate({
+	elems["pfd_t_"+graph_id].animate({
 		opacity : 1,
-		x : popup_point_x[id] ,
+		x : popup_point_xs[graph_id][id] ,
 	}, 150);
 }
 //Popup footer hover out
 function popup_footer_hover_out(id){
+	var res = id.split("_");
+	var id = parseInt(res[1]);
+	var graph_id = res[0];
 	//for rect
-	elems["pfd_r"].animate({
+	elems["pfd_r_"+graph_id].animate({
 		opacity : 0,
 	},150);
 	//for text
-	elems["pfd_t"].animate({
+	elems["pfd_t_"+graph_id].animate({
 		opacity : 0,
 	}, 150);
 }
 //Circle effect on popup
 function circle_popup(id){
-	for(var i = 0; i<parseInt(instruction.path_no); i++){
-		if(elems["c"+i+""+id]){
-			elems["c"+i+""+id].animate({
+	//console.log(id);
+	var res = id.split("_");
+	var id = parseInt(res[1]);
+	var graph_id = res[0];
+	for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+		if(elems["c_"+graph_id+"_"+i+""+id]){
+			elems["c_"+graph_id+"_"+i+""+id].animate({
 				opacity : 1,
-				r : path_details[i].circle_zoom_in,
+				r : path_details[graph_id][i].circle_zoom_in,
 			},25);
 		}
 	}
 }
 //Circle effect on popdown
 function circle_popdown(id){
-	for(var i = 0; i<parseInt(instruction.path_no); i++){
-		if(elems["c"+i+""+id]){
-			elems["c"+i+""+id].animate({
+	var res = id.split("_");
+	var id = parseInt(res[1]);
+	var graph_id = res[0];
+	for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+		if(elems["c_"+graph_id+"_"+i+""+id]){
+			elems["c_"+graph_id+"_"+i+""+id].animate({
 				//opacity : 0,
-				r : path_details[i].circle_zoom_out,
+				r : path_details[graph_id][i].circle_zoom_out,
 			},25);
 		}
 	}
 }
 //X axis hover
 function x_axis_hover(id){
-	if(instruction.x_axis_hover_design == true){
+	var res = id.split("_");
+	var id = parseInt(res[1]);
+	var graph_id = res[0];
+	if(instructions[graph_id].x_axis_hover_design == true){
 		for(var i = 0; i<1; i++){
-			var  p  = "M "+ ((2*paddingx)+id*((width-(4*paddingx))/(data.length-1))) +" " + (2*paddingy) + " l 0 "+  ( (height - (4*paddingy)) ) ;
-			if(elems["px"+i]){
-				elems["px"+i].animate({
+			var  p  = "M "+ ((2*paddingx[graph_id])+id*((width[graph_id]-(4*paddingx[graph_id]))/(datas[graph_id].length-1))) +" " + (2*paddingy[graph_id]) + " l 0 "+  ( (height[graph_id] - (4*paddingy[graph_id])) ) ;
+			if(elems["px_"+graph_id+"_"+i]){
+				elems["px_"+graph_id+"_"+i].animate({
 					opacity : 1,
 					path : p,
 				}, 150);
@@ -1912,11 +2044,15 @@ function x_axis_hover(id){
 }
 //Y axis hover
 function y_axis_hover(id){
-	if(instruction.y_axis_hover_design == true){
-		for(var i = 0; i<parseInt(instruction.path_no); i++){
-			var  p  = "M "+ 2*paddingx +" " + ( (height - (2*paddingy)) - ((Object.values(data[id].value)[i] - min_value)*((height-(4*paddingy))/max)) ) + " l "+  (width-(4*paddingx)) +" 0";
-			if(elems["py"+i]){
-				elems["py"+i].animate({
+	var res = id.split("_");
+	var id = parseInt(res[1]);
+	var graph_id = res[0];
+	
+	if(instructions[graph_id].y_axis_hover_design == true){
+		for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+			var  p  = "M "+ 2*paddingx[graph_id] +" " + ( (height[graph_id] - (2*paddingy[graph_id])) - ((Object.values(datas[graph_id][id].value)[i] - min_values[graph_id])*((height[graph_id]-(4*paddingy[graph_id]))/maxs[graph_id])) ) + " l "+  (width[graph_id]-(4*paddingx[graph_id])) +" 0";
+			if(elems["py_"+graph_id+"_"+i]){
+				elems["py_"+graph_id+"_"+i].animate({
 					opacity : 1,
 					path : p,
 				}, 150);
@@ -1927,9 +2063,12 @@ function y_axis_hover(id){
 }
 //X axis hover out
 function x_axis_hover_out(id){
+	var res = id.split("_");
+	var id = parseInt(res[1]);
+	var graph_id = res[0];
 	for(var i = 0; i<1; i++){
-		if(elems["px"+i]){
-			elems["px"+i].animate({
+		if(elems["px_"+graph_id+"_"+i]){
+			elems["px_"+graph_id+"_"+i].animate({
 				opacity : 0,
 			}, 150);
 		}
@@ -1937,9 +2076,12 @@ function x_axis_hover_out(id){
 }
 //Y axis hover out
 function y_axis_hover_out(id){
-	for(var i = 0; i<parseInt(instruction.path_no); i++){
-		if(elems["py"+i]){
-			elems["py"+i].animate({
+	var res = id.split("_");
+	var id = parseInt(res[1]);
+	var graph_id = res[0];
+	for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+		if(elems["py_"+graph_id+"_"+i]){
+			elems["py_"+graph_id+"_"+i].animate({
 				opacity : 0,
 			}, 150);
 		}
@@ -1949,22 +2091,28 @@ function y_axis_hover_out(id){
 //////////////////////////////////////////////////SELECT AREA//////////////////////////////////////////////////////
 //Draw select area
 function select_area(){
-	var rect1 = paper.rect(((2*paddingx)), 2*paddingy , 0, (height-(4*paddingy))).attr({
+	var rect1 = elems["paper_"+current_graph_id].rect(((2*paddingx[current_graph_id])), 2*paddingy[current_graph_id] , 0, (height[current_graph_id]-(4*paddingy[current_graph_id]))).attr({
 		opacity : 0,
 	});
-	elems['zoom_rect'] = rect1;
+	elems['zoom_rect_'+current_graph_id] = rect1;
 }
 var clicked_position = 0;
 var val1 = 0;
 var clicked_id = 0, unclicked_id = 0;
 
 function mousedown(e){
-	if(instruction.select_area == true){
-		var id = parseInt(this.id.replace('r',''));
+	//console.log(this.id);
+	var id = this.id.replace('r_','');
+	var res = id.split("_");
+	id = parseInt(res[1]);
+	var graph_id = res[0];
+	//console.log(id);
+	if(instructions[graph_id].select_area == true){
+		var id = parseInt(this.id.replace('r_'+graph_id+"_",''));
 		clicked_id = id;
-		elems['zoom_rect'].attr({
-			x : ((2*paddingx)+id*((width-(4*paddingx))/(data.length-1))),
-			y :  2*paddingy,
+		elems['zoom_rect_'+graph_id].attr({
+			x : ((2*paddingx[graph_id])+id*((width[graph_id]-(4*paddingx[graph_id]))/(datas[graph_id].length-1))),
+			y :  2*paddingy[graph_id],
 			'stroke-width' : 2,
 			stroke : '#00376e',
 			fill : '#0068d0',
@@ -1972,20 +2120,26 @@ function mousedown(e){
 			width : 0,
 		});
 		clicked_position = e.clientX;
-		val1 = ((2*paddingx)+id*((width-(4*paddingx))/(data.length-1)));
+		val1 = ((2*paddingx[graph_id])+id*((width[graph_id]-(4*paddingx[graph_id]))/(datas[graph_id].length-1)));
 	}
 	
 }
 function mousemove(e){
+	//console.log(this.id);
+	var id = this.id.replace('r_','');
+	var res = id.split("_");
+	id = parseInt(res[1]);
+	var graph_id = res[0];
+	//console.log(id);
 	//console.log(clicked_position+" "+ e.clientX + " : "+ (e.clientX - clicked_position) + " : "+ (clicked_position - e.clientX));
-	if(instruction.select_area == true){
+	if(instructions[graph_id].select_area == true){
 		try{
 			if(e.clientX  >= clicked_position){
-				elems['zoom_rect'].attr({
+				elems['zoom_rect_'+graph_id].attr({
 					width : e.clientX - clicked_position,
 				});
 			}else{		
-				elems['zoom_rect'].attr({
+				elems['zoom_rect_'+graph_id].attr({
 					x : val1 - (clicked_position - e.clientX),
 					width : (clicked_position - e.clientX),
 				});	
@@ -1996,11 +2150,16 @@ function mousemove(e){
 	}
 }
 function mouseup(){
-	var id = parseInt(this.id.replace('r',''));	
+	//console.log(this.id);
+	var id = this.id.replace('r_','');
+	var res = id.split("_");
+	id = parseInt(res[1]);
+	var graph_id = res[0];
+	//var id = parseInt(this.id.replace('r',''));	
 	unclicked_id = id;
-	if(instruction.select_area == true){
+	if(instructions[graph_id].select_area == true){
 		//console.log(clicked_id + "  :  "+ unclicked_id );
-		elems['zoom_rect'].attr({
+		elems['zoom_rect_'+graph_id].attr({
 			opacity : 0,
 		});
 		if(clicked_id>unclicked_id){
@@ -2009,9 +2168,10 @@ function mouseup(){
 			unclicked_id = a;
 		}
 		if(clicked_id != unclicked_id && unclicked_id > (clicked_id + 1)){				
-			paper.clear();
+			elems["paper_"+graph_id].clear();
 			//Load instruction
-			load_all_data(data.slice(clicked_id, unclicked_id+1), instruction, path_details);			
+			//console.log(graph_id);
+			load_all_data(datas[graph_id].slice(clicked_id, unclicked_id+1), instructions[graph_id], path_details[graph_id]);			
 			all_function();
 		}
 	}
