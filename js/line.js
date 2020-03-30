@@ -82,6 +82,12 @@ function load_all_data(data,  instruction, path_detail){//data_min_point = 1st a
 	height[current_graph_id] = parseInt(instruction.height) > 510 ? 510 : parseInt(instruction.height) < 420 ? 420 : parseInt(instruction.height) || 510;
 	paddingx[current_graph_id] = parseInt(instruction.paddingx) > 40 ? 40 : parseInt(instruction.paddingx) < 25 ? 25 : parseInt(instruction.paddingx) || 40;
 	paddingy[current_graph_id] = parseInt(instruction.paddingy) > 40 ? 40 : parseInt(instruction.paddingy) < 25 ? 25 : parseInt(instruction.paddingy) || 40;
+	if(instruction.type == "tiny"){
+		width[current_graph_id] = parseInt(instruction.width) > 420 ? 420 : parseInt(instruction.width) < 370 ? 370 : parseInt(instruction.width) || 420;
+		height[current_graph_id] = parseInt(instruction.height) > 290 ? 290 : parseInt(instruction.height) < 220 ? 220 : parseInt(instruction.height) || 290;
+		paddingx[current_graph_id] = parseInt(instruction.paddingx) > 25 ? 25 : parseInt(instruction.paddingx) < 15 ? 15 : parseInt(instruction.paddingx) || 25;
+		paddingy[current_graph_id] = parseInt(instruction.paddingy) > 25 ? 25 : parseInt(instruction.paddingy) < 15 ? 15 : parseInt(instruction.paddingy) || 25;	
+	}
 	x_division_nos[current_graph_id] = parseInt(instruction.x_division_no) > data.length ? (data.length > 18 ? 18 : data.length) : (parseInt(instruction.x_division_no) > 18 ? 18 : parseInt(instruction.x_division_no)) || (data.length > 18 ? 18 : data.length );
 	y_division_nos[current_graph_id] = parseInt(instruction.y_division_no) > 12 ? 12 : (parseInt(instruction.y_division_no) < 2 ? 2 : parseInt(instruction.y_division_no) ) || 12;
 	//max for division of y axis
@@ -1296,7 +1302,6 @@ function draw_annotations(){
 								text_x = rect_x + 10;
 								text_y = rect_y + ((instructions[current_graph_id].annotations.xaxis[i].label.text.length*7)+20)/2;
 							}
-							console.log(x1+" "+x2);
 							elems["paper_"+current_graph_id].rect(area_rect_x, area_rect_y, area_rect_width, area_rect_height).attr({
 								stroke : instructions[current_graph_id].annotations.xaxis[i].borderColor,
 								fill : instructions[current_graph_id].annotations.xaxis[i].fillColor,
@@ -1645,7 +1650,7 @@ function popup_design(){
 }
 
 //Draw popup footer design
-var popup_footer_design_flag = 0;
+//var popup_footer_design_flag = 0;
 function popup_footer_design(){
 	//for rect
 	var rect1 = elems["paper_"+current_graph_id].rect(2*paddingx[current_graph_id], height[current_graph_id] - (2*paddingy[current_graph_id]), 0, 40, 5).attr({
@@ -1661,7 +1666,7 @@ function popup_footer_design(){
 		opacity : 0,
 	});
 	elems["pfd_t_"+current_graph_id] = text1;
-	popup_footer_design_flag = 1;
+	//popup_footer_design_flag = 1;
 }
 //Collect max data on every point for view popup on that point
 function collect_popup_point(){
@@ -1717,103 +1722,105 @@ function popup_hover(id){
 	var res = id.split("_");
 	var id = parseInt(res[1]);
 	var graph_id = res[0];
-	var a = 0, b = 0;
-	for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
-		if(Object.values(datas[graph_id][id].value)[i].toString().length > a){
-			a = (path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i]).toString().length;
-		}
-	} 
-	a = (a*7)+40;
-	if(id<datas[graph_id].length/2){
-		if(Math.max(...(Object.values(datas[graph_id][id].value)))>(maxs[graph_id]/2)){
-			//for rect			
-			elems["pop_rect_"+graph_id].animate({
-				opacity : 1,
-				x : popup_point_xs[graph_id][id] ,
-				y : popup_point_ys[graph_id][id] + 15,
-				width : a,
-			},150);
-			//for text change
-			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
-				elems["tt_"+graph_id+"_"+i].attr({
-					text : path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i],
-				});
+	if(instructions[graph_id].popup_design == true){
+		var a = 0, b = 0;
+		for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+			if(Object.values(datas[graph_id][id].value)[i].toString().length > a){
+				a = (path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i]).toString().length;
 			}
-			//for text animation
-			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
-				elems["tt_"+graph_id+"_"+i].animate({
+		} 
+		a = (a*7)+40;
+		if(id<datas[graph_id].length/2){
+			if(Math.max(...(Object.values(datas[graph_id][id].value)))>(maxs[graph_id]/2)){
+				//for rect			
+				elems["pop_rect_"+graph_id].animate({
 					opacity : 1,
-					x : popup_point_xs[graph_id][id]+20,
-					y : popup_point_ys[graph_id][id] + (15 + (30*i) + 15),
-				}, 150);
+					x : popup_point_xs[graph_id][id] ,
+					y : popup_point_ys[graph_id][id] + 15,
+					width : a,
+				},150);
+				//for text change
+				for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+					elems["tt_"+graph_id+"_"+i].attr({
+						text : path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i],
+					});
+				}
+				//for text animation
+				for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+					elems["tt_"+graph_id+"_"+i].animate({
+						opacity : 1,
+						x : popup_point_xs[graph_id][id]+20,
+						y : popup_point_ys[graph_id][id] + (15 + (30*i) + 15),
+					}, 150);
+				}
+			}else{
+				//for rect
+				elems["pop_rect_"+graph_id].animate({
+					opacity : 1,
+					x : popup_point_xs[graph_id][id] ,
+					y : popup_point_ys[graph_id][id] - (instructions[graph_id].path_no*30) - 15,
+					width : a,
+				},150);
+				//for text change
+				for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+					elems["tt_"+graph_id+"_"+i].attr({
+						text : path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i],
+					});
+				}
+				//for text animation
+				for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+					elems["tt_"+graph_id+"_"+i].animate({
+						opacity : 1,
+						x : popup_point_xs[graph_id][id] + 20,
+						y : popup_point_ys[graph_id][id] + (15 + (30*i)) - (instructions[graph_id].path_no*30) - 15,
+					}, 150);
+				}
 			}
 		}else{
-			//for rect
-			elems["pop_rect_"+graph_id].animate({
-				opacity : 1,
-				x : popup_point_xs[graph_id][id] ,
-				y : popup_point_ys[graph_id][id] - (instructions[graph_id].path_no*30) - 15,
-				width : a,
-			},150);
-			//for text change
-			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
-				elems["tt_"+graph_id+"_"+i].attr({
-					text : path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i],
-				});
-			}
-			//for text animation
-			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
-				elems["tt_"+graph_id+"_"+i].animate({
+			if(Math.max(...(Object.values(datas[graph_id][id].value)))>(maxs[graph_id]/2)){
+				//for rect
+				elems["pop_rect_"+graph_id].animate({
 					opacity : 1,
-					x : popup_point_xs[graph_id][id] + 20,
-					y : popup_point_ys[graph_id][id] + (15 + (30*i)) - (instructions[graph_id].path_no*30) - 15,
-				}, 150);
-			}
-		}
-	}else{
-		if(Math.max(...(Object.values(datas[graph_id][id].value)))>(maxs[graph_id]/2)){
-			//for rect
-			elems["pop_rect_"+graph_id].animate({
-				opacity : 1,
-				x : popup_point_xs[graph_id][id] - a,
-				y : popup_point_ys[graph_id][id] + 15,
-				width : a,
-			},150);
-			//for text change
-			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
-				elems["tt_"+graph_id+"_"+i].attr({
-					text : path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i],
-				});
-			}
-			//for text animation
-			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
-				elems["tt_"+graph_id+"_"+i].animate({
+					x : popup_point_xs[graph_id][id] - a,
+					y : popup_point_ys[graph_id][id] + 15,
+					width : a,
+				},150);
+				//for text change
+				for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+					elems["tt_"+graph_id+"_"+i].attr({
+						text : path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i],
+					});
+				}
+				//for text animation
+				for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+					elems["tt_"+graph_id+"_"+i].animate({
+						opacity : 1,
+						x : popup_point_xs[graph_id][id] + 20 - a,
+						y : popup_point_ys[graph_id][id] + (15 + (30*i))  + 15,
+					}, 150);
+				}
+			}else{
+				//for rect
+				elems["pop_rect_"+graph_id].animate({
 					opacity : 1,
-					x : popup_point_xs[graph_id][id] + 20 - a,
-					y : popup_point_ys[graph_id][id] + (15 + (30*i))  + 15,
-				}, 150);
-			}
-		}else{
-			//for rect
-			elems["pop_rect_"+graph_id].animate({
-				opacity : 1,
-				x : popup_point_xs[graph_id][id] - a,
-				y : popup_point_ys[graph_id][id] - (instructions[graph_id].path_no*30) - 15,
-				width : a,
-			},150);
-			//for text change
-			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
-				elems["tt_"+graph_id+"_"+i].attr({
-					text : path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i],
-				});
-			}
-			//for text animation
-			for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
-				elems["tt_"+graph_id+"_"+i].animate({
-					opacity : 1,
-					x : popup_point_xs[graph_id][id] + 20 - a,
-					y : popup_point_ys[graph_id][id] + (15 + (30*i)) - (instructions[graph_id].path_no*30) - 15,
-				}, 150);
+					x : popup_point_xs[graph_id][id] - a,
+					y : popup_point_ys[graph_id][id] - (instructions[graph_id].path_no*30) - 15,
+					width : a,
+				},150);
+				//for text change
+				for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+					elems["tt_"+graph_id+"_"+i].attr({
+						text : path_details[graph_id][i].name+" : "+Object.values(datas[graph_id][id].value)[i],
+					});
+				}
+				//for text animation
+				for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+					elems["tt_"+graph_id+"_"+i].animate({
+						opacity : 1,
+						x : popup_point_xs[graph_id][id] + 20 - a,
+						y : popup_point_ys[graph_id][id] + (15 + (30*i)) - (instructions[graph_id].path_no*30) - 15,
+					}, 150);
+				}
 			}
 		}
 	}
@@ -1823,15 +1830,17 @@ function popup_hover_out(id){
 	var res = id.split("_");
 	var id = parseInt(res[1]);
 	var graph_id = res[0];
-	//for rect
-	elems["pop_rect_"+graph_id].animate({
-		opacity : 0,
-	}, 150);
-	//for text
-	for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
-		elems["tt_"+graph_id+"_"+i].animate({
+	if(instructions[graph_id].popup_design == true){
+		//for rect
+		elems["pop_rect_"+graph_id].animate({
 			opacity : 0,
 		}, 150);
+		//for text
+		for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
+			elems["tt_"+graph_id+"_"+i].animate({
+				opacity : 0,
+			}, 150);
+		}
 	}
 }
 
@@ -1840,35 +1849,39 @@ function popup_footer_hover(id){
 	var res = id.split("_");
 	var id = parseInt(res[1]);
 	var graph_id = res[0];
-	//for rect
-	elems["pfd_r_"+graph_id].animate({
-		opacity : 1,
-		x : popup_point_xs[graph_id][id] - (((datas[graph_id][id].month.length*7)+20)/2),
-		width : (datas[graph_id][id].month.length*7) + 20,
-	},150);
-	//for text change
-	elems["pfd_t_"+graph_id].attr({
-		text : datas[graph_id][id].month,
-	});
-	//for text
-	elems["pfd_t_"+graph_id].animate({
-		opacity : 1,
-		x : popup_point_xs[graph_id][id] ,
-	}, 150);
+	if(instructions[graph_id].popup_footer_design == true){
+		//for rect
+		elems["pfd_r_"+graph_id].animate({
+			opacity : 1,
+			x : popup_point_xs[graph_id][id] - (((datas[graph_id][id].month.length*7)+20)/2),
+			width : (datas[graph_id][id].month.length*7) + 20,
+		},150);
+		//for text change
+		elems["pfd_t_"+graph_id].attr({
+			text : datas[graph_id][id].month,
+		});
+		//for text
+		elems["pfd_t_"+graph_id].animate({
+			opacity : 1,
+			x : popup_point_xs[graph_id][id] ,
+		}, 150);
+	}
 }
 //Popup footer hover out
 function popup_footer_hover_out(id){
 	var res = id.split("_");
 	var id = parseInt(res[1]);
 	var graph_id = res[0];
-	//for rect
-	elems["pfd_r_"+graph_id].animate({
-		opacity : 0,
-	},150);
-	//for text
-	elems["pfd_t_"+graph_id].animate({
-		opacity : 0,
-	}, 150);
+	if(instructions[graph_id].popup_footer_design == true){
+		//for rect
+		elems["pfd_r_"+graph_id].animate({
+			opacity : 0,
+		},150);
+		//for text
+		elems["pfd_t_"+graph_id].animate({
+			opacity : 0,
+		}, 150);
+	}
 }
 //Circle effect on popup
 function circle_popup(id){
