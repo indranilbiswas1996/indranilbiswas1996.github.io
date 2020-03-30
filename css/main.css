@@ -26,7 +26,8 @@ h3{
 	background : #25294a;
 }
 .header a{
-	text-decoration : none;
+	text-decoration: none;
+    	display: inline-block;
 }
 .container{
 	width : 100%;
