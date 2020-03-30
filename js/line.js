@@ -29,34 +29,9 @@ var round_area_icon_effect_status_arrays = {};
 var stepline_area_icon_effect_status_arrays = {};
 var label_icon_effect_status_arrays = {};
 var circle_icon_effect_status_arrays = {};
-
-
-
-/*Function Flag*/
-/*var main_title_flag = 0;
-var x_axis_title_flag = 0;
-var y_axis_title_flag = 0;
-var x_axis_flag = 0;
-var y_axis_flag = 0;
-var x_axis_division_flag = 0;
-var x_axis_label_flag = 0;
-var y_axis_division_flag = 0;
-var y_axis_label_flag = 0;
-var draw_line_path_flag = 0;
-var draw_round_path_flag = 0;
-var draw_stepline_path_flag = 0;
-var draw_stepline_area_flag = 0;
-var draw_circle_flag = 0;
-var draw_line_area_flag = 0;
-var draw_round_area_flag = 0;
-var label_flag = 0;
-var popup_design_flag = 0;
-var x_axis_hover_design_flag = 0;
-var y_axis_hover_design_flag = 0;
-var popup_footer_design_flag = 0;*/
 var graph_id = {};
-
 var flag = {};
+
 //var flag = 0;
 function check(data, instruction, path_detail){
 	if(!graph_id[instruction.id]){
@@ -67,7 +42,6 @@ function check(data, instruction, path_detail){
 				for(var i = 0 ; i<data.length; i++){
 					if(Object.keys(data[i].value).length == path_detail.length){						
 						flag[instruction.id] = 1;
-						//flag = 1;
 					}else{
 						flag[instruction.id] = 0;
 					}
@@ -93,7 +67,6 @@ var main_data_flag = {};
 //Load instruction
 function load_all_data(data,  instruction, path_detail){//data_min_point = 1st array index & data_min_point = last array index
 	current_graph_id = instruction.id;
-	//console.log(current_graph_id);////////////////***********************
 	if(!main_data_flag[instruction.id]){
 		main_data_flag[instruction.id] = 0;
 	}
@@ -109,7 +82,6 @@ function load_all_data(data,  instruction, path_detail){//data_min_point = 1st a
 	height[current_graph_id] = parseInt(instruction.height) > 510 ? 510 : parseInt(instruction.height) < 420 ? 420 : parseInt(instruction.height) || 510;
 	paddingx[current_graph_id] = parseInt(instruction.paddingx) > 40 ? 40 : parseInt(instruction.paddingx) < 25 ? 25 : parseInt(instruction.paddingx) || 40;
 	paddingy[current_graph_id] = parseInt(instruction.paddingy) > 40 ? 40 : parseInt(instruction.paddingy) < 25 ? 25 : parseInt(instruction.paddingy) || 40;
-	//x_division_nos[current_graph_id] = parseInt(instruction.x_division_nos[current_graph_id]) > (data.length/2) ? parseInt(instruction.x_division_nos[current_graph_id]) == data.length ? data.length : (data.length/2) : instruction.x_division_nos[current_graph_id] || data.length;
 	x_division_nos[current_graph_id] = parseInt(instruction.x_division_no) > data.length ? (data.length > 18 ? 18 : data.length) : (parseInt(instruction.x_division_no) > 18 ? 18 : parseInt(instruction.x_division_no)) || (data.length > 18 ? 18 : data.length );
 	y_division_nos[current_graph_id] = parseInt(instruction.y_division_no) > 12 ? 12 : (parseInt(instruction.y_division_no) < 2 ? 2 : parseInt(instruction.y_division_no) ) || 12;
 	//max for division of y axis
@@ -119,21 +91,16 @@ function load_all_data(data,  instruction, path_detail){//data_min_point = 1st a
 			max_values[current_graph_id] = Math.max(...(Object.values(data[i].value)));
 		}
 	}
-	//max_values[current_graph_id]s[current_graph_id] = max_values[current_graph_id];
 	min_values[current_graph_id] = 0;
 	for(var i = 0; i<data.length; i++){
 		if((Math.min(...(Object.values(data[i].value))))< min_values[current_graph_id]){
 			min_values[current_graph_id] = Math.min(...(Object.values(data[i].value)));
 		}
 	}
-	//min_values[current_graph_id]s[current_graph_id] = min_values[current_graph_id];
-	//min_values[current_graph_id] = min_values[current_graph_id] + (Math.ceil((min_values[current_graph_id])/(y_division_nos[current_graph_id]-1)));
-	//max = ((Math.ceil(max_values[current_graph_id]/(y_division_nos[current_graph_id]-1)))*(y_division_nos[current_graph_id]-1))+(1*(y_division_nos[current_graph_id]-1));
 	max = ((Math.ceil((max_values[current_graph_id]-min_values[current_graph_id])/(y_division_nos[current_graph_id]-1)))*(y_division_nos[current_graph_id]-1))+(1*(y_division_nos[current_graph_id]-1));
 	maxs[current_graph_id] = max;
 	//For main value
 	if(main_data_flag[instruction.id] == 0){	
-		//console.log(instructions[current_graph_id].container);
 		create_paper();
 		main_data = data;
 		main_datas[current_graph_id] = data;
@@ -144,7 +111,6 @@ function load_all_data(data,  instruction, path_detail){//data_min_point = 1st a
 				max_point_values[current_graph_id] = Math.max(...(Object.values(main_datas[current_graph_id][i].value)));
 			}
 		}
-		//max_point_values[current_graph_id]s[current_graph_id] = max_point_values[current_graph_id];
 		//Min point value
 		min_point_values[current_graph_id] = Math.min(...(Object.values(main_datas[current_graph_id][0].value)));
 		for(var i = 0; i<main_datas[current_graph_id].length; i++){
@@ -152,24 +118,18 @@ function load_all_data(data,  instruction, path_detail){//data_min_point = 1st a
 				min_point_values[current_graph_id] = Math.min(...(Object.values(main_datas[current_graph_id][i].value)));
 			}
 		}
-		//min_point_values[current_graph_id]s[current_graph_id] = min_point_values[current_graph_id];
 	}
-	//console.log(max_point_values[current_graph_id]+ " "+ min_point_values[current_graph_id]);
-	//console.log(max_values[current_graph_id]+ " "+ min_values[current_graph_id]);
 	main_data_flag[instruction.id] = 1;
 }
 //Paper set
 function create_paper(){
-	//console.log(instructions[current_graph_id].container+width+" "+height[current_graph_id]);
 	paper = new Raphael(document.getElementById(instructions[current_graph_id].container), width[current_graph_id], height[current_graph_id]);	
 	elems["paper_"+current_graph_id] = paper;
 }
 //All function
 function all_function(){
-	//console.log(current_graph_id);
 	if(instructions[current_graph_id].main_title == true){
 		main_title();
-		//console.log(current_graph_id);
 	}
 	if(instructions[current_graph_id].icon == true){
 		icon_design();
@@ -230,23 +190,18 @@ function all_function(){
 //All title
 var main_title_flag = 0;
 function main_title(){
-	//alert(data.length);
 	elems["paper_"+current_graph_id].text((2*paddingx[current_graph_id]), paddingy[current_graph_id], instructions[current_graph_id].title).attr({
 		'font-weight' : 'bold',
 		'text-anchor': 'start',
 		'font-size' : '15px',
 	});
-	//console.log(current_graph_id);
-	//elems["main_title_"+current_graph_id] = text;
 	main_title_flag = 1;
 }
 //Icon design
 var icon_design_flag = 0;
 function icon_design(){
 	var x = (2*paddingx[current_graph_id]);
-	//console.log(path_details[current_graph_id]s[current_graph_id].length);
 	for(var i = 0; i < path_details[current_graph_id].length; i++){
-		//console.log(path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].name.length);
 		x += (7*path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].name.length);
 		var text = elems["paper_"+current_graph_id].text(width[current_graph_id] - x, paddingy[current_graph_id], path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].name).attr({
 			'font-weight' : 'bold',
@@ -262,7 +217,6 @@ function icon_design(){
 			fill : 'transparent',
 			opacity : 0,
 			cursor : 'pointer',
-			//stroke : 'transparent',
 		});
 		rect.node.id = "icon_"+current_graph_id+"_"+i;
 		rect.node.addEventListener('click', icon_effect_click);
@@ -297,332 +251,309 @@ function icon_design(){
 	stepline_area_icon_effect_status_arrays[current_graph_id] = stepline_area_icon_effect_status_array;
 	label_icon_effect_status_arrays[current_graph_id] = label_icon_effect_status_array;
 	circle_icon_effect_status_arrays[current_graph_id] = circle_icon_effect_status_array;
-	//icon_design_flag = 1;
 }
 
 //Icon click effect
 function icon_effect_click(){
-	//console.log(this.id);
 	var id = this.id.replace('icon_', '');
 	var res = id.split("_");
 	id = parseInt(res[1]);
 	var graph_id = res[0];
-	//console.log(path_details[graph_id][graph_id]);
 	id = (path_details[graph_id].length-1) - id;
 	//For Line path
-	//if(draw_line_path_flag == 1){
-		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-			if(i == id){
-				if(line_path_icon_effect_status_arrays[graph_id][id] == 0){
-					line_path_icon_effect_status_arrays[graph_id][id] = 1;
-					if(elems["line_path_"+graph_id+"_"+i]){
-						elems["line_path_"+graph_id+"_"+i].animate({
-							opacity: 0.1,
-						});
-					}
-					for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-						if(i != id && line_path_icon_effect_status_arrays[graph_id][i] == 0){
-							if(elems["line_path_"+graph_id+"_"+i]){
-								elems["line_path_"+graph_id+"_"+i].animate({
-									opacity: 1,
-								});
-							}
+	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+		if(i == id){
+			if(line_path_icon_effect_status_arrays[graph_id][id] == 0){
+				line_path_icon_effect_status_arrays[graph_id][id] = 1;
+				if(elems["line_path_"+graph_id+"_"+i]){
+					elems["line_path_"+graph_id+"_"+i].animate({
+						opacity: 0.1,
+					});
+				}
+				for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+					if(i != id && line_path_icon_effect_status_arrays[graph_id][i] == 0){
+						if(elems["line_path_"+graph_id+"_"+i]){
+							elems["line_path_"+graph_id+"_"+i].animate({
+								opacity: 1,
+							});
 						}
 					}
 				}
-				else{
-					line_path_icon_effect_status_arrays[graph_id][id] = 0;
-					if(elems["line_path_"+graph_id+"_"+i]){
-						elems["line_path_"+graph_id+"_"+i].animate({
-							opacity: 1,
-						});
-					}
+			}
+			else{
+				line_path_icon_effect_status_arrays[graph_id][id] = 0;
+				if(elems["line_path_"+graph_id+"_"+i]){
+					elems["line_path_"+graph_id+"_"+i].animate({
+						opacity: 1,
+					});
 				}
 			}
 		}
-	//}
+	}
 	//For Round path
-	//if(draw_round_path_flag == 1){
-		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-			if(i == id){
-				if(round_path_icon_effect_status_arrays[graph_id][id] == 0){
-					round_path_icon_effect_status_arrays[graph_id][id] = 1;
-					if(elems["round_path_"+graph_id+"_"+i]){
-						elems["round_path_"+graph_id+"_"+i].animate({
-							opacity: 0.1,
-						});
-					}
-					for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-						if(i != id && round_path_icon_effect_status_arrays[graph_id][i] == 0){
-							if(elems["round_path_"+graph_id+"_"+i]){
-								elems["round_path_"+graph_id+"_"+i].animate({
-									opacity: 1,
-								});
-							}
+	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+		if(i == id){
+			if(round_path_icon_effect_status_arrays[graph_id][id] == 0){
+				round_path_icon_effect_status_arrays[graph_id][id] = 1;
+				if(elems["round_path_"+graph_id+"_"+i]){
+					elems["round_path_"+graph_id+"_"+i].animate({
+						opacity: 0.1,
+					});
+				}
+				for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+					if(i != id && round_path_icon_effect_status_arrays[graph_id][i] == 0){
+						if(elems["round_path_"+graph_id+"_"+i]){
+							elems["round_path_"+graph_id+"_"+i].animate({
+								opacity: 1,
+							});
 						}
 					}
 				}
-				else{
-					round_path_icon_effect_status_arrays[graph_id][id] = 0;
-					if(elems["round_path_"+graph_id+"_"+i]){
-						elems["round_path_"+graph_id+"_"+i].animate({
-							opacity: 1,
-						});
-					}
+			}
+			else{
+				round_path_icon_effect_status_arrays[graph_id][id] = 0;
+				if(elems["round_path_"+graph_id+"_"+i]){
+					elems["round_path_"+graph_id+"_"+i].animate({
+						opacity: 1,
+					});
 				}
 			}
 		}
-	//}
+	}
 	//For stepline path
-	//if(draw_stepline_path_flag == 1){
-		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-			if(i == id){
-				if(stepline_path_icon_effect_status_arrays[graph_id][id] == 0){
-					stepline_path_icon_effect_status_arrays[graph_id][id] = 1;
-					if(elems["stepline_path_"+graph_id+"_"+i]){
-						elems["stepline_path_"+graph_id+"_"+i].animate({
-							opacity: 0.1,
+	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+		if(i == id){
+			if(stepline_path_icon_effect_status_arrays[graph_id][id] == 0){
+				stepline_path_icon_effect_status_arrays[graph_id][id] = 1;
+				if(elems["stepline_path_"+graph_id+"_"+i]){
+					elems["stepline_path_"+graph_id+"_"+i].animate({
+						opacity: 0.1,
+					});
+				}
+				for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+					if(i != id && stepline_path_icon_effect_status_arrays[graph_id][i] == 0){
+						if(elems["stepline_path_"+graph_id+"_"+i]){
+							elems["stepline_path_"+graph_id+"_"+i].animate({
+								opacity: 1,
+							});
+						}
+					}
+				}
+			}
+			else{
+				stepline_path_icon_effect_status_arrays[graph_id][id] = 0;
+				if(elems["stepline_path_"+graph_id+"_"+i]){
+					elems["stepline_path_"+graph_id+"_"+i].animate({
+						opacity: 1,
+					});
+				}
+			}
+		}
+	}
+	//For Line area
+	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+		if(i == id){
+			if(line_area_icon_effect_status_arrays[graph_id][id] == 0){
+				line_area_icon_effect_status_arrays[graph_id][id] = 1;
+				if(elems["line_area_"+graph_id+"_"+i]){
+					elems["line_area_"+graph_id+"_"+i].attr({
+						fill : "#fff",
+						opacity: 0,
+					});
+				}
+				for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
+					if(j != id && line_area_icon_effect_status_arrays[graph_id][j] == 0){
+						if(elems["line_area_"+graph_id+"_"+j]){
+							elems["line_area_"+graph_id+"_"+j].attr({
+								fill : "270-"+path_details[graph_id][j].color+"-#fff",
+								opacity: 0,
+							});
+						}
+					}
+				}
+			}
+			else{
+				line_area_icon_effect_status_arrays[graph_id][id] = 0;
+				if(elems["line_area_"+graph_id+"_"+i]){
+					elems["line_area_"+graph_id+"_"+i].attr({
+						fill : "270-"+path_details[graph_id][i].color+"-#fff",
+						opacity: 0,
+					});
+				}
+			}
+		}
+	}
+	//For Round area
+	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+		if(i == id){
+			if(round_area_icon_effect_status_arrays[graph_id][id] == 0){
+				round_area_icon_effect_status_arrays[graph_id][id] = 1;
+				if(elems["round_area_"+graph_id+"_"+i]){
+					elems["round_area_"+graph_id+"_"+i].attr({
+						fill : "#fff",
+						opacity: 0,
+					});
+				}
+				for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
+					if(j != id && round_area_icon_effect_status_arrays[graph_id][j] == 0){
+						if(elems["round_area_"+graph_id+"_"+j]){
+							elems["round_area_"+graph_id+"_"+j].attr({
+								fill : "270-"+path_details[graph_id][j].color+"-#fff",
+								opacity: 0,
+							});
+						}
+					}
+				}
+			}
+			else{
+				round_area_icon_effect_status_arrays[graph_id][id] = 0;
+				if(elems["round_area_"+graph_id+"_"+i]){
+					elems["round_area_"+graph_id+"_"+i].attr({
+						fill : "270-"+path_details[graph_id][i].color+"-#fff",
+						opacity: 0,
+					});
+				}
+			}
+		}
+	}
+	//For Stepline area
+	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+		if(i == id){
+			if(stepline_area_icon_effect_status_arrays[graph_id][id] == 0){
+				stepline_area_icon_effect_status_arrays[graph_id][id] = 1;
+				if(elems["stepline_area_"+graph_id+"_"+i]){
+					elems["stepline_area_"+graph_id+"_"+i].attr({
+						fill : "#fff",
+						opacity: 0,
+					});
+				}
+				for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
+					if(j != id && stepline_area_icon_effect_status_arrays[graph_id][j] == 0){
+						if(elems["stepline_area_"+graph_id+"_"+j]){
+							elems["stepline_area_"+graph_id+"_"+j].attr({
+								fill : "270-"+path_details[graph_id][j].color+"-#fff",
+								opacity: 0,
+							});
+						}
+					}
+				}
+			}
+			else{
+				stepline_area_icon_effect_status_arrays[graph_id][id] = 0;
+				if(elems["stepline_area_"+graph_id+"_"+i]){
+					elems["stepline_area_"+graph_id+"_"+i].attr({
+						fill : "270-"+path_details[graph_id][i].color+"-#fff",
+						opacity: 0,
+					});
+				}
+			}
+		}
+	}
+	//For Circle
+	
+	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+		if(i == id){
+			if(circle_icon_effect_status_arrays[graph_id][id] == 0){
+				circle_icon_effect_status_arrays[graph_id][id] = 1;					
+				for(var k =0;k< datas[graph_id].length ; k++){
+					if(elems["c_"+graph_id+"_"+i+""+k]){
+						elems["c_"+graph_id+"_"+i+""+k].attr({
+							fill : "#fff",
+							opacity: 0,
 						});
 					}
-					for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-						if(i != id && stepline_path_icon_effect_status_arrays[graph_id][i] == 0){
-							if(elems["stepline_path_"+graph_id+"_"+i]){
-								elems["stepline_path_"+graph_id+"_"+i].animate({
+					for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
+						if(j != id && circle_icon_effect_status_arrays[graph_id][j] == 0){
+							if(elems["c_"+graph_id+"_"+j+""+k]){
+								elems["c_"+graph_id+"_"+j+""+k].attr({
+									fill : path_details[graph_id][j].color,
 									opacity: 1,
 								});
 							}
 						}
 					}
 				}
-				else{
-					stepline_path_icon_effect_status_arrays[graph_id][id] = 0;
-					if(elems["stepline_path_"+graph_id+"_"+i]){
-						elems["stepline_path_"+graph_id+"_"+i].animate({
+			}
+			else{
+				circle_icon_effect_status_arrays[graph_id][id] = 0;
+				for(var k =0;k< datas[graph_id].length; k++){
+					if(elems["c_"+graph_id+"_"+i+""+k]){
+						elems["c_"+graph_id+"_"+i+""+k].attr({
+							fill : path_details[graph_id][i].color,
 							opacity: 1,
 						});
 					}
 				}
 			}
 		}
-	//}
-	//For Line area
-	//if(draw_line_area_flag == 1){
-		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-			if(i == id){
-				if(line_area_icon_effect_status_arrays[graph_id][id] == 0){
-					line_area_icon_effect_status_arrays[graph_id][id] = 1;
-					if(elems["line_area_"+graph_id+"_"+i]){
-						elems["line_area_"+graph_id+"_"+i].attr({
+	}
+	//For Label	
+	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+		if(i == id){
+			if(label_icon_effect_status_arrays[graph_id][id] == 0){
+				label_icon_effect_status_arrays[graph_id][id] = 1;
+				var m = 0;
+				for(var k =0;m< datas[graph_id].length ; k++){
+					if(elems["label_rect_"+graph_id+"_"+i+""+k]){
+						elems["label_rect_"+graph_id+"_"+i+""+k].attr({
 							fill : "#fff",
 							opacity: 0,
 						});
 					}
-					for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
-						if(j != id && line_area_icon_effect_status_arrays[graph_id][j] == 0){
-							if(elems["line_area_"+graph_id+"_"+j]){
-								elems["line_area_"+graph_id+"_"+j].attr({
-									fill : "270-"+path_details[graph_id][j].color+"-#fff",
-									opacity: 0,
-								});
-							}
-						}
-					}
-				}
-				else{
-					line_area_icon_effect_status_arrays[graph_id][id] = 0;
-					if(elems["line_area_"+graph_id+"_"+i]){
-						elems["line_area_"+graph_id+"_"+i].attr({
-							fill : "270-"+path_details[graph_id][i].color+"-#fff",
-							opacity: 0,
-						});
-					}
-				}
-			}
-		}
-	//}
-	//For Round area
-	//if(draw_round_area_flag == 1){
-		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-			if(i == id){
-				if(round_area_icon_effect_status_arrays[graph_id][id] == 0){
-					round_area_icon_effect_status_arrays[graph_id][id] = 1;
-					if(elems["round_area_"+graph_id+"_"+i]){
-						elems["round_area_"+graph_id+"_"+i].attr({
-							fill : "#fff",
+					if(elems["label_text_"+graph_id+"_"+i+""+k]){
+						elems["label_text_"+graph_id+"_"+i+""+k].animate({
+							//fill : path_details[graph_id][i].color,
 							opacity: 0,
 						});
 					}
 					for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
-						if(j != id && round_area_icon_effect_status_arrays[graph_id][j] == 0){
-							if(elems["round_area_"+graph_id+"_"+j]){
-								elems["round_area_"+graph_id+"_"+j].attr({
-									fill : "270-"+path_details[graph_id][j].color+"-#fff",
-									opacity: 0,
+						if(j != id && label_icon_effect_status_arrays[graph_id][j] == 0){
+							if(elems["label_rect_"+graph_id+"_"+j+""+k]){
+								elems["label_rect_"+graph_id+"_"+j+""+k].attr({
+									fill : path_details[graph_id][j].color,
+									opacity: 1,
+								});
+							}
+							if(elems["label_text_"+graph_id+"_"+j+""+k]){
+								elems["label_text_"+graph_id+"_"+j+""+k].animate({
+									//fill : path_details[graph_id][i].color,
+									opacity: 1,
 								});
 							}
 						}
 					}
+					m = m + (Math.ceil(datas[graph_id].length/(x_division_nos[graph_id])));
 				}
-				else{
-					round_area_icon_effect_status_arrays[graph_id][id] = 0;
-					if(elems["round_area_"+graph_id+"_"+i]){
-						elems["round_area_"+graph_id+"_"+i].attr({
-							fill : "270-"+path_details[graph_id][i].color+"-#fff",
-							opacity: 0,
+			}
+			else{
+				label_icon_effect_status_arrays[graph_id][id] = 0;
+				var m = 0;
+				for(var k =0;m< datas[graph_id].length; k++){
+					if(elems["label_rect_"+graph_id+"_"+i+""+k]){
+						elems["label_rect_"+graph_id+"_"+i+""+k].attr({
+							fill : path_details[graph_id][i].color,
+							opacity: 1,
 						});
 					}
+					if(elems["label_text_"+graph_id+"_"+i+""+k]){
+						elems["label_text_"+graph_id+"_"+i+""+k].animate({
+							//fill : path_details[graph_id][i].color,
+							opacity: 1,
+						});
+					}
+					m = m + (Math.ceil(datas[graph_id].length/(x_division_nos[graph_id])));
 				}
 			}
 		}
-	//}
-	//For Stepline area
-	//if(draw_stepline_area_flag  == 1){
-		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-			if(i == id){
-				if(stepline_area_icon_effect_status_arrays[graph_id][id] == 0){
-					stepline_area_icon_effect_status_arrays[graph_id][id] = 1;
-					if(elems["stepline_area_"+graph_id+"_"+i]){
-						elems["stepline_area_"+graph_id+"_"+i].attr({
-							fill : "#fff",
-							opacity: 0,
-						});
-					}
-					for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
-						if(j != id && stepline_area_icon_effect_status_arrays[graph_id][j] == 0){
-							if(elems["stepline_area_"+graph_id+"_"+j]){
-								elems["stepline_area_"+graph_id+"_"+j].attr({
-									fill : "270-"+path_details[graph_id][j].color+"-#fff",
-									opacity: 0,
-								});
-							}
-						}
-					}
-				}
-				else{
-					stepline_area_icon_effect_status_arrays[graph_id][id] = 0;
-					if(elems["stepline_area_"+graph_id+"_"+i]){
-						elems["stepline_area_"+graph_id+"_"+i].attr({
-							fill : "270-"+path_details[graph_id][i].color+"-#fff",
-							opacity: 0,
-						});
-					}
-				}
-			}
-		}
-	//}
-	//For Circle
-	//if(draw_circle_flag  == 1){
-		//console.log(circle_icon_effect_status_arrays[graph_id]);
-		
-		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-			if(i == id){
-				if(circle_icon_effect_status_arrays[graph_id][id] == 0){
-					circle_icon_effect_status_arrays[graph_id][id] = 1;					
-					for(var k =0;k< datas[graph_id].length ; k++){
-						if(elems["c_"+graph_id+"_"+i+""+k]){
-							elems["c_"+graph_id+"_"+i+""+k].attr({
-								fill : "#fff",
-								opacity: 0,
-							});
-						}
-						for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
-							if(j != id && circle_icon_effect_status_arrays[graph_id][j] == 0){
-								if(elems["c_"+graph_id+"_"+j+""+k]){
-									elems["c_"+graph_id+"_"+j+""+k].attr({
-										fill : path_details[graph_id][j].color,
-										opacity: 1,
-									});
-								}
-							}
-						}
-					}
-				}
-				else{
-					circle_icon_effect_status_arrays[graph_id][id] = 0;
-					for(var k =0;k< datas[graph_id].length; k++){
-						if(elems["c_"+graph_id+"_"+i+""+k]){
-							elems["c_"+graph_id+"_"+i+""+k].attr({
-								fill : path_details[graph_id][i].color,
-								opacity: 1,
-							});
-						}
-					}
-				}
-			}
-		}		
-		//console.log(circle_icon_effect_status_arrays[graph_id]);
-	//}
-	//For Label
-	//if(label_flag == 1){
-		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-			if(i == id){
-				if(label_icon_effect_status_arrays[graph_id][id] == 0){
-					label_icon_effect_status_arrays[graph_id][id] = 1;
-					var m = 0;
-					for(var k =0;m< datas[graph_id].length ; k++){
-						if(elems["label_rect_"+graph_id+"_"+i+""+k]){
-							elems["label_rect_"+graph_id+"_"+i+""+k].attr({
-								fill : "#fff",
-								opacity: 0,
-							});
-						}
-						if(elems["label_text_"+graph_id+"_"+i+""+k]){
-							elems["label_text_"+graph_id+"_"+i+""+k].animate({
-								//fill : path_details[graph_id][i].color,
-								opacity: 0,
-							});
-						}
-						for(var j = 0; j < parseInt(instructions[graph_id].path_no); j++){
-							if(j != id && label_icon_effect_status_arrays[graph_id][j] == 0){
-								if(elems["label_rect_"+graph_id+"_"+j+""+k]){
-									elems["label_rect_"+graph_id+"_"+j+""+k].attr({
-										fill : path_details[graph_id][j].color,
-										opacity: 1,
-									});
-								}
-								if(elems["label_text_"+graph_id+"_"+j+""+k]){
-									elems["label_text_"+graph_id+"_"+j+""+k].animate({
-										//fill : path_details[graph_id][i].color,
-										opacity: 1,
-									});
-								}
-							}
-						}
-						m = m + (Math.ceil(datas[graph_id].length/(x_division_nos[graph_id])));
-					}
-				}
-				else{
-					label_icon_effect_status_arrays[graph_id][id] = 0;
-					var m = 0;
-					for(var k =0;m< datas[graph_id].length; k++){
-						if(elems["label_rect_"+graph_id+"_"+i+""+k]){
-							elems["label_rect_"+graph_id+"_"+i+""+k].attr({
-								fill : path_details[graph_id][i].color,
-								opacity: 1,
-							});
-						}
-						if(elems["label_text_"+graph_id+"_"+i+""+k]){
-							elems["label_text_"+graph_id+"_"+i+""+k].animate({
-								//fill : path_details[graph_id][i].color,
-								opacity: 1,
-							});
-						}
-						m = m + (Math.ceil(datas[graph_id].length/(x_division_nos[graph_id])));
-					}
-				}
-			}
-		}
-	//}
+	}
 }
 
 //Icon mouseover effect
 function icon_effect_mouseover(){
-	//console.log(this.id);
 	var id = this.id.replace('icon_', '');
 	var res = id.split("_");
 	id = parseInt(res[1]);
 	var graph_id = res[0];
-	//console.log(path_details[graph_id]);
 	id = (path_details[graph_id].length-1) - id;
 	var c = 0;
 	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
@@ -652,124 +583,112 @@ function icon_effect_mouseover(){
 		}
 	}
 	if(c == 0){
-		//console.log(label_icon_effect_status_arrays["1st"]);
 		
 		//For line path
-		//if(draw_line_path_flag == 1){
-			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
-				if(id != i){
-					//console.log("Oi");
-					if(elems["line_path_"+graph_id+"_"+i]){
-						elems["line_path_"+graph_id+"_"+i].animate({
-							opacity: 0,
-						});
-					}
+	
+		for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+			if(id != i){
+				//console.log("Oi");
+				if(elems["line_path_"+graph_id+"_"+i]){
+					elems["line_path_"+graph_id+"_"+i].animate({
+						opacity: 0,
+					});
 				}
 			}
-		//}
-		//For round path
-		//if(draw_round_path_flag == 1){
-			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
-				if(id != i){
-					if(elems["round_path_"+graph_id+"_"+i]){
-						elems["round_path_"+graph_id+"_"+i].animate({
-							opacity: 0,
-						});
-					}
+		}
+		
+		//For round path		
+		for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+			if(id != i){
+				if(elems["round_path_"+graph_id+"_"+i]){
+					elems["round_path_"+graph_id+"_"+i].animate({
+						opacity: 0,
+					});
 				}
 			}
-		//}
+		}
+		
 		//For stepline path
-		//if(draw_stepline_path_flag  == 1){
-			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
-				if(id != i){
-					if(elems["stepline_path_"+graph_id+"_"+i]){
-						elems["stepline_path_"+graph_id+"_"+i].animate({
-							opacity: 0,
-						});
-					}
+		for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+			if(id != i){
+				if(elems["stepline_path_"+graph_id+"_"+i]){
+					elems["stepline_path_"+graph_id+"_"+i].animate({
+						opacity: 0,
+					});
 				}
 			}
-		//}
+		}
+		
 		//For line area
-		//if(draw_line_area_flag == 1){
-			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
-				if(id != i){
-					if(elems["line_area_"+graph_id+"_"+i]){
-						elems["line_area_"+graph_id+"_"+i].animate({
-							fill : "#fff",
-							opacity: 0,
-						});
-					}
+		for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+			if(id != i){
+				if(elems["line_area_"+graph_id+"_"+i]){
+					elems["line_area_"+graph_id+"_"+i].animate({
+						fill : "#fff",
+						opacity: 0,
+					});
 				}
 			}
-		//}
-		//For round area
-		//if(draw_round_area_flag == 1){
-			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
-				if(id != i){
-					if(elems["round_area_"+graph_id+"_"+i]){
-						elems["round_area_"+graph_id+"_"+i].attr({
-							fill : "#fff",
-							opacity: 0,
-						});
-					}
+		}
+		
+		//For round area		
+		for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+			if(id != i){
+				if(elems["round_area_"+graph_id+"_"+i]){
+					elems["round_area_"+graph_id+"_"+i].attr({
+						fill : "#fff",
+						opacity: 0,
+					});
 				}
 			}
-		//}
+		}
+			
 		//For stepline area
-		//if(draw_stepline_area_flag  == 1){
-			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
-				if(id != i){
-					if(elems["stepline_area_"+graph_id+"_"+i]){
-						elems["stepline_area_"+graph_id+"_"+i].attr({
-							fill : "#fff",
+		for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+			if(id != i){
+				if(elems["stepline_area_"+graph_id+"_"+i]){
+					elems["stepline_area_"+graph_id+"_"+i].attr({
+						fill : "#fff",
+						opacity: 0,
+					});
+				}
+			}
+		}
+			
+		//For Circle
+		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+			if(id != i){					
+				for(var k =0;k< datas[graph_id].length ; k++){
+					if(elems["c_"+graph_id+"_"+i+""+k]){
+						elems["c_"+graph_id+"_"+i+""+k].animate({
+							fill : path_details[graph_id][i].color,
 							opacity: 0,
 						});
 					}
 				}
 			}
-		//}
-		//For Circle
-		//if(draw_circle_flag  == 1){
-			for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-				if(id != i){					
-					for(var k =0;k< datas[graph_id].length ; k++){
-						if(elems["c_"+graph_id+"_"+i+""+k]){
-							elems["c_"+graph_id+"_"+i+""+k].animate({
-								fill : path_details[graph_id][i].color,
-								opacity: 0,
-							});
-						}
-					}
-				}
-			}
-		//}
+		}
+			
 		//For Label
-		//if(label_flag == 1){
-			for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-				if(id != i){
-					var m = 0;
-					for(var k =0;m< datas[graph_id].length ; k++){
-						
-						if(elems["label_rect_"+graph_id+"_"+i+""+k]){
-							elems["label_rect_"+graph_id+"_"+i+""+k].animate({
-								//fill : path_details[graph_id][i].color,
-								opacity: 0,
-							});
-							//console.log(elems["label_rect_"+graph_id+"_"+i+""+k]);
-						}
-						if(elems["label_text_"+graph_id+"_"+i+""+k]){
-							elems["label_text_"+graph_id+"_"+i+""+k].animate({
-								//fill : path_details[graph_id][i].color,
-								opacity: 0,
-							});
-						}
-						m = m + (Math.ceil(datas[graph_id].length/(x_division_nos[graph_id])));
+		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+			if(id != i){
+				var m = 0;
+				for(var k =0;m< datas[graph_id].length ; k++){
+					
+					if(elems["label_rect_"+graph_id+"_"+i+""+k]){
+						elems["label_rect_"+graph_id+"_"+i+""+k].animate({
+							opacity: 0,
+						});
 					}
+					if(elems["label_text_"+graph_id+"_"+i+""+k]){
+						elems["label_text_"+graph_id+"_"+i+""+k].animate({
+							opacity: 0,
+						});
+					}
+					m = m + (Math.ceil(datas[graph_id].length/(x_division_nos[graph_id])));
 				}
 			}
-		//}
+		}
 	}
 }
 
@@ -810,102 +729,94 @@ function icon_effect_mouseout(){
 	}
 	if(c == 0){
 		//For line path
-		//if(draw_line_path_flag == 1){
-			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
-				if(elems["line_path_"+graph_id+"_"+i]){
-					elems["line_path_"+graph_id+"_"+i].animate({
-						opacity: 1,
-					});
-				}
+		
+		for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+			if(elems["line_path_"+graph_id+"_"+i]){
+				elems["line_path_"+graph_id+"_"+i].animate({
+					opacity: 1,
+				});
 			}
-		//}
+		}
+		
 		//For round path
-		//if(draw_round_path_flag == 1){
-			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
-				if(elems["round_path_"+graph_id+"_"+i]){
-					elems["round_path_"+graph_id+"_"+i].animate({
-						opacity: 1,
-					});
-				}
+		for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+			if(elems["round_path_"+graph_id+"_"+i]){
+				elems["round_path_"+graph_id+"_"+i].animate({
+					opacity: 1,
+				});
 			}
-		//}
-		//For stepline path
-		//if(draw_stepline_path_flag  == 1){
-			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
-				if(elems["stepline_path_"+graph_id+"_"+i]){
-					elems["stepline_path_"+graph_id+"_"+i].animate({
-						opacity: 1,
-					});
-				}
+		}
+		
+		//For stepline path		
+		for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+			if(elems["stepline_path_"+graph_id+"_"+i]){
+				elems["stepline_path_"+graph_id+"_"+i].animate({
+					opacity: 1,
+				});
 			}
-		//}
+		}
+		
 		//For line area
-		//if(draw_line_area_flag == 1){
-			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
-				if(elems["line_area_"+graph_id+"_"+i]){
-					elems["line_area_"+graph_id+"_"+i].animate({
-						opacity: 0.1,
-						fill : "270-"+path_details[graph_id][i].color+"-#fff",
-					});
-				}
+		for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+			if(elems["line_area_"+graph_id+"_"+i]){
+				elems["line_area_"+graph_id+"_"+i].animate({
+					opacity: 0.1,
+					fill : "270-"+path_details[graph_id][i].color+"-#fff",
+				});
 			}
-		//}
+		}
+			
 		//For round area
-		//if(draw_round_area_flag == 1){
-			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
-				if(elems["round_area_"+graph_id+"_"+i]){
-					elems["round_area_"+graph_id+"_"+i].animate({
-						opacity: 0.1,
-						fill : "270-"+path_details[graph_id][i].color+"-#fff",
-					});
-				}
+		for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+			if(elems["round_area_"+graph_id+"_"+i]){
+				elems["round_area_"+graph_id+"_"+i].animate({
+					opacity: 0.1,
+					fill : "270-"+path_details[graph_id][i].color+"-#fff",
+				});
 			}
-		//}
+		}
+			
 		//For stepline area
-		//if(draw_stepline_area_flag == 1){
-			for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
-				if(elems["stepline_area_"+graph_id+"_"+i]){
-					elems["stepline_area_"+graph_id+"_"+i].animate({
-						opacity: 0.1,
-						fill : "270-"+path_details[graph_id][i].color+"-#fff",
+		for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
+			if(elems["stepline_area_"+graph_id+"_"+i]){
+				elems["stepline_area_"+graph_id+"_"+i].animate({
+					opacity: 0.1,
+					fill : "270-"+path_details[graph_id][i].color+"-#fff",
+				});
+			}
+		}
+			
+		//For circle
+		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+			for(var k =0;k< datas[graph_id].length ; k++){
+				if(elems["c_"+graph_id+"_"+i+""+k]){
+					elems["c_"+graph_id+"_"+i+""+k].animate({
+						fill : path_details[graph_id][i].color,
+						opacity: 1,
 					});
 				}
 			}
-		//}
-		//For circle
-		//if(label_flag == 1){
-			for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-				for(var k =0;k< datas[graph_id].length ; k++){
-					if(elems["c_"+graph_id+"_"+i+""+k]){
-						elems["c_"+graph_id+"_"+i+""+k].animate({
-							fill : path_details[graph_id][i].color,
-							opacity: 1,
-						});
-					}
-				}
-			}
-		//}
+		}
+			
 		//For Label
-		//if(label_flag == 1){
-			for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
-				var m = 0;
-				for(var k =0;m< datas[graph_id].length ; k++){
-					if(elems["label_rect_"+graph_id+"_"+i+""+k]){
-						elems["label_rect_"+graph_id+"_"+i+""+k].animate({
-							fill : path_details[graph_id][i].color,
-							opacity: 1,
-						});
-					}
-					if(elems["label_text_"+graph_id+"_"+i+""+k]){
-						elems["label_text_"+graph_id+"_"+i+""+k].animate({
-							//fill : path_details[graph_id][i].color,
-							opacity: 1,
-						});
-					}
-					m = m + (Math.ceil(datas[graph_id].length/(x_division_nos[graph_id])));
+		for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
+			var m = 0;
+			for(var k =0;m< datas[graph_id].length ; k++){
+				if(elems["label_rect_"+graph_id+"_"+i+""+k]){
+					elems["label_rect_"+graph_id+"_"+i+""+k].animate({
+						fill : path_details[graph_id][i].color,
+						opacity: 1,
+					});
 				}
+				if(elems["label_text_"+graph_id+"_"+i+""+k]){
+					elems["label_text_"+graph_id+"_"+i+""+k].animate({
+						//fill : path_details[graph_id][i].color,
+						opacity: 1,
+					});
+				}
+				m = m + (Math.ceil(datas[graph_id].length/(x_division_nos[graph_id])));
 			}
-		//}
+		}
 	}
 }
 
@@ -1104,8 +1015,6 @@ function draw_stepline_path(){
 //Draw circle on path
 var draw_circle_flag = 0;
 function draw_circle(){
-	/*circle_radius = radius;
-	circle_radius_zoom = radius_zoom;*/
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		if(path_details[current_graph_id][i].circle == true){
 			for(var j = 0; j < datas[current_graph_id].length ; j++){
@@ -1128,7 +1037,6 @@ function draw_circle(){
 //Draw line area
 var draw_line_area_flag = 0;
 function draw_line_area(){
-	//line_area_stroke = stroke_width[current_graph_id];
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
 			if(path_details[current_graph_id][i].type[x] == "line_area"){
@@ -1193,7 +1101,6 @@ function draw_round_area(){
 //Draw stepline area
 var draw_stepline_area_flag = 0;
 function draw_stepline_area(){
-	//stepline_area_stroke = stroke_width[current_graph_id];
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){	
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
 			if(path_details[current_graph_id][i].type[x] == "stepline_area"){
@@ -1233,7 +1140,6 @@ function label(){
 			var j = 0;		
 			for(var k = 0; j< datas[current_graph_id].length; k++){
 				var rect1 = elems["paper_"+current_graph_id].rect( ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))) - ((((Object.values(datas[current_graph_id][j].value)[i]+"").length*7) + 10)/2) ,(height[current_graph_id] - (2*paddingy[current_graph_id]))- ((0  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])), ((Object.values(datas[current_graph_id][j].value)[i]+"").length*7) + 10 , 16, 2).attr({
-					//opacity : 0,
 					fill : path_details[current_graph_id][i].color,		
 					stroke : "#fff",		
 				});
@@ -1243,8 +1149,7 @@ function label(){
 				}, 400 + (150*i), "<>" );
 				elems["label_rect_"+current_graph_id+"_"+i+""+k] = rect1;
 				var text1 = elems["paper_"+current_graph_id].text( ((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))), (height[current_graph_id] - (2*paddingy[current_graph_id])) - ((0  - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])) ,Object.values(datas[current_graph_id][j].value)[i]).attr({
-					//opacity : 0,
-					fill : "#fff",//path_detail[i].color,
+					fill : "#fff",
 				});
 				text1.animate({
 					opacity : 1,
@@ -1337,9 +1242,7 @@ function draw_annotations(){
 								}
 							}
 							var area_rect_x, area_rect_y,area_rect_width, area_rect_height;
-							//var rect_x, rect_y, text_x, text_y;
 							var rect_x = -5000, rect_y = -5000, text_x = -5000, text_y = -5000;
-							//alert(x_area_annotation_count);
 							if(x1 >=0 && x2 >= 0){
 								if(x1 > x2){
 									var a = x1;
@@ -1492,7 +1395,6 @@ function draw_annotations(){
 						for(var j = 0; j < datas[current_graph_id].length ; j ++){
 							if(datas[current_graph_id][j].month == instructions[current_graph_id].annotations.points[i].x){
 								if(instructions[current_graph_id].annotations.points[i].y <= max_values[current_graph_id] && instructions[current_graph_id].annotations.points[i].y >= min_values[current_graph_id]){
-									//alert(max_values[current_graph_id]+ " "+ min_values[current_graph_id]+" "+maxs[current_graph_id]);								
 									paper.circle(((2*paddingx[current_graph_id])+j*((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))), (height[current_graph_id] - (2*paddingy[current_graph_id])) - ((parseInt(instructions[current_graph_id].annotations.points[i].y) - min_values[current_graph_id])*((height[current_graph_id]-(4*paddingy[current_graph_id]))/maxs[current_graph_id])), instructions[current_graph_id].annotations.points[i].marker.radius).attr({
 										fill : instructions[current_graph_id].annotations.points[i].marker.fillColor,
 										'stroke-width' : instructions[current_graph_id].annotations.points[i].marker.strokeWidth,
@@ -1695,7 +1597,6 @@ function x_axis_hover_design(){
 			var  p = "M "+ 2*paddingx[current_graph_id] +" " + 2*paddingy[current_graph_id] + " l 0 "+  (height[current_graph_id]-(4*paddingy[current_graph_id])) +" 0";
 			var path1 = elems["paper_"+current_graph_id].path(p).attr({
 				'stroke-width' : .5,
-				//"stroke-dasharray": " - ",
 				stroke : '#949494',
 				opacity : 0,
 			});
@@ -1712,7 +1613,6 @@ function y_axis_hover_design(){
 			var  p = "M "+ 2*paddingx[current_graph_id] +" " + ( (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i ) + " l "+  (width[current_graph_id]-(4*paddingx[current_graph_id])) +" 0";
 			var path1 = elems["paper_"+current_graph_id].path(p).attr({
 				'stroke-width' : .5,
-				//"stroke-dasharray": " - ",
 				stroke : '#949494',
 				opacity : 0,
 			});
@@ -1725,8 +1625,8 @@ function y_axis_hover_design(){
 var popup_design_flag = 0;
 function popup_design(){	
 	var pop_rect = elems["paper_"+current_graph_id].rect(0, (height[current_graph_id] - (4*paddingy[current_graph_id])), 0, instructions[current_graph_id].path_no*30, 2).attr({
-		fill : '#fcfcfc',//'#f2f4ff',
-		stroke : '#b8b8b8',//'#666666','#90a3ff',
+		fill : '#fcfcfc',
+		stroke : '#b8b8b8',
 		opacity : 0,
 	});	
 	pop_rect.blur(1);
@@ -1794,47 +1694,23 @@ function draw_popup_rect(){
 
 
 //////////////////////////////////////////////////PopUp////////////////////////////////////////////////////
-function popup(){
-	//console.log(this.id);
-	//var id = parseInt(this.id.replace('r',''));
-	var id = this.id.replace('r_','');
-	//console.log(id);
-	//instructions[current_graph_id].x_axis_hover_design
-	//if(draw_circle_flag == 1){
-		circle_popup(id);
-	//}
-	//if(instructions[current_graph_id].x_axis_hover_design == true){
-		x_axis_hover(id);
-	//}
-	//if(instructions[current_graph_id].y_axis_hover_design == true){
-		y_axis_hover(id);
-	//}
-	//if(instructions[current_graph_id].popup_design == true){
-		popup_hover(id);
-	//}
-	//if(instructions[current_graph_id].popup_footer_design == true){
-		popup_footer_hover(id);
-	//}
+function popup(){	
+	var id = this.id.replace('r_','');	
+	circle_popup(id);
+	x_axis_hover(id);
+	y_axis_hover(id);
+	popup_hover(id);
+	popup_footer_hover(id);
 }
-function popdown(){
-	//console.log(this.id);
-	var id = this.id.replace('r_','');
-	//console.log(id);
-	//if(draw_circle_flag == 1){
-		circle_popdown(id);
-	//}
-	//if(instructions[current_graph_id].x_axis_hover_design == true){
-		x_axis_hover_out(id);
-	//}
-	//if(instructions[current_graph_id].y_axis_hover_design == true){
-		y_axis_hover_out(id);
-	//}
-	//if(instructions[current_graph_id].popup_design == true){
-		popup_hover_out(id);
-	//}
-	//if(instructions[current_graph_id].popup_footer_design == true){
-		popup_footer_hover_out(id);
-	//}
+
+function popdown(){	
+	var id = this.id.replace('r_','');	
+	circle_popdown(id);
+	x_axis_hover_out(id);
+	y_axis_hover_out(id);
+	popup_hover_out(id);
+	popup_footer_hover_out(id);
+	
 }
 //Popup hover
 function popup_hover(id){
@@ -1848,7 +1724,6 @@ function popup_hover(id){
 		}
 	} 
 	a = (a*7)+40;
-	//console.log(a);
 	if(id<datas[graph_id].length/2){
 		if(Math.max(...(Object.values(datas[graph_id][id].value)))>(maxs[graph_id]/2)){
 			//for rect			
@@ -1997,7 +1872,6 @@ function popup_footer_hover_out(id){
 }
 //Circle effect on popup
 function circle_popup(id){
-	//console.log(id);
 	var res = id.split("_");
 	var id = parseInt(res[1]);
 	var graph_id = res[0];
@@ -2018,7 +1892,6 @@ function circle_popdown(id){
 	for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
 		if(elems["c_"+graph_id+"_"+i+""+id]){
 			elems["c_"+graph_id+"_"+i+""+id].animate({
-				//opacity : 0,
 				r : path_details[graph_id][i].circle_zoom_out,
 			},25);
 		}
@@ -2101,12 +1974,10 @@ var val1 = 0;
 var clicked_id = 0, unclicked_id = 0;
 
 function mousedown(e){
-	//console.log(this.id);
 	var id = this.id.replace('r_','');
 	var res = id.split("_");
 	id = parseInt(res[1]);
 	var graph_id = res[0];
-	//console.log(id);
 	if(instructions[graph_id].select_area == true){
 		var id = parseInt(this.id.replace('r_'+graph_id+"_",''));
 		clicked_id = id;
@@ -2125,13 +1996,10 @@ function mousedown(e){
 	
 }
 function mousemove(e){
-	//console.log(this.id);
 	var id = this.id.replace('r_','');
 	var res = id.split("_");
 	id = parseInt(res[1]);
 	var graph_id = res[0];
-	//console.log(id);
-	//console.log(clicked_position+" "+ e.clientX + " : "+ (e.clientX - clicked_position) + " : "+ (clicked_position - e.clientX));
 	if(instructions[graph_id].select_area == true){
 		try{
 			if(e.clientX  >= clicked_position){
@@ -2145,20 +2013,16 @@ function mousemove(e){
 				});	
 			}
 		}catch(err){
-			//console.log(err);
 		}
 	}
 }
 function mouseup(){
-	//console.log(this.id);
 	var id = this.id.replace('r_','');
 	var res = id.split("_");
 	id = parseInt(res[1]);
 	var graph_id = res[0];
-	//var id = parseInt(this.id.replace('r',''));	
 	unclicked_id = id;
 	if(instructions[graph_id].select_area == true){
-		//console.log(clicked_id + "  :  "+ unclicked_id );
 		elems['zoom_rect_'+graph_id].attr({
 			opacity : 0,
 		});
@@ -2169,8 +2033,8 @@ function mouseup(){
 		}
 		if(clicked_id != unclicked_id && unclicked_id > (clicked_id + 1)){				
 			elems["paper_"+graph_id].clear();
+			
 			//Load instruction
-			//console.log(graph_id);
 			load_all_data(datas[graph_id].slice(clicked_id, unclicked_id+1), instructions[graph_id], path_details[graph_id]);			
 			all_function();
 		}
