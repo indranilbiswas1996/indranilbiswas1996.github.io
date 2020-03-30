@@ -83,10 +83,10 @@ function load_all_data(data,  instruction, path_detail){//data_min_point = 1st a
 	paddingx[current_graph_id] = parseInt(instruction.paddingx) > 40 ? 40 : parseInt(instruction.paddingx) < 25 ? 25 : parseInt(instruction.paddingx) || 40;
 	paddingy[current_graph_id] = parseInt(instruction.paddingy) > 40 ? 40 : parseInt(instruction.paddingy) < 25 ? 25 : parseInt(instruction.paddingy) || 40;
 	if(instruction.type == "tiny"){
-		width[current_graph_id] = parseInt(instruction.width) > 420 ? 420 : parseInt(instruction.width) < 370 ? 370 : parseInt(instruction.width) || 420;
-		height[current_graph_id] = parseInt(instruction.height) > 290 ? 290 : parseInt(instruction.height) < 220 ? 220 : parseInt(instruction.height) || 290;
-		paddingx[current_graph_id] = parseInt(instruction.paddingx) > 25 ? 25 : parseInt(instruction.paddingx) < 15 ? 15 : parseInt(instruction.paddingx) || 25;
-		paddingy[current_graph_id] = parseInt(instruction.paddingy) > 25 ? 25 : parseInt(instruction.paddingy) < 15 ? 15 : parseInt(instruction.paddingy) || 25;	
+		width[current_graph_id] = parseInt(instruction.width) > 400 ? 400 : parseInt(instruction.width) < 360 ? 360 : parseInt(instruction.width) || 400;
+		height[current_graph_id] = parseInt(instruction.height) > 235 ? 235 : parseInt(instruction.height) < 200 ? 200 : parseInt(instruction.height) || 235;
+		paddingx[current_graph_id] = parseInt(instruction.paddingx) > 25 ? 25 : parseInt(instruction.paddingx) < 10 ? 10 : parseInt(instruction.paddingx) || 25;
+		paddingy[current_graph_id] = parseInt(instruction.paddingy) > 25 ? 25 : parseInt(instruction.paddingy) < 10 ? 10 : parseInt(instruction.paddingy) || 25;	
 	}
 	x_division_nos[current_graph_id] = parseInt(instruction.x_division_no) > data.length ? (data.length > 18 ? 18 : data.length) : (parseInt(instruction.x_division_no) > 18 ? 18 : parseInt(instruction.x_division_no)) || (data.length > 18 ? 18 : data.length );
 	y_division_nos[current_graph_id] = parseInt(instruction.y_division_no) > 12 ? 12 : (parseInt(instruction.y_division_no) < 2 ? 2 : parseInt(instruction.y_division_no) ) || 12;
@@ -873,7 +873,7 @@ function x_axis_division(){
 	var j = 0;
 	for(var i = 0; j< datas[current_graph_id].length; i++){	
 		elems["paper_"+current_graph_id].path("M " + ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) + " "+ (height[current_graph_id] - (2*paddingy[current_graph_id])) + " l 0 " + (-(height[current_graph_id]-(4*paddingy[current_graph_id]))) ).attr({
-			stroke : "#ececec",
+			stroke : "#cdcdcd",
 			opacity : .8,
 		});
 		j = j + (Math.ceil(datas[current_graph_id].length/(x_division_nos[current_graph_id])));
@@ -909,8 +909,8 @@ function y_axis_division(){
 				
 	for(var i = 0 ; i<y_division_nos[current_graph_id] ; i++){		
 		elems["paper_"+current_graph_id].path( "M "+ 2*paddingx[current_graph_id] +" " + ( (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i ) + " l "+  (width[current_graph_id]-(4*paddingx[current_graph_id])) +" 0").attr({
-			stroke : "#ececec",
-			opacity : .8,
+			stroke : "#cdcdcd",
+			opacity : .5,
 		});
 	}
 	y_axis_division_flag = 1;
