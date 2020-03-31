@@ -1168,28 +1168,5 @@
 			check(adata7, ainstruction7, apath_detail7);	
 		}
 	</script>
-	<!--For menu-->
-	<script type ="text/javascript">
-		var allText = "";
-		function readTextFile(file)
-		{
-			var rawFile = new XMLHttpRequest();
-			rawFile.open("GET", file, false);
-			rawFile.onreadystatechange = function ()
-			{
-				if(rawFile.readyState === 4)
-				{
-					if(rawFile.status === 200 || rawFile.status == 0)
-					{        
-						allText = rawFile.responseText;
-					}
-				}
-			}
-			rawFile.send(null);
-		}
-		readTextFile("menu.html");
-		
-		document.getElementById('menu').innerHTML = allText;
-	</script>
     </body>
 </html>
