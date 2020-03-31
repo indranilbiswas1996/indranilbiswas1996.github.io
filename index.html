@@ -239,6 +239,45 @@
 				</a>
 			</div>
 		</div>
+		<div class="inner-container">
+			<div class="inner-container-topic">
+				<div class="inner-container-topic-inner">
+					<h2>Mixed Chart</h2>
+				</div>
+			</div>
+			<div class="inner-container-div">
+				<a href="mixed_line.html">
+					<div class="inner-container-div-item">	
+						<div class="inner-container-div-item-inner">
+							<div  id="m_cntnr1"></div>
+							<div class="inner-container-div-item-inner-footer">
+								<p>Line Mixed chart</p>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a href="mixed_area.html">
+					<div class="inner-container-div-item">	
+						<div class="inner-container-div-item-inner">
+							<div id="m_cntnr2"></div>
+							<div class="inner-container-div-item-inner-footer">
+								<p>Area Mixed chart</p>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a href="mixed_line_area_circle.html">
+					<div class="inner-container-div-item">	
+						<div class="inner-container-div-item-inner">
+							<div id="m_cntnr3"></div>
+							<div class="inner-container-div-item-inner-footer">
+								<p>Line, Area & Circle Mixed chart</p>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
 	</div>
 	<script>
 		window.onload = function(){		
@@ -1166,6 +1205,204 @@
 			}];
 			
 			check(adata7, ainstruction7, apath_detail7);	
+			
+			/////////////////////////////////// Mixed Chart /////////////////////////////////
+			/////////////////////////////////// 1 ///////////////////////////////////
+			var mdata1 = [
+			{ month : '1 ,JAN', value : { a : 96, b : 99, c : 44, } },{ month : '2 ,JAN', value : { a : 86, b : 131, c : 28, } },{ month : '3 ,JAN', value : { a : 80, b : 136, c : 41, } },{ month : '4 ,JAN', value : { a : 88, b : 90, c : 32, } },{ month : '5 ,JAN', value : { a : 98, b : 136, c : 41, } },{ month : '6 ,JAN', value : { a : 85, b : 114, c : 46, } },{ month : '7 ,JAN', value : { a : 57, b : 115, c : 34, } },{ month : '8 ,JAN', value : { a : 69, b : 136, c : 26, } },{ month : '9 ,JAN', value : { a : 86, b : 112, c : 42, } },{ month : '10 ,JAN', value : { a : 69, b : 107, c : 39, } },{ month : '11 ,JAN', value : { a : 68, b : 147, c : 49, } },{ month : '12 ,JAN', value : { a : 71, b : 136, c : 26, } },{ month : '13 ,JAN', value : { a : 73, b : 131, c : 44, } },{ month : '14 ,JAN', value : { a : 95, b : 130, c : 44, } },{ month : '15 ,JAN', value : { a : 83, b : 118, c : 42, } },{ month : '16 ,JAN', value : { a : 82, b : 100, c : 38, } },{ month : '17 ,JAN', value : { a : 67, b : 137, c : 36, } },{ month : '18 ,JAN', value : { a : 77, b : 106, c : 49, } },{ month : '19 ,JAN', value : { a : 71, b : 92, c : 27, } },{ month : '20 ,JAN', value : { a : 55, b : 95, c : 27, } },{ month : '21 ,JAN', value : { a : 91, b : 99, c : 40, } },{ month : '22 ,JAN', value : { a : 61, b : 108, c : 35, } },{ month : '23 ,JAN', value : { a : 72, b : 104, c : 26, } },{ month : '24 ,JAN', value : { a : 80, b : 95, c : 42, } },{ month : '25 ,JAN', value : { a : 67, b : 112, c : 32, } },{ month : '26 ,JAN', value : { a : 94, b : 124, c : 44, } },{ month : '27 ,JAN', value : { a : 99, b : 98, c : 47, } },{ month : '28 ,JAN', value : { a : 72, b : 107, c : 47, } },{ month : '29 ,JAN', value : { a : 68, b : 122, c : 27, } },{ month : '30 ,JAN', value : { a : 61, b : 140, c : 28, } },{ month : '31 ,JAN', value : { a : 65, b : 135, c : 39, } },
+			];
+			var minstruction1 = {
+				id : "m1st",
+				container : "m_cntnr1",
+				title : "Mixed chart",
+				width : 0,
+				height : 0,
+				paddingx : 0,
+				paddingy : 0,
+				axis_color : "#0e66a9",
+				x_axis_name : "",
+				y_axis_name : "",
+				x_division_no : "5",//"" means Number of data
+				y_division_no : "8",//"" means Number of data
+				path_no : 3,
+				type : "tiny",
+				main_title : false,
+				icon : false,
+				x_axis : false,
+				x_axis_division : false,
+				x_axis_title : false,
+				x_axis_label : false,
+				y_axis : false,
+				y_axis_division : true,
+				y_axis_title : true,
+				y_axis_label : false,
+				x_axis_hover_design : false,
+				y_axis_hover_design : false,
+				popup_design : false,
+				popup_footer_design : false,
+				select_area : false,
+			};
+			mpath_detail1 = [{
+				name : "Normal",
+				color : "#0e66a9",
+				type : ["line_path"],
+				stroke : [2],
+				circle : true,
+				circle_zoom_out : 0,
+				circle_zoom_in : 3,
+				label : true,
+			},{
+				name : "Warmest",
+				color : "#ff9800",
+				type : ["round_path"],
+				stroke : [2],
+				circle : true,
+				circle_zoom_out : 2,
+				circle_zoom_in : 3,
+				label : false,
+			},{
+				name : "Coldest",
+				color : "#03a9f4",
+				type : ["stepline_path"],
+				stroke : [3],
+				circle : true,
+				circle_zoom_out : 0,
+				circle_zoom_in : 3,
+				label : false,
+			}];
+			check(mdata1, minstruction1, mpath_detail1);	
+			
+			////////////////////////// 2 ///////////////////////////
+			var mdata2 = [
+				{ month : '1 ,JAN', value : { a : 60, b : 137, c : 36, } },{ month : '2 ,JAN', value : { a : 56, b : 142, c : 40, } },{ month : '3 ,JAN', value : { a : 94, b : 122, c : 45, } },{ month : '4 ,JAN', value : { a : 76, b : 133, c : 34, } },{ month : '5 ,JAN', value : { a : 51, b : 119, c : 50, } },{ month : '6 ,JAN', value : { a : 77, b : 92, c : 42, } },{ month : '7 ,JAN', value : { a : 80, b : 133, c : 29, } },{ month : '8 ,JAN', value : { a : 71, b : 145, c : 38, } },{ month : '9 ,JAN', value : { a : 82, b : 96, c : 37, } },{ month : '10 ,JAN', value : { a : 83, b : 140, c : 34, } },{ month : '11 ,JAN', value : { a : 58, b : 125, c : 42, } },{ month : '12 ,JAN', value : { a : 97, b : 150, c : 47, } },{ month : '13 ,JAN', value : { a : 53, b : 135, c : 37, } },{ month : '14 ,JAN', value : { a : 58, b : 112, c : 33, } },{ month : '15 ,JAN', value : { a : 74, b : 94, c : 32, } },{ month : '16 ,JAN', value : { a : 57, b : 141, c : 39, } },{ month : '17 ,JAN', value : { a : 76, b : 92, c : 34, } },{ month : '18 ,JAN', value : { a : 87, b : 94, c : 45, } },{ month : '19 ,JAN', value : { a : 61, b : 117, c : 37, } },{ month : '20 ,JAN', value : { a : 62, b : 142, c : 26, } },{ month : '21 ,JAN', value : { a : 65, b : 119, c : 37, } },{ month : '22 ,JAN', value : { a : 87, b : 108, c : 49, } },{ month : '23 ,JAN', value : { a : 50, b : 109, c : 41, } },{ month : '24 ,JAN', value : { a : 94, b : 148, c : 32, } },{ month : '25 ,JAN', value : { a : 70, b : 126, c : 36, } },{ month : '26 ,JAN', value : { a : 65, b : 111, c : 37, } },{ month : '27 ,JAN', value : { a : 66, b : 93, c : 28, } },{ month : '28 ,JAN', value : { a : 86, b : 110, c : 27, } },{ month : '29 ,JAN', value : { a : 94, b : 136, c : 43, } },{ month : '30 ,JAN', value : { a : 64, b : 138, c : 42, } },{ month : '31 ,JAN', value : { a : 69, b : 91, c : 49, } },
+			];
+			var minstruction2 = {				
+				id : "m2nd",
+				container : "m_cntnr2",
+				title : "Mixed chart",
+				width : 0,
+				height : 0,
+				paddingx : 0,
+				paddingy : 0,
+				axis_color : "#0e66a9",
+				x_axis_name : "",
+				y_axis_name : "",
+				x_division_no : "5",//"" means Number of data
+				y_division_no : "8",//"" means Number of data
+				path_no : 3,
+				type : "tiny",
+				main_title : false,
+				icon : false,
+				x_axis : false,
+				x_axis_division : false,
+				x_axis_title : false,
+				x_axis_label : false,
+				y_axis : false,
+				y_axis_division : true,
+				y_axis_title : true,
+				y_axis_label : false,
+				x_axis_hover_design : false,
+				y_axis_hover_design : false,
+				popup_design : false,
+				popup_footer_design : false,
+				select_area : false,
+			};
+			mpath_detail2 = [{
+				name : "Normal",
+				color : "#770069",
+				type : ["line_area","line_path",],
+				stroke : [0,2],
+				circle : true,
+				circle_zoom_out : 0,
+				circle_zoom_in : 3,
+				label : true,
+			},{
+				name : "Warmest",
+				color : "#0e66a9",
+				type : ["round_area","round_path"],
+				stroke : [0,1],
+				circle : true,
+				circle_zoom_out : 2,
+				circle_zoom_in : 3,
+				label : false,
+			},{
+				name : "Coldest",
+				color : "#03a9f4",
+				type : ["stepline_area","stepline_path"],
+				stroke : [0,0],
+				circle : true,
+				circle_zoom_out : 0,
+				circle_zoom_in : 3,
+				label : false,
+			}];
+			
+			check(mdata2, minstruction2, mpath_detail2);	
+			
+			/////////////////////////// 3 ///////////////////////////////
+			var mdata3 = [
+				{ month : '1 ,JAN', value : { a : 95, b : 128, c : 27, } },{ month : '2 ,JAN', value : { a : 54, b : 93, c : 38, } },{ month : '3 ,JAN', value : { a : 77, b : 103, c : 38, } },{ month : '4 ,JAN', value : { a : 64, b : 66, c : 30, } },{ month : '5 ,JAN', value : { a : 94, b : 70, c : 37, } },{ month : '6 ,JAN', value : { a : 52, b : 83, c : 28, } },{ month : '7 ,JAN', value : { a : 92, b : 75, c : 45, } },{ month : '8 ,JAN', value : { a : 65, b : 141, c : 39, } },{ month : '9 ,JAN', value : { a : 60, b : 65, c : 28, } },{ month : '10 ,JAN', value : { a : 54, b : 104, c : 44, } },{ month : '11 ,JAN', value : { a : 64, b : 113, c : 45, } },{ month : '12 ,JAN', value : { a : 82, b : 79, c : 49, } },{ month : '13 ,JAN', value : { a : 63, b : 93, c : 36, } },{ month : '14 ,JAN', value : { a : 85, b : 70, c : 40, } },{ month : '15 ,JAN', value : { a : 85, b : 88, c : 30, } },{ month : '16 ,JAN', value : { a : 89, b : 58, c : 38, } },{ month : '17 ,JAN', value : { a : 95, b : 141, c : 39, } },{ month : '18 ,JAN', value : { a : 51, b : 105, c : 26, } },{ month : '19 ,JAN', value : { a : 80, b : 83, c : 50, } },{ month : '20 ,JAN', value : { a : 86, b : 61, c : 44, } },{ month : '21 ,JAN', value : { a : 67, b : 44, c : 39, } },{ month : '22 ,JAN', value : { a : 69, b : 62, c : 32, } },{ month : '23 ,JAN', value : { a : 78, b : 106, c : 27, } },{ month : '24 ,JAN', value : { a : 83, b : 126, c : 33, } },{ month : '25 ,JAN', value : { a : 59, b : 122, c : 34, } },{ month : '26 ,JAN', value : { a : 98, b : 125, c : 28, } },{ month : '27 ,JAN', value : { a : 85, b : 70, c : 37, } },{ month : '28 ,JAN', value : { a : 68, b : 41, c : 42, } },{ month : '29 ,JAN', value : { a : 81, b : 89, c : 42, } },{ month : '30 ,JAN', value : { a : 67, b : 104, c : 28, } },{ month : '31 ,JAN', value : { a : 55, b : 80, c : 32, } },
+			];
+			var minstruction3 = {
+				id : "m3rd",
+				container : "m_cntnr3",
+				title : "Mixed chart",
+				width : 0,
+				height : 0,
+				paddingx : 0,
+				paddingy : 0,
+				axis_color : "#0e66a9",
+				x_axis_name : "",
+				y_axis_name : "",
+				x_division_no : "5",//"" means Number of data
+				y_division_no : "8",//"" means Number of data
+				path_no : 3,
+				type : "tiny",
+				main_title : false,
+				icon : false,
+				x_axis : false,
+				x_axis_division : false,
+				x_axis_title : false,
+				x_axis_label : false,
+				y_axis : false,
+				y_axis_division : true,
+				y_axis_title : true,
+				y_axis_label : false,
+				x_axis_hover_design : false,
+				y_axis_hover_design : false,
+				popup_design : false,
+				popup_footer_design : false,
+				select_area : false,
+			};
+			mpath_detail3 = [{
+				name : "Normal",
+				color : "#770069",
+				type : ["line_area"],
+				stroke : [0],
+				circle : true,
+				circle_zoom_out : 0,
+				circle_zoom_in : 3,
+				label : true,
+			},{
+				name : "Warmest",
+				color : "#0e66a9",
+				type : ["round_path"],
+				stroke : [3],
+				circle : true,
+				circle_zoom_out : 2,
+				circle_zoom_in : 3,
+				label : false,
+			},{
+				name : "Coldest",
+				color : "#ff0000",
+				type : ["stepline_path"],
+				stroke : [0],
+				circle : true,
+				circle_zoom_out : 3,
+				circle_zoom_in : 4,
+				label : false,
+			}];
+			
+			check(mdata3, minstruction3, mpath_detail3);	
 		}
 	</script>
     </body>
