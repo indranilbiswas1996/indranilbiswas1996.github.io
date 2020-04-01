@@ -18,7 +18,7 @@ var maxs = {};
 var max_values = {};
 var min_values = {};
 var popup_point_xs = {};
-var	popup_point_ys = {};
+var popup_point_ys = {};
 var max_point_values = {};
 var min_point_values = {};
 var icon_effect_status_arrays = {};
@@ -1682,14 +1682,14 @@ function popup_design(){
 //var popup_footer_design_flag = 0;
 function popup_footer_design(){
 	//for rect
-	var rect1 = elems["paper_"+current_graph_id].rect(2*paddingx[current_graph_id], height[current_graph_id] - (2*paddingy[current_graph_id]), 0, 30, 5).attr({
+	var rect1 = elems["paper_"+current_graph_id].rect(2*paddingx[current_graph_id], height[current_graph_id] - (2*paddingy[current_graph_id]), 0, 40, 5).attr({
 		fill : '#f1f1f1',
 		stroke : '#b6b6b6',
 		opacity : 0,
 	});
 	elems["pfd_r_"+current_graph_id] = rect1;
 	//for text
-	var text1 = elems["paper_"+current_graph_id].text(2*paddingx[current_graph_id], height[current_graph_id] - (1.4*paddingy[current_graph_id]), "").attr({
+	var text1 = elems["paper_"+current_graph_id].text(2*paddingx[current_graph_id], height[current_graph_id] - (1.5*paddingy[current_graph_id]), "2019").attr({
 		'font-size' : '13px',
 			'font-weight' : 'bold',
 		opacity : 0,
@@ -1919,8 +1919,8 @@ function popup_footer_hover_inner(id, graph_id){
 		//for rect
 		elems["pfd_r_"+graph_id].animate({
 			opacity : 1,
-			x : popup_point_xs[graph_id][id] - (((datas[graph_id][id].month.length*7)+30)/2),
-			width : (datas[graph_id][id].month.length*7) + 30,
+			x : popup_point_xs[graph_id][id] - (((datas[graph_id][id].month.length*7)+20)/2),
+			width : (datas[graph_id][id].month.length*7) + 20,
 		},150);
 		//for text change
 		elems["pfd_t_"+graph_id].attr({
