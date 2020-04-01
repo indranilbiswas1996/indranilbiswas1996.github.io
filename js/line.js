@@ -21,6 +21,7 @@ var popup_point_xs = {};
 var	popup_point_ys = {};
 var max_point_values = {};
 var min_point_values = {};
+var icon_effect_status_arrays = {};
 var line_path_icon_effect_status_arrays = {};
 var round_path_icon_effect_status_arrays = {};
 var stepline_path_icon_effect_status_arrays = {};
@@ -206,6 +207,16 @@ function main_title(){
 //Icon design
 var icon_design_flag = 0;
 function icon_design(){
+	var icon_effect_status_array = [];
+	var line_path_icon_effect_status_array = [];
+	var round_path_icon_effect_status_array = [];
+	var stepline_path_icon_effect_status_array = [];
+	var line_area_icon_effect_status_array = [];
+	var round_area_icon_effect_status_array = [];
+	var stepline_area_icon_effect_status_array = [];
+	var label_icon_effect_status_array = [];
+	var circle_icon_effect_status_array = [];
+	
 	var x = (2*paddingx[current_graph_id]);
 	for(var i = 0; i < path_details[current_graph_id].length; i++){
 		x += (7*path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].name.length);
@@ -220,7 +231,7 @@ function icon_design(){
 			stroke : path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].color,
 		});
 		var rect = elems["paper_"+current_graph_id].rect(width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 5, paddingy[current_graph_id] - 7.5, (path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].name).toString().length*7 + 25 , 15).attr({
-			fill : 'transparent',
+			fill : '#ff0000',
 			opacity : 0,
 			cursor : 'pointer',
 		});
@@ -229,16 +240,11 @@ function icon_design(){
 		rect.node.addEventListener('mouseover', icon_effect_mouseover);
 		rect.node.addEventListener('mouseout', icon_effect_mouseout);
 		x += .75*paddingx[current_graph_id];
-		
+		icon_effect_status_array.push(0);
+		elems["icon_"+current_graph_id+"_"+i] = rect;
 	}
-	var line_path_icon_effect_status_array = [];
-	var round_path_icon_effect_status_array = [];
-	var stepline_path_icon_effect_status_array = [];
-	var line_area_icon_effect_status_array = [];
-	var round_area_icon_effect_status_array = [];
-	var stepline_area_icon_effect_status_array = [];
-	var label_icon_effect_status_array = [];
-	var circle_icon_effect_status_array = [];
+	icon_effect_status_arrays[current_graph_id] = icon_effect_status_array;///////////For icon effect changes
+	
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		line_path_icon_effect_status_array.push(0);
 		round_path_icon_effect_status_array.push(0);
@@ -266,6 +272,21 @@ function icon_effect_click(){
 	id = parseInt(res[1]);
 	var graph_id = res[0];
 	id = (path_details[graph_id].length-1) - id;
+	//Icon effect
+	if(icon_effect_status_arrays[graph_id][id] == 0){
+		elems["icon_"+graph_id+"_"+((path_details[graph_id].length-1) - id)].attr({
+			fill : "#fff",
+			stroke : "#fff",
+			opacity : .6,
+		});
+		icon_effect_status_arrays[graph_id][id] = 1;
+		
+	}else{
+		elems["icon_"+graph_id+"_"+((path_details[graph_id].length-1) - id)].attr({
+			opacity : 0,
+		});
+		icon_effect_status_arrays[graph_id][id] = 0;
+	}
 	//For Line path
 	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 		if(i == id){
@@ -273,7 +294,7 @@ function icon_effect_click(){
 				line_path_icon_effect_status_arrays[graph_id][id] = 1;
 				if(elems["line_path_"+graph_id+"_"+i]){
 					elems["line_path_"+graph_id+"_"+i].animate({
-						opacity: 0.1,
+						opacity: 0,
 					});
 				}
 				for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
@@ -303,7 +324,7 @@ function icon_effect_click(){
 				round_path_icon_effect_status_arrays[graph_id][id] = 1;
 				if(elems["round_path_"+graph_id+"_"+i]){
 					elems["round_path_"+graph_id+"_"+i].animate({
-						opacity: 0.1,
+						opacity: 0,
 					});
 				}
 				for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
@@ -333,7 +354,7 @@ function icon_effect_click(){
 				stepline_path_icon_effect_status_arrays[graph_id][id] = 1;
 				if(elems["stepline_path_"+graph_id+"_"+i]){
 					elems["stepline_path_"+graph_id+"_"+i].animate({
-						opacity: 0.1,
+						opacity: 0,
 					});
 				}
 				for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
@@ -372,7 +393,7 @@ function icon_effect_click(){
 						if(elems["line_area_"+graph_id+"_"+j]){
 							elems["line_area_"+graph_id+"_"+j].attr({
 								fill : "270-"+path_details[graph_id][j].color+"-#fff",
-								opacity: 0,
+								opacity: .1,
 							});
 						}
 					}
@@ -383,7 +404,7 @@ function icon_effect_click(){
 				if(elems["line_area_"+graph_id+"_"+i]){
 					elems["line_area_"+graph_id+"_"+i].attr({
 						fill : "270-"+path_details[graph_id][i].color+"-#fff",
-						opacity: 0,
+						opacity: .1,
 					});
 				}
 			}
@@ -405,7 +426,7 @@ function icon_effect_click(){
 						if(elems["round_area_"+graph_id+"_"+j]){
 							elems["round_area_"+graph_id+"_"+j].attr({
 								fill : "270-"+path_details[graph_id][j].color+"-#fff",
-								opacity: 0,
+								opacity: .1,
 							});
 						}
 					}
@@ -416,7 +437,7 @@ function icon_effect_click(){
 				if(elems["round_area_"+graph_id+"_"+i]){
 					elems["round_area_"+graph_id+"_"+i].attr({
 						fill : "270-"+path_details[graph_id][i].color+"-#fff",
-						opacity: 0,
+						opacity: 0.1,
 					});
 				}
 			}
@@ -438,7 +459,7 @@ function icon_effect_click(){
 						if(elems["stepline_area_"+graph_id+"_"+j]){
 							elems["stepline_area_"+graph_id+"_"+j].attr({
 								fill : "270-"+path_details[graph_id][j].color+"-#fff",
-								opacity: 0,
+								opacity: 0.1,
 							});
 						}
 					}
@@ -449,7 +470,7 @@ function icon_effect_click(){
 				if(elems["stepline_area_"+graph_id+"_"+i]){
 					elems["stepline_area_"+graph_id+"_"+i].attr({
 						fill : "270-"+path_details[graph_id][i].color+"-#fff",
-						opacity: 0,
+						opacity: 0.1,
 					});
 				}
 			}
@@ -597,7 +618,7 @@ function icon_effect_mouseover(){
 				//console.log("Oi");
 				if(elems["line_path_"+graph_id+"_"+i]){
 					elems["line_path_"+graph_id+"_"+i].animate({
-						opacity: 0,
+						opacity: 0.1,
 					});
 				}
 			}
@@ -608,7 +629,7 @@ function icon_effect_mouseover(){
 			if(id != i){
 				if(elems["round_path_"+graph_id+"_"+i]){
 					elems["round_path_"+graph_id+"_"+i].animate({
-						opacity: 0,
+						opacity: 0.1,
 					});
 				}
 			}
@@ -619,7 +640,7 @@ function icon_effect_mouseover(){
 			if(id != i){
 				if(elems["stepline_path_"+graph_id+"_"+i]){
 					elems["stepline_path_"+graph_id+"_"+i].animate({
-						opacity: 0,
+						opacity: 0.1,
 					});
 				}
 			}
@@ -631,7 +652,7 @@ function icon_effect_mouseover(){
 				if(elems["line_area_"+graph_id+"_"+i]){
 					elems["line_area_"+graph_id+"_"+i].animate({
 						fill : "#fff",
-						opacity: 0,
+						opacity: 0.1,
 					});
 				}
 			}
@@ -643,7 +664,7 @@ function icon_effect_mouseover(){
 				if(elems["round_area_"+graph_id+"_"+i]){
 					elems["round_area_"+graph_id+"_"+i].attr({
 						fill : "#fff",
-						opacity: 0,
+						opacity: 0.1,
 					});
 				}
 			}
@@ -655,7 +676,7 @@ function icon_effect_mouseover(){
 				if(elems["stepline_area_"+graph_id+"_"+i]){
 					elems["stepline_area_"+graph_id+"_"+i].attr({
 						fill : "#fff",
-						opacity: 0,
+						opacity: 0.1,
 					});
 				}
 			}
@@ -668,7 +689,7 @@ function icon_effect_mouseover(){
 					if(elems["c_"+graph_id+"_"+i+""+k]){
 						elems["c_"+graph_id+"_"+i+""+k].animate({
 							fill : path_details[graph_id][i].color,
-							opacity: 0,
+							opacity: 0.1,
 						});
 					}
 				}
@@ -683,12 +704,12 @@ function icon_effect_mouseover(){
 					
 					if(elems["label_rect_"+graph_id+"_"+i+""+k]){
 						elems["label_rect_"+graph_id+"_"+i+""+k].animate({
-							opacity: 0,
+							opacity: 0.05,
 						});
 					}
 					if(elems["label_text_"+graph_id+"_"+i+""+k]){
 						elems["label_text_"+graph_id+"_"+i+""+k].animate({
-							opacity: 0,
+							opacity: 0.05,
 						});
 					}
 					m = m + (Math.ceil(datas[graph_id].length/(x_division_nos[graph_id])));
