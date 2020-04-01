@@ -33,6 +33,8 @@ var circle_icon_effect_status_arrays = {};
 var graph_id = {};
 var flag = {};
 
+var sync_chart = {};
+
 //var flag = 0;
 function check(data, instruction, path_detail){
 	if(!graph_id[instruction.id]){
@@ -74,6 +76,10 @@ function load_all_data(data,  instruction, path_detail){//data_min_point = 1st a
 	datas[instruction.id] = data;
 	instructions[instruction.id] = instruction;
 	path_details[instruction.id] = path_detail;
+	//For SYNC chart
+	if(instruction.sync_id){
+		sync_chart[current_graph_id] = instruction.sync_id;
+	}
 	//Default paper width, height[current_graph_id]
 	//Max width : 950, Max-height[current_graph_id] : 510
 	//Min width : 780,  Min-height[current_graph_id] : 400
@@ -83,6 +89,9 @@ function load_all_data(data,  instruction, path_detail){//data_min_point = 1st a
 	height[current_graph_id] = parseInt(instruction.height) > 510 ? 510 : parseInt(instruction.height) < 420 ? 420 : parseInt(instruction.height) || 510;
 	paddingx[current_graph_id] = parseInt(instruction.paddingx) > 40 ? 40 : parseInt(instruction.paddingx) < 25 ? 25 : parseInt(instruction.paddingx) || 40;
 	paddingy[current_graph_id] = parseInt(instruction.paddingy) > 40 ? 40 : parseInt(instruction.paddingy) < 25 ? 25 : parseInt(instruction.paddingy) || 40;
+	//width[current_graph_id] = parseInt(instruction.width) > (screen.width-(2*paddingx[current_graph_id])) ? (screen.width-(2*paddingx[current_graph_id])) : parseInt(instruction.width) < 780 ? 780 : parseInt(instruction.width) || 950;
+	//height[current_graph_id] = parseInt(instruction.height) > (screen.height-(4*paddingy[current_graph_id])) ? (screen.height-(4*paddingy[current_graph_id])) : parseInt(instruction.height) < 420 ? 420 : parseInt(instruction.height) || 510;
+	
 	if(instruction.type == "tiny"){
 		width[current_graph_id] = parseInt(instruction.width) > 400 ? 400 : parseInt(instruction.width) < 360 ? 360 : parseInt(instruction.width) || 400;
 		height[current_graph_id] = parseInt(instruction.height) > 235 ? 235 : parseInt(instruction.height) < 200 ? 200 : parseInt(instruction.height) || 235;
@@ -615,7 +624,6 @@ function icon_effect_mouseover(){
 	
 		for(var i = 0; i< parseInt(instructions[graph_id].path_no); i++){
 			if(id != i){
-				//console.log("Oi");
 				if(elems["line_path_"+graph_id+"_"+i]){
 					elems["line_path_"+graph_id+"_"+i].animate({
 						opacity: 0.1,
@@ -1674,14 +1682,14 @@ function popup_design(){
 //var popup_footer_design_flag = 0;
 function popup_footer_design(){
 	//for rect
-	var rect1 = elems["paper_"+current_graph_id].rect(2*paddingx[current_graph_id], height[current_graph_id] - (2*paddingy[current_graph_id]), 0, 40, 5).attr({
+	var rect1 = elems["paper_"+current_graph_id].rect(2*paddingx[current_graph_id], height[current_graph_id] - (2*paddingy[current_graph_id]), 0, 30, 5).attr({
 		fill : '#f1f1f1',
 		stroke : '#b6b6b6',
 		opacity : 0,
 	});
 	elems["pfd_r_"+current_graph_id] = rect1;
 	//for text
-	var text1 = elems["paper_"+current_graph_id].text(2*paddingx[current_graph_id], height[current_graph_id] - (1.5*paddingy[current_graph_id]), "2019").attr({
+	var text1 = elems["paper_"+current_graph_id].text(2*paddingx[current_graph_id], height[current_graph_id] - (1.4*paddingy[current_graph_id]), "").attr({
 		'font-size' : '13px',
 			'font-weight' : 'bold',
 		opacity : 0,
@@ -1743,6 +1751,18 @@ function popup_hover(id){
 	var res = id.split("_");
 	var id = parseInt(res[1]);
 	var graph_id = res[0];
+	if(sync_chart[graph_id]){
+		for(var i = 0; i < Object.keys(sync_chart).length; i++){
+			if(sync_chart[graph_id] == Object.values(sync_chart)[i]){
+				popup_hover_inner(id, Object.keys(sync_chart)[i])
+			}
+		}
+	}
+	else{
+		popup_hover_inner(id, graph_id);
+	}
+}
+function popup_hover_inner(id, graph_id){
 	if(instructions[graph_id].popup_design == true){
 		var a = 0, b = 0;
 		for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
@@ -1851,6 +1871,18 @@ function popup_hover_out(id){
 	var res = id.split("_");
 	var id = parseInt(res[1]);
 	var graph_id = res[0];
+	if(sync_chart[graph_id]){
+		for(var i = 0; i < Object.keys(sync_chart).length; i++){
+			if(sync_chart[graph_id] == Object.values(sync_chart)[i]){
+				popup_hover_out_inner(id, Object.keys(sync_chart)[i])
+			}
+		}
+	}
+	else{
+		popup_hover_inner(id, graph_id);
+	}	
+}
+function popup_hover_out_inner(id, graph_id){
 	if(instructions[graph_id].popup_design == true){
 		//for rect
 		elems["pop_rect_"+graph_id].animate({
@@ -1870,12 +1902,25 @@ function popup_footer_hover(id){
 	var res = id.split("_");
 	var id = parseInt(res[1]);
 	var graph_id = res[0];
+	if(sync_chart[graph_id]){
+		for(var i = 0; i < Object.keys(sync_chart).length; i++){
+			if(sync_chart[graph_id] == Object.values(sync_chart)[i]){
+				popup_footer_hover_inner(id, Object.keys(sync_chart)[i])
+			}
+		}
+	}
+	else{
+		popup_footer_hover_inner(id, graph_id);
+	}	
+	
+}
+function popup_footer_hover_inner(id, graph_id){
 	if(instructions[graph_id].popup_footer_design == true){
 		//for rect
 		elems["pfd_r_"+graph_id].animate({
 			opacity : 1,
-			x : popup_point_xs[graph_id][id] - (((datas[graph_id][id].month.length*7)+20)/2),
-			width : (datas[graph_id][id].month.length*7) + 20,
+			x : popup_point_xs[graph_id][id] - (((datas[graph_id][id].month.length*7)+30)/2),
+			width : (datas[graph_id][id].month.length*7) + 30,
 		},150);
 		//for text change
 		elems["pfd_t_"+graph_id].attr({
@@ -1893,6 +1938,19 @@ function popup_footer_hover_out(id){
 	var res = id.split("_");
 	var id = parseInt(res[1]);
 	var graph_id = res[0];
+	if(sync_chart[graph_id]){
+		for(var i = 0; i < Object.keys(sync_chart).length; i++){
+			if(sync_chart[graph_id] == Object.values(sync_chart)[i]){
+				popup_footer_hover_out_inner(id, Object.keys(sync_chart)[i])
+			}
+		}
+	}
+	else{
+		popup_footer_hover_out_inner(id, graph_id);
+	}
+	
+}
+function popup_footer_hover_out_inner(id, graph_id){
 	if(instructions[graph_id].popup_footer_design == true){
 		//for rect
 		elems["pfd_r_"+graph_id].animate({
@@ -1909,6 +1967,18 @@ function circle_popup(id){
 	var res = id.split("_");
 	var id = parseInt(res[1]);
 	var graph_id = res[0];
+	if(sync_chart[graph_id]){
+		for(var i = 0; i < Object.keys(sync_chart).length; i++){
+			if(sync_chart[graph_id] == Object.values(sync_chart)[i]){
+				circle_popup_inner(id, Object.keys(sync_chart)[i])
+			}
+		}
+	}
+	else{
+		circle_popup_inner(id, graph_id);
+	}
+}
+function circle_popup_inner(id, graph_id){
 	for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
 		if(elems["c_"+graph_id+"_"+i+""+id]){
 			elems["c_"+graph_id+"_"+i+""+id].animate({
@@ -1923,6 +1993,18 @@ function circle_popdown(id){
 	var res = id.split("_");
 	var id = parseInt(res[1]);
 	var graph_id = res[0];
+	if(sync_chart[graph_id]){
+		for(var i = 0; i < Object.keys(sync_chart).length; i++){
+			if(sync_chart[graph_id] == Object.values(sync_chart)[i]){
+				circle_popdown_inner(id, Object.keys(sync_chart)[i])
+			}
+		}
+	}
+	else{
+		circle_popdown_inner(id, graph_id);
+	}
+}
+function circle_popdown_inner(id, graph_id){
 	for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
 		if(elems["c_"+graph_id+"_"+i+""+id]){
 			elems["c_"+graph_id+"_"+i+""+id].animate({
@@ -1936,6 +2018,19 @@ function x_axis_hover(id){
 	var res = id.split("_");
 	var id = parseInt(res[1]);
 	var graph_id = res[0];
+	if(sync_chart[graph_id]){
+		for(var i = 0; i < Object.keys(sync_chart).length; i++){
+			if(sync_chart[graph_id] == Object.values(sync_chart)[i]){
+				x_axis_hover_inner(id, Object.keys(sync_chart)[i])
+			}
+		}
+	}
+	else{
+		x_axis_hover_inner(id, graph_id);
+	}
+	
+}
+function x_axis_hover_inner(id, graph_id){
 	if(instructions[graph_id].x_axis_hover_design == true){
 		for(var i = 0; i<1; i++){
 			var  p  = "M "+ ((2*paddingx[graph_id])+id*((width[graph_id]-(4*paddingx[graph_id]))/(datas[graph_id].length-1))) +" " + (2*paddingy[graph_id]) + " l 0 "+  ( (height[graph_id] - (4*paddingy[graph_id])) ) ;
@@ -1949,12 +2044,48 @@ function x_axis_hover(id){
 		
 	}
 }
+//X axis hover out
+function x_axis_hover_out(id){
+	var res = id.split("_");
+	var id = parseInt(res[1]);
+	var graph_id = res[0];
+	if(sync_chart[graph_id]){
+		for(var i = 0; i < Object.keys(sync_chart).length; i++){
+			if(sync_chart[graph_id] == Object.values(sync_chart)[i]){
+				x_axis_hover_out_inner(id, Object.keys(sync_chart)[i])
+			}
+		}
+	}
+	else{
+		x_axis_hover_out_inner(id, graph_id);
+	}
+}
+function x_axis_hover_out_inner(id, graph_id){
+	for(var i = 0; i<1; i++){
+		if(elems["px_"+graph_id+"_"+i]){
+			elems["px_"+graph_id+"_"+i].animate({
+				opacity : 0,
+			}, 150);
+		}
+	}
+}
 //Y axis hover
 function y_axis_hover(id){
 	var res = id.split("_");
 	var id = parseInt(res[1]);
-	var graph_id = res[0];
-	
+	var graph_id = res[0];	
+	if(sync_chart[graph_id]){
+		for(var i = 0; i < Object.keys(sync_chart).length; i++){
+			if(sync_chart[graph_id] == Object.values(sync_chart)[i]){
+				y_axis_hover_inner(id, Object.keys(sync_chart)[i])
+			}
+		}
+	}
+	else{
+		y_axis_hover_inner(id, graph_id);
+	}	
+}
+function y_axis_hover_inner(id, graph_id){
 	if(instructions[graph_id].y_axis_hover_design == true){
 		for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
 			var  p  = "M "+ 2*paddingx[graph_id] +" " + ( (height[graph_id] - (2*paddingy[graph_id])) - ((Object.values(datas[graph_id][id].value)[i] - min_values[graph_id])*((height[graph_id]-(4*paddingy[graph_id]))/maxs[graph_id])) ) + " l "+  (width[graph_id]-(4*paddingx[graph_id])) +" 0";
@@ -1966,26 +2097,24 @@ function y_axis_hover(id){
 			}
 		}
 	}
-	
-}
-//X axis hover out
-function x_axis_hover_out(id){
-	var res = id.split("_");
-	var id = parseInt(res[1]);
-	var graph_id = res[0];
-	for(var i = 0; i<1; i++){
-		if(elems["px_"+graph_id+"_"+i]){
-			elems["px_"+graph_id+"_"+i].animate({
-				opacity : 0,
-			}, 150);
-		}
-	}
 }
 //Y axis hover out
 function y_axis_hover_out(id){
 	var res = id.split("_");
 	var id = parseInt(res[1]);
 	var graph_id = res[0];
+	if(sync_chart[graph_id]){
+		for(var i = 0; i < Object.keys(sync_chart).length; i++){
+			if(sync_chart[graph_id] == Object.values(sync_chart)[i]){
+				y_axis_hover_out_inner(id, Object.keys(sync_chart)[i])
+			}
+		}
+	}
+	else{
+		y_axis_hover_out_inner(id, graph_id);
+	}
+}
+function y_axis_hover_out_inner(id, graph_id){
 	for(var i = 0; i<parseInt(instructions[graph_id].path_no); i++){
 		if(elems["py_"+graph_id+"_"+i]){
 			elems["py_"+graph_id+"_"+i].animate({
@@ -2065,12 +2194,25 @@ function mouseup(){
 			clicked_id = unclicked_id;
 			unclicked_id = a;
 		}
-		if(clicked_id != unclicked_id && unclicked_id > (clicked_id + 1)){				
-			elems["paper_"+graph_id].clear();
+		if(clicked_id != unclicked_id && unclicked_id > (clicked_id + 1)){	
+			if(sync_chart[graph_id]){
+				for(var i = 0; i < Object.keys(sync_chart).length; i++){
+					if(sync_chart[graph_id] == Object.values(sync_chart)[i]){
+						mouseup_inner(clicked_id, unclicked_id, Object.keys(sync_chart)[i])
+					}
+				}
+			}
+			else{
+				mouseup_inner(clicked_id, unclicked_id, graph_id);
+			}
 			
-			//Load instruction
-			load_all_data(datas[graph_id].slice(clicked_id, unclicked_id+1), instructions[graph_id], path_details[graph_id]);			
-			all_function();
 		}
 	}
+}
+function mouseup_inner(clicked_id, unclicked_id, graph_id){
+	elems["paper_"+graph_id].clear();
+			
+	//Load instruction
+	load_all_data(datas[graph_id].slice(clicked_id, unclicked_id+1), instructions[graph_id], path_details[graph_id]);			
+	all_function();
 }
