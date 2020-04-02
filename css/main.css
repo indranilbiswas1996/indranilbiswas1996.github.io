@@ -94,6 +94,11 @@ h3{
 	box-shadow: 1px 15px 25px 10px #181a2f;
     border: 1px solid #ddd;
 }
+.inner-graph-sync{
+	display : inline-block;
+	background : #ffffff;
+	text-align: center;
+}
 .graph svg{
 	cursor : crosshair;
 }
