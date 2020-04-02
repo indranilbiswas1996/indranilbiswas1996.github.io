@@ -42,7 +42,7 @@
 				id : "1st",
 				sync_id : "oi",
 				container : "cntnr1",
-				title : "Weather statistics for Jammu and Kashmir",
+				title : "Line Syncing chart",
 				width : 950,
 				height : 220,
 				paddingx : 30,
@@ -53,8 +53,8 @@
 				x_division_no : "12",//"" means Number of data
 				y_division_no : "4",//"" means Number of data
 				path_no : 1,
-				main_title : false,
-				icon : false,
+				main_title : true,
+				icon : true,
 				x_axis : true,
 				x_axis_division : false,
 				x_axis_title : false,
@@ -70,7 +70,7 @@
 				select_area : true,
 			};
 			path_details = [{
-				name : "Normal",
+				name : "Line",
 				color : "#0e66a9",
 				type : ["line_path"],
 				stroke : [ 5],
@@ -78,25 +78,7 @@
 				circle_zoom_out : 4,
 				circle_zoom_in : 5,
 				label : false,
-			}/*,{
-				name : "Warmest",
-				color : "#ff9800",
-				type : ["line_path"],
-				stroke : [ 5],
-				circle : true,
-				circle_zoom_out : 0,
-				circle_zoom_in : 5,
-				label : true,
-			},{
-				name : "Coldest",
-				color : "#03a9f4",
-				type : ["line_path"],
-				stroke : [5],
-				circle : true,
-				circle_zoom_out : 0,
-				circle_zoom_in : 5,
-				label : true,
-			}*/];
+			}];
 			
 			check(data, instruction, path_details);			
 			
@@ -109,9 +91,9 @@
 				container : "cntnr2",
 				title : "Weather statistics for Jammu and Kashmir",
 				width : 950,
-				height : 200,
+				height : 220,
 				paddingx : 30,
-				paddingy : 20,
+				paddingy : 30,
 				axis_color : "#007c00",
 				x_axis_name : "Month",
 				y_axis_name : "",
@@ -119,7 +101,7 @@
 				y_division_no : "4",//"" means Number of data
 				path_no : 1,
 				main_title : false,
-				icon : false,
+				icon : true,
 				x_axis : true,
 				x_axis_division : false,
 				x_axis_title : false,
@@ -135,7 +117,7 @@
 				select_area : true,
 			};
 			path_detail2 = [{
-				name : "Normal",
+				name : "Round",
 				color : "#007c00",
 				type : ["round_path"],
 				stroke : [5],
@@ -157,9 +139,9 @@
 				container : "cntnr3",
 				title : "Weather statistics for Jammu and Kashmir",
 				width : 950,
-				height : 200,
+				height : 220,
 				paddingx : 30,
-				paddingy : 20,
+				paddingy : 30,
 				axis_color : "#bf0077",
 				x_axis_name : "Month",
 				y_axis_name : "",
@@ -167,7 +149,7 @@
 				y_division_no : "4",//"" means Number of data
 				path_no : 2,
 				main_title : false,
-				icon : false,
+				icon : true,
 				x_axis : true,
 				x_axis_division : false,
 				x_axis_title : false,
@@ -183,7 +165,7 @@
 				select_area : true,
 			};
 			path_detail3 = [{
-				name : "Normal",
+				name : "Line",
 				color : "#ff0000",
 				type : ["round_path"],
 				stroke : [5],
@@ -192,7 +174,7 @@
 				circle_zoom_in : 5,
 				label : true,
 			},{
-				name : "Normal",
+				name : "Round",
 				color : "#bf0077",
 				type : ["line_path"],
 				stroke : [5],
