@@ -91,8 +91,8 @@ function load_all_data(data,  instruction, path_detail){//data_min_point = 1st a
 	height[current_graph_id] = parseInt(instruction.height) > (screen.height-(4*paddingy[current_graph_id])) ? (screen.height-(4*paddingy[current_graph_id])) : parseInt(instruction.height) /*< 420 ? 420 : parseInt(instruction.height)*/ || 510;
 	
 	if(instruction.type == "tiny"){
-		width[current_graph_id] = parseInt(instruction.width) > 400 ? 400 : parseInt(instruction.width) < 360 ? 360 : parseInt(instruction.width) || 400;
-		height[current_graph_id] = parseInt(instruction.height) > 235 ? 235 : parseInt(instruction.height) < 200 ? 200 : parseInt(instruction.height) || 235;
+		width[current_graph_id] = parseInt(instruction.width) > 400 ? 400 : parseInt(instruction.width) < 1 ? 360 : parseInt(instruction.width) || 400;
+		height[current_graph_id] = parseInt(instruction.height) > 235 ? 235 : parseInt(instruction.height) < 1 ? 200 : parseInt(instruction.height) || 235;
 		paddingx[current_graph_id] = parseInt(instruction.paddingx) > 25 ? 25 : parseInt(instruction.paddingx) < 10 ? 10 : parseInt(instruction.paddingx) || 25;
 		paddingy[current_graph_id] = parseInt(instruction.paddingy) > 25 ? 25 : parseInt(instruction.paddingy) < 10 ? 10 : parseInt(instruction.paddingy) || 25;	
 	}
