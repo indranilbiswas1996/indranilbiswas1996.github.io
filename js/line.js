@@ -76,10 +76,8 @@ function load_all_data(data,  instruction, path_detail){//data_min_point = 1st a
 	datas[instruction.id] = data;
 	instructions[instruction.id] = instruction;
 	path_details[instruction.id] = path_detail;
-	//For SYNC chart
-	if(instruction.sync_id){
-		sync_chart[current_graph_id] = instruction.sync_id;
-	}
+	
+	//console.log(sync_chart);
 	//Default paper width, height[current_graph_id]
 	//Max width : 950, Max-height[current_graph_id] : 510
 	//Min width : 780,  Min-height[current_graph_id] : 400
@@ -132,6 +130,17 @@ function load_all_data(data,  instruction, path_detail){//data_min_point = 1st a
 		for(var i = 0; i<main_datas[current_graph_id].length; i++){
 			if((Math.min(...(Object.values(main_datas[current_graph_id][i].value))))< min_point_values[current_graph_id]){
 				min_point_values[current_graph_id] = Math.min(...(Object.values(main_datas[current_graph_id][i].value)));
+			}
+		}
+		//For SYNC chart
+		if(instruction.sync_id){
+			sync_chart[current_graph_id] = instruction.sync_id;			
+			for(var i = 0; i < (Object.keys(sync_chart).length); i++){
+				if(instruction.sync_id == Object.values(sync_chart)[i]){
+					if(datas[current_graph_id].length != datas[Object.keys(sync_chart)[i]].length){
+						delete sync_chart[current_graph_id];
+					}
+				}
 			}
 		}
 	}
