@@ -960,7 +960,7 @@ function y_axis_label(){
 		elems["paper_"+current_graph_id].path( "M "+ 2*paddingx[current_graph_id] +" " + ( (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i ) + " l -3 0").attr({
 			stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
 		});
-		elems["paper_"+current_graph_id].text(2*paddingx[current_graph_id] - 5, (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i, ((maxs[current_graph_id]/(y_division_nos[current_graph_id]-1))*i)+min_values[current_graph_id]).attr({
+		elems["paper_"+current_graph_id].text(2*paddingx[current_graph_id] - 5, (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i, number_format(((maxs[current_graph_id]/(y_division_nos[current_graph_id]-1))*i)+min_values[current_graph_id])).attr({
 			fill : instructions[current_graph_id].axis_color || "#9d9d9d",
 			'text-anchor' : "end",
 		});		
@@ -2224,4 +2224,42 @@ function mouseup_inner(clicked_id, unclicked_id, graph_id){
 	//Load instruction
 	load_all_data(datas[graph_id].slice(clicked_id, unclicked_id+1), instructions[graph_id], path_details[graph_id]);			
 	all_function();
+}
+
+
+////////////Common function ///////////////////
+function number_format(number){
+	try{
+		var flag = false;
+		var new_number = "";
+		if(number<0){
+			number = Math.abs(number);
+			flag = true;
+		}
+		if(number >= 1000000000000000000){
+			new_number = (number/1000000000000000000).toFixed(2) + "E";
+		}
+		else if(number >= 1000000000000000){
+			new_number = (number/1000000000000000).toFixed(2) + "P";
+		}
+		else if(number >= 1000000000000){
+			new_number = (number/1000000000000).toFixed(2) + "T";
+		}
+		else if(number >= 1000000000){
+			new_number = (number/1000000000).toFixed(2) + "G";
+		}
+		else if(number >= 1000000){
+			new_number = (number/1000000).toFixed(2) + "M";
+		}
+		else if(number >= 1000){
+			new_number = (number/1000).toFixed(2) + "K";
+		}
+		else{
+			new_number = number;
+		}
+		if(flag == true){
+			new_number = "-"+new_number;
+		}
+		return new_number;		
+	}catch(err){}
 }
