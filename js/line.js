@@ -274,21 +274,93 @@ function icon_design(){
 	var stepline_area_icon_effect_status_array = [];
 	var label_icon_effect_status_array = [];
 	var circle_icon_effect_status_array = [];
-	
+	var position = "";
+	if(instructions[current_graph_id].icon_position){
+		position = (instructions[current_graph_id].icon_position+"").toLowerCase() || "top-right";
+	}
+	var xx = (2*paddingx[current_graph_id]);
+	for(var i = path_details[current_graph_id].length - 1; i >= 0; i--){
+		xx += (7*path_details[current_graph_id][i].name.length);		
+		xx += .75*paddingx[current_graph_id];
+	}
 	var x = (2*paddingx[current_graph_id]);
-	for(var i = 0; i < path_details[current_graph_id].length; i++){
-		x += (7*path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].name.length);
-		var text = elems["paper_"+current_graph_id].text(width[current_graph_id] - x, paddingy[current_graph_id], path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].name).attr({
+	for(var i = path_details[current_graph_id].length - 1; i >= 0; i--){
+		x += (7*path_details[current_graph_id][i].name.length);	
+		var text_x, text_y, circle_x, circle_y, rect_x, rect_y , rect_y_width;
+		if(position == "top-right"){
+			text_x = width[current_graph_id] - x;
+			text_y = paddingy[current_graph_id];
+			circle_x = width[current_graph_id]- x - (.2*paddingx[current_graph_id]);
+			circle_y = paddingy[current_graph_id];
+			rect_x = width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0;
+			rect_y = paddingy[current_graph_id] - 7.5;
+			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
+		}
+		else if(position == "top-middle"){
+			text_x = width[current_graph_id] - x -xx;
+			text_y = paddingy[current_graph_id];
+			circle_x = width[current_graph_id]- x - (.2*paddingx[current_graph_id]) -xx;
+			circle_y = paddingy[current_graph_id];
+			rect_x = width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0 -xx;
+			rect_y = paddingy[current_graph_id] - 7.5;
+			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
+		}
+		else if(position == "top-left"){
+			text_x =  width[current_graph_id] - x -(width[current_graph_id] -(2*paddingx[current_graph_id])- xx  );
+			text_y = paddingy[current_graph_id];
+			circle_x =  width[current_graph_id]- x - (.2*paddingx[current_graph_id]) -(width[current_graph_id] -(2*paddingx[current_graph_id])- xx);
+			circle_y = paddingy[current_graph_id];
+			rect_x =  width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0 -(width[current_graph_id] -(2*paddingx[current_graph_id])- xx);
+			rect_y = paddingy[current_graph_id] - 7.5;
+			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
+		}	
+		else if(position == "bottom-right"){
+			text_x = width[current_graph_id] - x;
+			text_y = height[current_graph_id] - paddingy[current_graph_id];
+			circle_x = width[current_graph_id]- x - (.2*paddingx[current_graph_id]);
+			circle_y = height[current_graph_id] - paddingy[current_graph_id];
+			rect_x = width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0;
+			rect_y = height[current_graph_id] - paddingy[current_graph_id] - 7.5;
+			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
+		}
+		else if(position == "bottom-middle"){
+			text_x = width[current_graph_id] - x -xx;
+			text_y = height[current_graph_id] - paddingy[current_graph_id];
+			circle_x = width[current_graph_id]- x - (.2*paddingx[current_graph_id]) -xx;
+			circle_y = height[current_graph_id] - paddingy[current_graph_id];
+			rect_x = width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0  -xx;
+			rect_y = height[current_graph_id] - paddingy[current_graph_id] - 7.5;
+			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
+		}
+		else if(position == "bottom-left"){
+			text_x =  width[current_graph_id] - x -(width[current_graph_id] -(2*paddingx[current_graph_id])- xx  );
+			text_y = height[current_graph_id] - paddingy[current_graph_id];
+			circle_x =  width[current_graph_id]- x - (.2*paddingx[current_graph_id]) -(width[current_graph_id] -(2*paddingx[current_graph_id])- xx);
+			circle_y = height[current_graph_id] - paddingy[current_graph_id];
+			rect_x =  width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0 -(width[current_graph_id] -(2*paddingx[current_graph_id])- xx);
+			rect_y = height[current_graph_id] - paddingy[current_graph_id] - 7.5;
+			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
+		}
+		else{
+			text_x = width[current_graph_id] - x;
+			text_y = paddingy[current_graph_id];
+			circle_x = width[current_graph_id]- x - (.2*paddingx[current_graph_id]);
+			circle_y = paddingy[current_graph_id];
+			rect_x = width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0;
+			rect_y = paddingy[current_graph_id] - 7.5;
+			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
+		}
+		var text = elems["paper_"+current_graph_id].text(text_x, text_y, path_details[current_graph_id][i].name).attr({
 			'font-weight' : 'bold',
 			'text-anchor': 'start',
 			'font-size' : '13px',
-			fill : path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].color,
+			fill : path_details[current_graph_id][i].color,
 		});
-		var circle = elems["paper_"+current_graph_id].circle(width[current_graph_id]- x - (.3*paddingx[current_graph_id]) , paddingy[current_graph_id], 5).attr({
-			fill : path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].color,
-			stroke : path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].color,
+		var circle = elems["paper_"+current_graph_id].circle(circle_x , circle_y, 5).attr({
+			fill : path_details[current_graph_id][i].color,
+			stroke : path_details[current_graph_id][i].color,
 		});
-		var rect = elems["paper_"+current_graph_id].rect(width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 5, paddingy[current_graph_id] - 7.5, (path_details[current_graph_id][(path_details[current_graph_id].length-1)-i].name).toString().length*7 + 25 , 15).attr({
+		var rect = elems["paper_"+current_graph_id].rect(rect_x, rect_y, rect_width , 15).attr({
 			fill : '#ff0000',
 			opacity : 0,
 			cursor : 'pointer',
@@ -329,10 +401,10 @@ function icon_effect_click(){
 	var res = id.split("_");
 	id = parseInt(res[1]);
 	var graph_id = res[0];
-	id = (path_details[graph_id].length-1) - id;
+	//id = (path_details[graph_id].length-1) - id;
 	//Icon effect
 	if(icon_effect_status_arrays[graph_id][id] == 0){
-		elems["icon_"+graph_id+"_"+((path_details[graph_id].length-1) - id)].attr({
+		elems["icon_"+graph_id+"_"+(id)].attr({
 			fill : "#fff",
 			stroke : "#fff",
 			opacity : .6,
@@ -340,7 +412,7 @@ function icon_effect_click(){
 		icon_effect_status_arrays[graph_id][id] = 1;
 		
 	}else{
-		elems["icon_"+graph_id+"_"+((path_details[graph_id].length-1) - id)].attr({
+		elems["icon_"+graph_id+"_"+(id)].attr({
 			opacity : 0,
 		});
 		icon_effect_status_arrays[graph_id][id] = 0;
@@ -639,7 +711,7 @@ function icon_effect_mouseover(){
 	var res = id.split("_");
 	id = parseInt(res[1]);
 	var graph_id = res[0];
-	id = (path_details[graph_id].length-1) - id;
+	//id = (path_details[graph_id].length-1) - id;
 	var c = 0;
 	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 		if(line_path_icon_effect_status_arrays[graph_id][i] == 1){
@@ -783,7 +855,7 @@ function icon_effect_mouseout(){
 	var res = id.split("_");
 	id = parseInt(res[1]);
 	var graph_id = res[0];
-	id = (path_details[graph_id].length-1) - id;
+	//id = (path_details[graph_id].length-1) - id;
 	var c = 0;
 	for(var i = 0; i < parseInt(instructions[graph_id].path_no); i++){
 		if(line_path_icon_effect_status_arrays[graph_id][i] == 1){
