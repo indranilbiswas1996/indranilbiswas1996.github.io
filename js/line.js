@@ -216,33 +216,54 @@ function all_function(){
 //var main_title_flag = 0;
 function main_title(){
 	var position = "";
+	var x = 0, y = 0;
+	var text_anchor = "start";
 	if(instructions[current_graph_id].main_title_position){
-		position = (instructions[current_graph_id].main_title_position+"").toLowerCase() || "left";
+		position = (instructions[current_graph_id].main_title_position+"").toLowerCase() || "top-left";
 	}
-	if(position == "right"){
-		elems["paper_"+current_graph_id].text(width[current_graph_id] -(2*paddingx[current_graph_id]), paddingy[current_graph_id], instructions[current_graph_id].title).attr({
-			'font-weight' : 'bold',
-			'text-anchor': 'end',
-			'font-size' : instructions[current_graph_id].main_title_font_size || '15px',
-			fill : instructions[current_graph_id].main_title_color || "#000",
-		});
+	if(position == "top-left"){
+		x = (2*paddingx[current_graph_id]);
+		y = paddingy[current_graph_id];
+		text_anchor = "start";
 	}
-	else if(position == "middle"){
-		elems["paper_"+current_graph_id].text((width[current_graph_id]/2), paddingy[current_graph_id], instructions[current_graph_id].title).attr({
-			'font-weight' : 'bold',
-			'font-size' : instructions[current_graph_id].main_title_font_size || '15px',
-			fill : instructions[current_graph_id].main_title_color || "#000",
-		});
+	else if(position == "top-middle"){
+		x = (width[current_graph_id]/2);
+		y = paddingy[current_graph_id];
+		text_anchor = "middle";
+	}
+	else if(position == "top-right"){
+		x = width[current_graph_id] -(2*paddingx[current_graph_id]);
+		y = paddingy[current_graph_id];
+		text_anchor = "end";
+	}	
+	else if(position == "bottom-left"){
+		x = (2*paddingx[current_graph_id]);
+		y = height[current_graph_id]-paddingy[current_graph_id];
+		text_anchor = "start";
+	}
+	else if(position == "bottom-middle"){
+		x = (width[current_graph_id]/2);
+		y = height[current_graph_id]-paddingy[current_graph_id];
+		text_anchor = "middle";
+	}
+	else if(position == "bottom-right"){
+		x = width[current_graph_id] -(2*paddingx[current_graph_id]);
+		y = height[current_graph_id]-paddingy[current_graph_id];
+		text_anchor = "end";
 	}
 	else{
-		elems["paper_"+current_graph_id].text((2*paddingx[current_graph_id]), paddingy[current_graph_id], instructions[current_graph_id].title).attr({
-			'font-weight' : 'bold',
-			'text-anchor': 'start',
-			'font-size' : instructions[current_graph_id].main_title_font_size || '15px',
-			fill : instructions[current_graph_id].main_title_color || "#000",
-		});
+		x = (2*paddingx[current_graph_id]);
+		y = paddingy[current_graph_id];
+		text_anchor = "start";
 	}
-	//main_title_flag = 1;
+	
+	elems["paper_"+current_graph_id].text(x, y, instructions[current_graph_id].title).attr({
+		'font-weight' : 'bold',
+		'text-anchor': text_anchor,
+		'font-size' : instructions[current_graph_id].main_title_font_size || '15px',
+		fill : instructions[current_graph_id].main_title_color || "#000",
+	});
+	
 }
 //Icon design
 //var icon_design_flag = 0;
