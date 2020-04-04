@@ -32,10 +32,9 @@ var label_icon_effect_status_arrays = {};
 var circle_icon_effect_status_arrays = {};
 var graph_id = {};
 var flag = {};
-
 var sync_chart = {};
 
-//var flag = 0;
+
 function check(data, instruction, path_detail){
 	if(!graph_id[instruction.id]){
 		graph_id[instruction.id] = instruction.id;	
@@ -213,7 +212,6 @@ function all_function(){
 	draw_popup_rect();
 }
 //All title
-//var main_title_flag = 0;
 function main_title(){
 	var position = "";
 	var x = 0, y = 0;
@@ -266,7 +264,6 @@ function main_title(){
 	
 }
 //Icon design
-//var icon_design_flag = 0;
 function icon_design(){
 	var icon_effect_status_array = [];
 	var line_path_icon_effect_status_array = [];
@@ -908,7 +905,6 @@ function icon_effect_mouseout(){
 }
 
 //x axis title
-//var x_axis_title_flag = 0;
 function x_axis_title(){
 	var position = "";
 	if(instructions[current_graph_id].x_axis_position){
@@ -920,12 +916,10 @@ function x_axis_title(){
 	else{
 		elems["paper_"+current_graph_id].text(width[current_graph_id]/2, height[current_graph_id]-paddingy[current_graph_id], instructions[current_graph_id].x_axis_name);
 	}
-	//x_axis_title_flag = 1;
 }
 
 
 //Draw x axis
-//var x_axis_flag = 0;
 function x_axis(){
 	var position = "";
 	if(instructions[current_graph_id].x_axis_position){
@@ -948,7 +942,6 @@ function x_axis(){
 	}
 }
 //y axis title
-//var y_axis_title_flag = 0;
 function y_axis_title(){
 	var position = "";
 	if(instructions[current_graph_id].y_axis_position){
@@ -964,10 +957,8 @@ function y_axis_title(){
 			transform : "r270",
 		});	
 	}
-	//y_axis_title_flag = 1;
 }
 //Draw y axis
-//var y_axis_flag = 0;
 function y_axis(){
 	var position = "";
 	if(instructions[current_graph_id].y_axis_position){
@@ -982,12 +973,10 @@ function y_axis(){
 			stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
 		});
 	}
-	//y_axis_flag = 1;
 }
 
 /* x */
 /* x axis division */
-//var x_axis_division_flag = 0;
 function x_axis_division(){
 	var j = 0;
 	for(var i = 0; j< datas[current_graph_id].length; i++){	
@@ -997,10 +986,8 @@ function x_axis_division(){
 		});
 		j = j + (Math.ceil(datas[current_graph_id].length/(x_division_nos[current_graph_id])));
 	}
-	//x_axis_division_flag = 1;
 }
 /* x axis label */
-//var x_axis_label_flag = 0;
 function x_axis_label(){
 	var j = 0;		
 	var position = "";
@@ -1039,11 +1026,9 @@ function x_axis_label(){
 		}
 		j = j + (Math.ceil(datas[current_graph_id].length/(x_division_nos[current_graph_id])));		
 	}
-	//x_axis_label_flag = 1;
 }
 
 /* y */
-//var y_axis_division_flag = 0;
 function y_axis_division(){
 				
 	for(var i = 0 ; i<y_division_nos[current_graph_id] ; i++){		
@@ -1052,10 +1037,8 @@ function y_axis_division(){
 			opacity : .5,
 		});
 	}
-	//y_axis_division_flag = 1;
 }
 /* y axis label */
-//var y_axis_label_flag = 0;
 function y_axis_label(){
 	var position = "";
 	if(instructions[current_graph_id].y_axis_position){
@@ -1080,10 +1063,8 @@ function y_axis_label(){
 			});	
 		}	
 	}
-	//y_axis_label_flag = 1;
 }
 //Draw path
-//var draw_line_path_flag = 0;
 function draw_line_path(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
@@ -1109,10 +1090,8 @@ function draw_line_path(){
 			}
 		}
 	}
-//draw_line_path_flag = 1;
 }
 //Draw round path
-//var draw_round_path_flag = 0;
 function draw_round_path(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
@@ -1137,11 +1116,9 @@ function draw_round_path(){
 			}
 		}
 	}
-	//draw_round_path_flag = 1;
 }
 
 //Draw stepline path
-//var draw_stepline_path_flag = 0;
 function draw_stepline_path(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
@@ -1169,10 +1146,8 @@ function draw_stepline_path(){
 			}
 		}
 	}
-	//draw_stepline_path_flag = 1;
 }
 //Draw circle on path
-//var draw_circle_flag = 0;
 function draw_circle(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		if(path_details[current_graph_id][i].circle == true){
@@ -1191,10 +1166,8 @@ function draw_circle(){
 			}
 		}
 	}
-	//draw_circle_flag = 1;
 }
 //Draw line area
-//var draw_line_area_flag = 0;
 function draw_line_area(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
@@ -1222,11 +1195,9 @@ function draw_line_area(){
 			}
 		}
 	}
-	//draw_line_area_flag = 1;
 }
 
 //Draw round area
-//var draw_round_area_flag = 0;
 function draw_round_area(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){	
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){	
@@ -1254,11 +1225,9 @@ function draw_round_area(){
 			}
 		}
 	}
-	//draw_round_area_flag = 1;
 }
 
 //Draw stepline area
-//var draw_stepline_area_flag = 0;
 function draw_stepline_area(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){	
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
@@ -1288,11 +1257,9 @@ function draw_stepline_area(){
 			}
 		}
 	}
-	//draw_stepline_area_flag = 1;
 }
 
 //Draw label on path
-//var label_flag = 0;
 function label(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		if(path_details[current_graph_id][i].label == true){
@@ -1321,11 +1288,9 @@ function label(){
 			}
 		}
 	}
-	//label_flag = 1;
 }
 
 //Draw annotations
-//var draw_annotations_flag = 0;
 function draw_annotations(){
 	if(instructions[current_graph_id].annotations){
 		//x axis annotations
@@ -1738,7 +1703,6 @@ function draw_annotations(){
 			}
 		}
 	}
-	//draw_annotations_flag = 1;
 }
 
 
@@ -1748,7 +1712,6 @@ function draw_annotations(){
 /////////////////////////////////////////////////////////////////////////////////////
 
 // For x axis hover design -----------------------------
-//var x_axis_hover_design_flag = 0;
 function x_axis_hover_design(){
 	if(instructions[current_graph_id].x_axis_hover_design == true){
 		for(var i=0; i<1; i++){
@@ -1760,11 +1723,9 @@ function x_axis_hover_design(){
 			});
 			elems["px_"+current_graph_id+"_"+i] = path1;
 		}
-		//x_axis_hover_design_flag = 1;
 	}
 }
 // For y axis hover design-----------------------------
-//var y_axis_hover_design_flag = 0;
 function y_axis_hover_design(){
 	if(instructions[current_graph_id].y_axis_hover_design == true){
 		for(var i=0; i<instructions[current_graph_id].path_no; i++){
@@ -1776,11 +1737,9 @@ function y_axis_hover_design(){
 			});
 			elems["py_"+current_graph_id+"_"+i] = path1;
 		}
-		//y_axis_hover_design_flag =1;
 	}
 }
 //Draw popup
-//var popup_design_flag = 0;
 function popup_design(){	
 	var pop_rect = elems["paper_"+current_graph_id].rect(0, (height[current_graph_id] - (4*paddingy[current_graph_id])), 0, instructions[current_graph_id].path_no*30, 2).attr({
 		fill : '#fcfcfc',
@@ -1799,7 +1758,6 @@ function popup_design(){
 		});
 		elems["tt_"+current_graph_id+"_"+i] = text1;
 	}
-	//popup_design_flag = 1;
 }
 
 //Draw popup footer design
