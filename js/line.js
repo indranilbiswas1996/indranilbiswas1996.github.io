@@ -213,17 +213,39 @@ function all_function(){
 	draw_popup_rect();
 }
 //All title
-var main_title_flag = 0;
+//var main_title_flag = 0;
 function main_title(){
-	elems["paper_"+current_graph_id].text((2*paddingx[current_graph_id]), paddingy[current_graph_id], instructions[current_graph_id].title).attr({
-		'font-weight' : 'bold',
-		'text-anchor': 'start',
-		'font-size' : '15px',
-	});
-	main_title_flag = 1;
+	var position = "";
+	if(instructions[current_graph_id].main_title_position){
+		position = (instructions[current_graph_id].main_title_position+"").toLowerCase() || "left";
+	}
+	if(position == "right"){
+		elems["paper_"+current_graph_id].text(width[current_graph_id] -(2*paddingx[current_graph_id]), paddingy[current_graph_id], instructions[current_graph_id].title).attr({
+			'font-weight' : 'bold',
+			'text-anchor': 'end',
+			'font-size' : instructions[current_graph_id].main_title_font_size || '15px',
+			fill : instructions[current_graph_id].main_title_color || "#000",
+		});
+	}
+	else if(position == "middle"){
+		elems["paper_"+current_graph_id].text((width[current_graph_id]/2), paddingy[current_graph_id], instructions[current_graph_id].title).attr({
+			'font-weight' : 'bold',
+			'font-size' : instructions[current_graph_id].main_title_font_size || '15px',
+			fill : instructions[current_graph_id].main_title_color || "#000",
+		});
+	}
+	else{
+		elems["paper_"+current_graph_id].text((2*paddingx[current_graph_id]), paddingy[current_graph_id], instructions[current_graph_id].title).attr({
+			'font-weight' : 'bold',
+			'text-anchor': 'start',
+			'font-size' : instructions[current_graph_id].main_title_font_size || '15px',
+			fill : instructions[current_graph_id].main_title_color || "#000",
+		});
+	}
+	//main_title_flag = 1;
 }
 //Icon design
-var icon_design_flag = 0;
+//var icon_design_flag = 0;
 function icon_design(){
 	var icon_effect_status_array = [];
 	var line_path_icon_effect_status_array = [];
@@ -865,48 +887,67 @@ function icon_effect_mouseout(){
 }
 
 //x axis title
-var x_axis_title_flag = 0;
+//var x_axis_title_flag = 0;
 function x_axis_title(){
 	elems["paper_"+current_graph_id].text(width[current_graph_id]/2, height[current_graph_id]-paddingy[current_graph_id], instructions[current_graph_id].x_axis_name);
-	x_axis_title_flag = 1;
+	//x_axis_title_flag = 1;
 }
 
 //y axis title
-var y_axis_title_flag = 0;
+//var y_axis_title_flag = 0;
 function y_axis_title(){
 	elems["paper_"+current_graph_id].text(paddingx[current_graph_id], height[current_graph_id]/2, instructions[current_graph_id].y_axis_name).attr({
 		transform : "r270",
 	});
-	y_axis_title_flag = 1;
+	//y_axis_title_flag = 1;
 }
 
 //Draw x axis
-var x_axis_flag = 0;
+//var x_axis_flag = 0;
 function x_axis(){
-	if(0 <= max_values[current_graph_id] && 0 >= min_values[current_graph_id]){
+	var position = "";
+	if(instructions[current_graph_id].x_axis_position){
+		position = (instructions[current_graph_id].x_axis_position+"").toLowerCase() || "bottom";
+	}
+	if(0 > min_values[current_graph_id]){
 		elems["paper_"+current_graph_id].path("M " + (2*paddingx[current_graph_id]) + " " + ( (height[current_graph_id]-(2*paddingy[current_graph_id])) - ((height[current_graph_id]-(4*paddingy[current_graph_id]))*(0 - min_values[current_graph_id]))/maxs[current_graph_id]) + "l "+ (width[current_graph_id] - (4*paddingx[current_graph_id])) + " 0").attr({
 			stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
 		});
 	}else{
-		elems["paper_"+current_graph_id].path("M " + (2*paddingx[current_graph_id]) + " " + ( (height[current_graph_id]-(2*paddingy[current_graph_id])) ) + "l "+ (width[current_graph_id] - (4*paddingx[current_graph_id])) + " 0").attr({
-			stroke : instruction.axis_color || "#9d9d9d",
-		});
+		if(position == "top"){
+			elems["paper_"+current_graph_id].path("M " + (2*paddingx[current_graph_id]) + " " + ( (2*paddingy[current_graph_id]) ) + "l "+ (width[current_graph_id] - (4*paddingx[current_graph_id])) + " 0").attr({
+				stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
+			});
+		}else{
+			elems["paper_"+current_graph_id].path("M " + (2*paddingx[current_graph_id]) + " " + ( (height[current_graph_id]-(2*paddingy[current_graph_id])) ) + "l "+ (width[current_graph_id] - (4*paddingx[current_graph_id])) + " 0").attr({
+				stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
+			});
+		}
 	}
-	x_axis_flag = 1;
 }
 
 //Draw y axis
-var y_axis_flag = 0;
+//var y_axis_flag = 0;
 function y_axis(){
-	elems["paper_"+current_graph_id].path("M " + (2*paddingx[current_graph_id]) + " " + (2*paddingy[current_graph_id]) +" l  0 " + (height[current_graph_id]-(4*paddingy[current_graph_id])) ).attr({
-		stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
-	});
-	y_axis_flag = 1;
+	var position = "";
+	if(instructions[current_graph_id].y_axis_position){
+		position = (instructions[current_graph_id].y_axis_position+"").toLowerCase() || "left";
+	}
+	if(position == "right"){
+		elems["paper_"+current_graph_id].path("M " + (width[current_graph_id]-(2*paddingx[current_graph_id])) + " " + (2*paddingy[current_graph_id]) +" l  0 " + (height[current_graph_id]-(4*paddingy[current_graph_id])) ).attr({
+			stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
+		});
+	}else{
+		elems["paper_"+current_graph_id].path("M " + (2*paddingx[current_graph_id]) + " " + (2*paddingy[current_graph_id]) +" l  0 " + (height[current_graph_id]-(4*paddingy[current_graph_id])) ).attr({
+			stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
+		});
+	}
+	//y_axis_flag = 1;
 }
 
 /* x */
 /* x axis division */
-var x_axis_division_flag = 0;
+//var x_axis_division_flag = 0;
 function x_axis_division(){
 	var j = 0;
 	for(var i = 0; j< datas[current_graph_id].length; i++){	
@@ -916,33 +957,53 @@ function x_axis_division(){
 		});
 		j = j + (Math.ceil(datas[current_graph_id].length/(x_division_nos[current_graph_id])));
 	}
-	x_axis_division_flag = 1;
+	//x_axis_division_flag = 1;
 }
 /* x axis label */
-var x_axis_label_flag = 0;
+//var x_axis_label_flag = 0;
 function x_axis_label(){
 	var j = 0;		
-	for(var i = 0; j< datas[current_graph_id].length; i++){		
-		elems["paper_"+current_graph_id].path( "M " + ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) + " "+ (height[current_graph_id] - (2*paddingy[current_graph_id])) + " l 0 3" ).attr({
-			stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
-		});
-		if(x_division_nos[current_graph_id]>15){
-			elems["paper_"+current_graph_id].text(((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) , (height[current_graph_id] - (1.5*paddingy[current_graph_id])), datas[current_graph_id][j].month).attr({
-				fill : instructions[current_graph_id].axis_color || "#9d9d9d",
-				transform : "r325",
+	var position = "";
+	if(instructions[current_graph_id].x_axis_position){
+		position = (instructions[current_graph_id].x_axis_position+"").toLowerCase() || "bottom";
+	}
+	for(var i = 0; j< datas[current_graph_id].length; i++){	
+		if(position == "top"){
+			elems["paper_"+current_graph_id].path( "M " + ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) + " "+ ((2*paddingy[current_graph_id])) + " l 0 -3" ).attr({
+				stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
 			});
+			if(x_division_nos[current_graph_id]>15){
+				elems["paper_"+current_graph_id].text(((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) , (height[current_graph_id] - (1.5*paddingy[current_graph_id])), datas[current_graph_id][j].month).attr({
+					fill : instructions[current_graph_id].axis_color || "#9d9d9d",
+					transform : "r325",
+				});
+			}else{
+				elems["paper_"+current_graph_id].text(((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) , ((1.5*paddingy[current_graph_id])), datas[current_graph_id][j].month).attr({
+					fill : instructions[current_graph_id].axis_color || "#9d9d9d",
+				});
+			}
 		}else{
-			elems["paper_"+current_graph_id].text(((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) , (height[current_graph_id] - (1.5*paddingy[current_graph_id])), datas[current_graph_id][j].month).attr({
-				fill : instructions[current_graph_id].axis_color || "#9d9d9d",
+			elems["paper_"+current_graph_id].path( "M " + ((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) + " "+ (height[current_graph_id] - (2*paddingy[current_graph_id])) + " l 0 3" ).attr({
+				stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
 			});
+			if(x_division_nos[current_graph_id]>15){
+				elems["paper_"+current_graph_id].text(((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) , (height[current_graph_id] - (1.5*paddingy[current_graph_id])), datas[current_graph_id][j].month).attr({
+					fill : instructions[current_graph_id].axis_color || "#9d9d9d",
+					transform : "r325",
+				});
+			}else{
+				elems["paper_"+current_graph_id].text(((2*paddingx[current_graph_id]) + ((width[current_graph_id]-(4*paddingx[current_graph_id]))/(datas[current_graph_id].length-1))*j) , (height[current_graph_id] - (1.5*paddingy[current_graph_id])), datas[current_graph_id][j].month).attr({
+					fill : instructions[current_graph_id].axis_color || "#9d9d9d",
+				});
+			}
 		}
 		j = j + (Math.ceil(datas[current_graph_id].length/(x_division_nos[current_graph_id])));		
 	}
-	x_axis_label_flag = 1;
+	//x_axis_label_flag = 1;
 }
 
 /* y */
-var y_axis_division_flag = 0;
+//var y_axis_division_flag = 0;
 function y_axis_division(){
 				
 	for(var i = 0 ; i<y_division_nos[current_graph_id] ; i++){		
@@ -951,24 +1012,38 @@ function y_axis_division(){
 			opacity : .5,
 		});
 	}
-	y_axis_division_flag = 1;
+	//y_axis_division_flag = 1;
 }
 /* y axis label */
-var y_axis_label_flag = 0;
+//var y_axis_label_flag = 0;
 function y_axis_label(){
-	for(var i = 0 ; i<y_division_nos[current_graph_id] ; i++){
-		elems["paper_"+current_graph_id].path( "M "+ 2*paddingx[current_graph_id] +" " + ( (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i ) + " l -3 0").attr({
-			stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
-		});
-		elems["paper_"+current_graph_id].text(2*paddingx[current_graph_id] - 5, (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i, number_format(((maxs[current_graph_id]/(y_division_nos[current_graph_id]-1))*i)+min_values[current_graph_id])).attr({
-			fill : instructions[current_graph_id].axis_color || "#9d9d9d",
-			'text-anchor' : "end",
-		});		
+	var position = "";
+	if(instructions[current_graph_id].y_axis_position){
+		position = (instructions[current_graph_id].y_axis_position+"").toLowerCase() || "left";
 	}
-	y_axis_label_flag = 1;
+	for(var i = 0 ; i<y_division_nos[current_graph_id] ; i++){
+		if(position == "right"){
+			elems["paper_"+current_graph_id].path( "M "+ (width[current_graph_id] - 2*paddingx[current_graph_id]) +" " + ( (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i ) + " l 3 0").attr({
+				stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
+			});
+			elems["paper_"+current_graph_id].text((width[current_graph_id] -2*paddingx[current_graph_id] + 5), (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i, number_format(((maxs[current_graph_id]/(y_division_nos[current_graph_id]-1))*i)+min_values[current_graph_id])).attr({
+				fill : instructions[current_graph_id].axis_color || "#9d9d9d",
+				'text-anchor' : "start",
+			});	
+		}else{
+			elems["paper_"+current_graph_id].path( "M "+ 2*paddingx[current_graph_id] +" " + ( (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i ) + " l -3 0").attr({
+				stroke : instructions[current_graph_id].axis_color || "#9d9d9d",
+			});
+			elems["paper_"+current_graph_id].text(2*paddingx[current_graph_id] - 5, (height[current_graph_id]-(2*paddingy[current_graph_id]))-((height[current_graph_id]-(4*paddingy[current_graph_id]))/(y_division_nos[current_graph_id]-1))*i, number_format(((maxs[current_graph_id]/(y_division_nos[current_graph_id]-1))*i)+min_values[current_graph_id])).attr({
+				fill : instructions[current_graph_id].axis_color || "#9d9d9d",
+				'text-anchor' : "end",
+			});	
+		}	
+	}
+	//y_axis_label_flag = 1;
 }
 //Draw path
-var draw_line_path_flag = 0;
+//var draw_line_path_flag = 0;
 function draw_line_path(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
@@ -994,10 +1069,10 @@ function draw_line_path(){
 			}
 		}
 	}
-draw_line_path_flag = 1;
+//draw_line_path_flag = 1;
 }
 //Draw round path
-var draw_round_path_flag = 0;
+//var draw_round_path_flag = 0;
 function draw_round_path(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
@@ -1022,11 +1097,11 @@ function draw_round_path(){
 			}
 		}
 	}
-	draw_round_path_flag = 1;
+	//draw_round_path_flag = 1;
 }
 
 //Draw stepline path
-var draw_stepline_path_flag = 0;
+//var draw_stepline_path_flag = 0;
 function draw_stepline_path(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
@@ -1054,10 +1129,10 @@ function draw_stepline_path(){
 			}
 		}
 	}
-	draw_stepline_path_flag = 1;
+	//draw_stepline_path_flag = 1;
 }
 //Draw circle on path
-var draw_circle_flag = 0;
+//var draw_circle_flag = 0;
 function draw_circle(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		if(path_details[current_graph_id][i].circle == true){
@@ -1076,10 +1151,10 @@ function draw_circle(){
 			}
 		}
 	}
-	draw_circle_flag = 1;
+	//draw_circle_flag = 1;
 }
 //Draw line area
-var draw_line_area_flag = 0;
+//var draw_line_area_flag = 0;
 function draw_line_area(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
@@ -1107,11 +1182,11 @@ function draw_line_area(){
 			}
 		}
 	}
-	draw_line_area_flag = 1;
+	//draw_line_area_flag = 1;
 }
 
 //Draw round area
-var draw_round_area_flag = 0;
+//var draw_round_area_flag = 0;
 function draw_round_area(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){	
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){	
@@ -1139,11 +1214,11 @@ function draw_round_area(){
 			}
 		}
 	}
-	draw_round_area_flag = 1;
+	//draw_round_area_flag = 1;
 }
 
 //Draw stepline area
-var draw_stepline_area_flag = 0;
+//var draw_stepline_area_flag = 0;
 function draw_stepline_area(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){	
 		for(var x = 0; x<path_details[current_graph_id][i].type.length; x++){
@@ -1173,11 +1248,11 @@ function draw_stepline_area(){
 			}
 		}
 	}
-	draw_stepline_area_flag = 1;
+	//draw_stepline_area_flag = 1;
 }
 
 //Draw label on path
-var label_flag = 0;
+//var label_flag = 0;
 function label(){
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		if(path_details[current_graph_id][i].label == true){
@@ -1206,11 +1281,11 @@ function label(){
 			}
 		}
 	}
-	label_flag = 1;
+	//label_flag = 1;
 }
 
 //Draw annotations
-var draw_annotations_flag = 0;
+//var draw_annotations_flag = 0;
 function draw_annotations(){
 	if(instructions[current_graph_id].annotations){
 		//x axis annotations
@@ -1623,7 +1698,7 @@ function draw_annotations(){
 			}
 		}
 	}
-	draw_annotations_flag = 1;
+	//draw_annotations_flag = 1;
 }
 
 
@@ -1633,7 +1708,7 @@ function draw_annotations(){
 /////////////////////////////////////////////////////////////////////////////////////
 
 // For x axis hover design -----------------------------
-var x_axis_hover_design_flag = 0;
+//var x_axis_hover_design_flag = 0;
 function x_axis_hover_design(){
 	if(instructions[current_graph_id].x_axis_hover_design == true){
 		for(var i=0; i<1; i++){
@@ -1645,11 +1720,11 @@ function x_axis_hover_design(){
 			});
 			elems["px_"+current_graph_id+"_"+i] = path1;
 		}
-		x_axis_hover_design_flag = 1;
+		//x_axis_hover_design_flag = 1;
 	}
 }
 // For y axis hover design-----------------------------
-var y_axis_hover_design_flag = 0;
+//var y_axis_hover_design_flag = 0;
 function y_axis_hover_design(){
 	if(instructions[current_graph_id].y_axis_hover_design == true){
 		for(var i=0; i<instructions[current_graph_id].path_no; i++){
@@ -1661,7 +1736,7 @@ function y_axis_hover_design(){
 			});
 			elems["py_"+current_graph_id+"_"+i] = path1;
 		}
-		y_axis_hover_design_flag =1;
+		//y_axis_hover_design_flag =1;
 	}
 }
 //Draw popup
@@ -1688,23 +1763,42 @@ function popup_design(){
 }
 
 //Draw popup footer design
-//var popup_footer_design_flag = 0;
 function popup_footer_design(){
-	//for rect
-	var rect1 = elems["paper_"+current_graph_id].rect(2*paddingx[current_graph_id], height[current_graph_id] - (2*paddingy[current_graph_id]), 0, 40, 5).attr({
-		fill : '#f1f1f1',
-		stroke : '#b6b6b6',
-		opacity : 0,
-	});
-	elems["pfd_r_"+current_graph_id] = rect1;
-	//for text
-	var text1 = elems["paper_"+current_graph_id].text(2*paddingx[current_graph_id], height[current_graph_id] - (2*paddingy[current_graph_id]) + 20, "2019").attr({
-		'font-size' : '13px',
-			'font-weight' : 'bold',
-		opacity : 0,
-	});
-	elems["pfd_t_"+current_graph_id] = text1;
-	//popup_footer_design_flag = 1;
+	var position = "";
+	if(instructions[current_graph_id].x_axis_position){
+		position = (instructions[current_graph_id].x_axis_position+"").toLowerCase() || "bottom";
+	}
+	if(position == "top"){
+		//for rect
+		var rect1 = elems["paper_"+current_graph_id].rect(2*paddingx[current_graph_id], (2*paddingy[current_graph_id])-40, 0, 40, 5).attr({
+			fill : '#f1f1f1',
+			stroke : '#b6b6b6',
+			opacity : 0,
+		});
+		elems["pfd_r_"+current_graph_id] = rect1;
+		//for text
+		var text1 = elems["paper_"+current_graph_id].text(2*paddingx[current_graph_id], (2*paddingy[current_graph_id]) - 20, "2019").attr({
+			'font-size' : '13px',
+				'font-weight' : 'bold',
+			opacity : 0,
+		});
+		elems["pfd_t_"+current_graph_id] = text1;
+	}else{
+		//for rect
+		var rect1 = elems["paper_"+current_graph_id].rect(2*paddingx[current_graph_id], height[current_graph_id] - (2*paddingy[current_graph_id]), 0, 40, 5).attr({
+			fill : '#f1f1f1',
+			stroke : '#b6b6b6',
+			opacity : 0,
+		});
+		elems["pfd_r_"+current_graph_id] = rect1;
+		//for text
+		var text1 = elems["paper_"+current_graph_id].text(2*paddingx[current_graph_id], height[current_graph_id] - (2*paddingy[current_graph_id]) + 20, "2019").attr({
+			'font-size' : '13px',
+				'font-weight' : 'bold',
+			opacity : 0,
+		});
+		elems["pfd_t_"+current_graph_id] = text1;
+	}
 }
 //Collect max data on every point for view popup on that point
 function collect_popup_point(){
