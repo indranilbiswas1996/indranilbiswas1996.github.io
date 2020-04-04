@@ -910,18 +910,19 @@ function icon_effect_mouseout(){
 //x axis title
 //var x_axis_title_flag = 0;
 function x_axis_title(){
-	elems["paper_"+current_graph_id].text(width[current_graph_id]/2, height[current_graph_id]-paddingy[current_graph_id], instructions[current_graph_id].x_axis_name);
+	var position = "";
+	if(instructions[current_graph_id].x_axis_position){
+		position = (instructions[current_graph_id].x_axis_position+"").toLowerCase() || "bottom";
+	}
+	if(position == "top"){
+		elems["paper_"+current_graph_id].text(width[current_graph_id]/2, paddingy[current_graph_id], instructions[current_graph_id].x_axis_name);
+	}
+	else{
+		elems["paper_"+current_graph_id].text(width[current_graph_id]/2, height[current_graph_id]-paddingy[current_graph_id], instructions[current_graph_id].x_axis_name);
+	}
 	//x_axis_title_flag = 1;
 }
 
-//y axis title
-//var y_axis_title_flag = 0;
-function y_axis_title(){
-	elems["paper_"+current_graph_id].text(paddingx[current_graph_id], height[current_graph_id]/2, instructions[current_graph_id].y_axis_name).attr({
-		transform : "r270",
-	});
-	//y_axis_title_flag = 1;
-}
 
 //Draw x axis
 //var x_axis_flag = 0;
@@ -946,7 +947,25 @@ function x_axis(){
 		}
 	}
 }
-
+//y axis title
+//var y_axis_title_flag = 0;
+function y_axis_title(){
+	var position = "";
+	if(instructions[current_graph_id].y_axis_position){
+		position = (instructions[current_graph_id].y_axis_position+"").toLowerCase() || "left";
+	}
+	if(position == "right"){
+		elems["paper_"+current_graph_id].text(width[current_graph_id]-paddingx[current_graph_id], height[current_graph_id]/2, instructions[current_graph_id].y_axis_name).attr({
+			transform : "r270",
+		});	
+	}
+	else{
+		elems["paper_"+current_graph_id].text(paddingx[current_graph_id], height[current_graph_id]/2, instructions[current_graph_id].y_axis_name).attr({
+			transform : "r270",
+		});	
+	}
+	//y_axis_title_flag = 1;
+}
 //Draw y axis
 //var y_axis_flag = 0;
 function y_axis(){
