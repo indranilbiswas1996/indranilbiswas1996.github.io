@@ -22,7 +22,7 @@ var instruction = {
 
 	title : "Weather statistics for Jammu and Kashmir",
 	main_title : true,
-	main_title_position : "bottom-right",
+	main_title_position : "bottom-right",     //top-left, top-middle, top-right, bottom-left, bottom-middle, bottom-right
 	main_title_color : "#ff0000",
 	main_title_font_size : "15px",
 
@@ -30,20 +30,20 @@ var instruction = {
 
 	x_axis_name : "Month",
 	x_axis : true,
-	x_axis_position : "top",
+	x_axis_position : "top",            //top, bottom
 	x_axis_division : false,
 	x_axis_title : true,
 	x_axis_label : true,
 
 	y_axis_name : "Temp",
 	y_axis : false,
-	y_axis_position : "right",
+	y_axis_position : "right",           //left, right
 	y_axis_division : true,
 	y_axis_title : true,
 	y_axis_label : true,
 
 	icon : true,
-	icon_position : "bottom-middle",
+	icon_position : "bottom-middle",      //top-left, top-middle, top-right, bottom-left, bottom-middle, bottom-right
 	x_axis_hover_design : true,
 	y_axis_hover_design : true,
 	popup_design : true,
