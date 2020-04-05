@@ -76,7 +76,6 @@ function load_all_data(data,  instruction, path_detail){//data_min_point = 1st a
 	instructions[instruction.id] = instruction;
 	path_details[instruction.id] = path_detail;
 	
-	//console.log(sync_chart);
 	//Default paper width, height[current_graph_id]
 	//Max width : 950, Max-height[current_graph_id] : 510
 	//Min width : 780,  Min-height[current_graph_id] : 400
@@ -278,102 +277,160 @@ function icon_design(){
 	if(instructions[current_graph_id].icon_position){
 		position = (instructions[current_graph_id].icon_position+"").toLowerCase() || "top-right";
 	}
-	var xx = (2*paddingx[current_graph_id]);
-	for(var i = path_details[current_graph_id].length - 1; i >= 0; i--){
-		xx += (7*path_details[current_graph_id][i].name.length);		
-		xx += .75*paddingx[current_graph_id];
-	}
-	var x = (2*paddingx[current_graph_id]);
-	for(var i = path_details[current_graph_id].length - 1; i >= 0; i--){
-		x += (7*path_details[current_graph_id][i].name.length);	
-		var text_x, text_y, circle_x, circle_y, rect_x, rect_y , rect_y_width;
-		if(position == "top-right"){
-			text_x = width[current_graph_id] - x;
-			text_y = paddingy[current_graph_id];
-			circle_x = width[current_graph_id]- x - (.2*paddingx[current_graph_id]);
-			circle_y = paddingy[current_graph_id];
-			rect_x = width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0;
-			rect_y = paddingy[current_graph_id] - 7.5;
-			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
-		}
-		else if(position == "top-middle"){
-			text_x = width[current_graph_id] - x -xx;
-			text_y = paddingy[current_graph_id];
-			circle_x = width[current_graph_id]- x - (.2*paddingx[current_graph_id]) -xx;
-			circle_y = paddingy[current_graph_id];
-			rect_x = width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0 -xx;
-			rect_y = paddingy[current_graph_id] - 7.5;
-			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
-		}
-		else if(position == "top-left"){
-			text_x =  width[current_graph_id] - x -(width[current_graph_id] -(2*paddingx[current_graph_id])- xx  );
-			text_y = paddingy[current_graph_id];
-			circle_x =  width[current_graph_id]- x - (.2*paddingx[current_graph_id]) -(width[current_graph_id] -(2*paddingx[current_graph_id])- xx);
-			circle_y = paddingy[current_graph_id];
-			rect_x =  width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0 -(width[current_graph_id] -(2*paddingx[current_graph_id])- xx);
-			rect_y = paddingy[current_graph_id] - 7.5;
-			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
-		}	
-		else if(position == "bottom-right"){
-			text_x = width[current_graph_id] - x;
-			text_y = height[current_graph_id] - paddingy[current_graph_id];
-			circle_x = width[current_graph_id]- x - (.2*paddingx[current_graph_id]);
-			circle_y = height[current_graph_id] - paddingy[current_graph_id];
-			rect_x = width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0;
-			rect_y = height[current_graph_id] - paddingy[current_graph_id] - 7.5;
-			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
-		}
-		else if(position == "bottom-middle"){
-			text_x = width[current_graph_id] - x -xx;
-			text_y = height[current_graph_id] - paddingy[current_graph_id];
-			circle_x = width[current_graph_id]- x - (.2*paddingx[current_graph_id]) -xx;
-			circle_y = height[current_graph_id] - paddingy[current_graph_id];
-			rect_x = width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0  -xx;
-			rect_y = height[current_graph_id] - paddingy[current_graph_id] - 7.5;
-			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
-		}
-		else if(position == "bottom-left"){
-			text_x =  width[current_graph_id] - x -(width[current_graph_id] -(2*paddingx[current_graph_id])- xx  );
-			text_y = height[current_graph_id] - paddingy[current_graph_id];
-			circle_x =  width[current_graph_id]- x - (.2*paddingx[current_graph_id]) -(width[current_graph_id] -(2*paddingx[current_graph_id])- xx);
-			circle_y = height[current_graph_id] - paddingy[current_graph_id];
-			rect_x =  width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0 -(width[current_graph_id] -(2*paddingx[current_graph_id])- xx);
-			rect_y = height[current_graph_id] - paddingy[current_graph_id] - 7.5;
-			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
-		}
-		else{
-			text_x = width[current_graph_id] - x;
-			text_y = paddingy[current_graph_id];
-			circle_x = width[current_graph_id]- x - (.2*paddingx[current_graph_id]);
-			circle_y = paddingy[current_graph_id];
-			rect_x = width[current_graph_id]- x - (.3*paddingx[current_graph_id]) - 0;
-			rect_y = paddingy[current_graph_id] - 7.5;
-			rect_width = (path_details[current_graph_id][i].name).toString().length*7 + 15;
-		}
-		var text = elems["paper_"+current_graph_id].text(text_x, text_y, path_details[current_graph_id][i].name).attr({
+	var x = 0, y = 0;
+	var text_x = 0, text_y = 0, text_width = 0;
+	var	circle_x = 0, circle_y = 0;
+	var	rect_x = 0, rect_y = 0 , rect_y_width = 0;
+	var total_length = 0 , length = 0;
+	//For get the icon's total length
+	for(var i = 0; i < path_details[current_graph_id].length; i++){		
+		var text = elems["paper_"+current_graph_id].text(0, 0, path_details[current_graph_id][i].name).attr({
 			'font-weight' : 'bold',
 			'text-anchor': 'start',
 			'font-size' : '13px',
-			fill : path_details[current_graph_id][i].color,
-		});
-		var circle = elems["paper_"+current_graph_id].circle(circle_x , circle_y, 5).attr({
-			fill : path_details[current_graph_id][i].color,
-			stroke : path_details[current_graph_id][i].color,
-		});
-		var rect = elems["paper_"+current_graph_id].rect(rect_x, rect_y, rect_width , 15).attr({
-			fill : '#ff0000',
 			opacity : 0,
-			cursor : 'pointer',
 		});
-		rect.node.id = "icon_"+current_graph_id+"_"+i;
-		rect.node.addEventListener('click', icon_effect_click);
-		rect.node.addEventListener('mouseover', icon_effect_mouseover);
-		rect.node.addEventListener('mouseout', icon_effect_mouseout);
-		x += .75*paddingx[current_graph_id];
-		icon_effect_status_array.push(0);
-		elems["icon_"+current_graph_id+"_"+i] = rect;
+		text_width = text.getBBox().width;
+		text.remove();
+		total_length += 15 + text_width +5;
 	}
-	icon_effect_status_arrays[current_graph_id] = icon_effect_status_array;///////////For icon effect changes
+	//Draw icon
+	for(var i = 0; i < path_details[current_graph_id].length; i++){
+		if(position == "top-right"){
+			x = width[current_graph_id] - (2*paddingx[current_graph_id]) - total_length;
+			y =(1*paddingy[current_graph_id]);
+			circle_x = x + length + 5;
+			circle_y = y;
+			icon_circle();
+			text_x = 5 + 10 + x + length;
+			text_y = y;
+			text_width = icon_text();
+			rect_x =  x + length;
+			rect_y = y - (18/2);
+			rect_width = 15 + text_width;
+			icon_rect();
+			length += rect_width +5;
+		}
+		else if(position == "top-middle"){
+			x = (width[current_graph_id]/2) - (total_length/2);
+			y =(1*paddingy[current_graph_id]);
+			circle_x = x + length + 5;
+			circle_y = y;
+			icon_circle();
+			text_x = 5 + 10 + x + length;
+			text_y = y;
+			text_width = icon_text();
+			rect_x =  x + length;
+			rect_y = y - (18/2);
+			rect_width = 15 + text_width;
+			icon_rect();
+			length += rect_width +5;
+		}
+		else if(position == "top-left"){
+			x = 2*paddingx[current_graph_id];
+			y =(1*paddingy[current_graph_id]);
+			circle_x = x + length + 5;
+			circle_y = y;
+			icon_circle();
+			text_x = 5 + 10 + x + length;
+			text_y = y;
+			text_width = icon_text();
+			rect_x =  x + length;
+			rect_y = y - (18/2);
+			rect_width = 15 + text_width;
+			icon_rect();
+			length += rect_width +5;
+		}	
+		else if(position == "bottom-right"){
+			x = width[current_graph_id] - (2*paddingx[current_graph_id]) - total_length
+			y =(height[current_graph_id] - (1*paddingy[current_graph_id]));
+			circle_x = x + length + 5;
+			circle_y = y;
+			icon_circle();
+			text_x = 5 + 10 + x + length;
+			text_y = y;
+			text_width = icon_text();
+			rect_x =  x + length;
+			rect_y = y - (18/2);
+			rect_width = 15 + text_width;
+			icon_rect();
+			length += rect_width +5;
+		}
+		else if(position == "bottom-middle"){
+			x = (width[current_graph_id]/2) - (total_length/2);
+			y =(height[current_graph_id] - (1*paddingy[current_graph_id]));
+			circle_x = x + length + 5;
+			circle_y = y;
+			icon_circle();
+			text_x = 5 + 10 + x + length;
+			text_y = y;
+			text_width = icon_text();
+			rect_x =  x + length;
+			rect_y = y - (18/2);
+			rect_width = 15 + text_width;
+			icon_rect();
+			length += rect_width +5;
+		}
+		else if(position == "bottom-left"){
+			x = 2*paddingx[current_graph_id];
+			y =(height[current_graph_id] - (1*paddingy[current_graph_id]));
+			circle_x = x + length + 5;
+			circle_y = y;
+			icon_circle();
+			text_x = 5 + 10 + x + length;
+			text_y = y;
+			text_width = icon_text();
+			rect_x =  x + length;
+			rect_y = y - (18/2);
+			rect_width = 15 + text_width;
+			icon_rect();
+			length += rect_width +5;
+		}
+		else{
+			x = width[current_graph_id] - (2*paddingx[current_graph_id]) - total_length;
+			y =(1*paddingy[current_graph_id]);
+			circle_x = x + length + 5;
+			circle_y = y;
+			icon_circle();
+			text_x = 5 + 10 + x + length;
+			text_y = y;
+			text_width = icon_text();
+			rect_x =  x + length;
+			rect_y = y - (18/2);
+			rect_width = 15 + text_width;
+			icon_rect();
+			length += rect_width +5;
+		}
+		function icon_text(){
+			var text = elems["paper_"+current_graph_id].text(text_x, text_y, path_details[current_graph_id][i].name).attr({
+				'font-weight' : 'bold',
+				'text-anchor': 'start',
+				'font-size' : '13px',
+				fill : path_details[current_graph_id][i].color,
+			});
+			return text.getBBox().width;
+		}
+		function icon_circle(){
+			var circle = elems["paper_"+current_graph_id].circle(circle_x , circle_y, 5).attr({
+				fill : path_details[current_graph_id][i].color,
+				stroke : path_details[current_graph_id][i].color,
+			});
+		}
+		function icon_rect(){
+			var rect = elems["paper_"+current_graph_id].rect(rect_x, rect_y, rect_width , 18).attr({
+				fill : '#ff0000',
+				opacity : 0,
+				cursor : 'pointer',
+			});
+			rect.node.id = "icon_"+current_graph_id+"_"+i;
+			rect.node.addEventListener('click', icon_effect_click);
+			rect.node.addEventListener('mouseover', icon_effect_mouseover);
+			rect.node.addEventListener('mouseout', icon_effect_mouseout);
+			icon_effect_status_array.push(0);
+			elems["icon_"+current_graph_id+"_"+i] = rect;
+		}
+	}
+	icon_effect_status_arrays[current_graph_id] = icon_effect_status_array;///////////For icon effect changes*/
 	
 	for(var i = 0; i < parseInt(instructions[current_graph_id].path_no); i++){
 		line_path_icon_effect_status_array.push(0);
@@ -983,10 +1040,10 @@ function x_axis_title(){
 		position = (instructions[current_graph_id].x_axis_position+"").toLowerCase() || "bottom";
 	}
 	if(position == "top"){
-		elems["paper_"+current_graph_id].text(width[current_graph_id]/2, paddingy[current_graph_id], instructions[current_graph_id].x_axis_name);
+		elems["paper_"+current_graph_id].text(width[current_graph_id]/2, 1.25*paddingy[current_graph_id], instructions[current_graph_id].x_axis_name);
 	}
 	else{
-		elems["paper_"+current_graph_id].text(width[current_graph_id]/2, height[current_graph_id]-paddingy[current_graph_id], instructions[current_graph_id].x_axis_name);
+		elems["paper_"+current_graph_id].text(width[current_graph_id]/2, height[current_graph_id]-(1.25*paddingy[current_graph_id]), instructions[current_graph_id].x_axis_name);
 	}
 }
 
